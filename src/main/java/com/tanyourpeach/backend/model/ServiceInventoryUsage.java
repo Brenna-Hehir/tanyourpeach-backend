@@ -3,6 +3,7 @@ package com.tanyourpeach.backend.model;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "service_inventory_usage")
 public class ServiceInventoryUsage {
 
     @EmbeddedId

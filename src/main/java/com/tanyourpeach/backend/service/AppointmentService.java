@@ -8,14 +8,17 @@ import org.springframework.stereotype.Service;
 
 import com.tanyourpeach.backend.model.Appointment;
 import com.tanyourpeach.backend.model.Availability;
+import com.tanyourpeach.backend.model.Receipt;
 import com.tanyourpeach.backend.model.ServiceInventoryUsage;
 import com.tanyourpeach.backend.model.ServiceInventoryUsageKey;
 import com.tanyourpeach.backend.repository.AppointmentRepository;
 import com.tanyourpeach.backend.repository.AvailabilityRepository;
 import com.tanyourpeach.backend.repository.InventoryRepository;
+import com.tanyourpeach.backend.repository.ReceiptRepository;
 import com.tanyourpeach.backend.repository.ServiceInventoryUsageRepository;
 import com.tanyourpeach.backend.repository.TanServiceRepository;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -37,6 +40,9 @@ public class AppointmentService {
 
     @Autowired
     private InventoryRepository inventoryRepository;
+
+    @Autowired
+    private ReceiptRepository receiptRepository;
 
     @Enumerated(EnumType.STRING)
     private Status status;
@@ -131,6 +137,19 @@ public class AppointmentService {
                     inventoryRepository.save(item);
                 });
             }
+        }
+
+        // Auto-generate receipt if one doesn't already exist
+        if (updated.getStatus() == Appointment.Status.CONFIRMED) {
+            Receipt existingReceipt = receiptRepository.findByAppointment_AppointmentId(existing.getAppointmentId());
+
+            if (existingReceipt == null) {
+                Receipt receipt = new Receipt();
+                receipt.setAppointment(existing);
+                receipt.setTotalAmount(BigDecimal.valueOf(existing.getTotalPrice()));
+                receipt.setPaymentMethod("Unpaid"); // You can change this later via update
+                receiptRepository.save(receipt);
+            }   
         }
 
         Appointment saved = appointmentRepository.save(existing);
