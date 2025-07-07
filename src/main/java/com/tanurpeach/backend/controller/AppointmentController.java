@@ -35,7 +35,7 @@ public class AppointmentController {
 
     // GET appointment by ID
     @GetMapping("/{id}")
-    public ResponseEntity<Appointment> getById(@PathVariable Long id) {
+    public ResponseEntity<Appointment> getAppointmentById(@PathVariable Long id) {
         return appointmentRepository.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
