@@ -1,6 +1,8 @@
 package com.tanurpeach.backend.model;
 
 import jakarta.persistence.*;
+
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -11,19 +13,31 @@ public class Inventory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long itemId;
 
+    @Column(nullable = false, length = 100)
     private String itemName;
 
-    private Integer quantity;
+    private int quantity = 0;
 
-    private Double unitCost;
+    @Column(precision = 6, scale = 2)
+    private BigDecimal unitCost;
 
+    @Column(precision = 10, scale = 2)
+    private BigDecimal totalSpent = BigDecimal.ZERO;
+
+    @Column(columnDefinition = "TEXT")
+    private String notes;
+
+    @Column(name = "last_updated", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
     private LocalDateTime lastUpdated;
 
+    // Auto-update timestamp
     @PrePersist
     @PreUpdate
-    public void onUpdate() {
+    public void updateTimestamp() {
         lastUpdated = LocalDateTime.now();
     }
+
+    // Getters and Setters
 
     public Long getItemId() {
         return itemId;
@@ -49,12 +63,28 @@ public class Inventory {
         this.quantity = quantity;
     }
 
-    public Double getUnitCost() {
+    public BigDecimal getUnitCost() {
         return unitCost;
     }
 
-    public void setUnitCost(Double unitCost) {
+    public void setUnitCost(BigDecimal unitCost) {
         this.unitCost = unitCost;
+    }
+
+    public BigDecimal getTotalSpent() {
+        return totalSpent;
+    }
+
+    public void setTotalSpent(BigDecimal totalSpent) {
+        this.totalSpent = totalSpent;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 
     public LocalDateTime getLastUpdated() {

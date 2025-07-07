@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -17,13 +18,13 @@ public class InventoryController {
     @Autowired
     private InventoryService inventoryService;
 
-    // GET all inventory
+    // GET all items
     @GetMapping
     public List<Inventory> getAllInventory() {
         return inventoryService.getAllInventory();
     }
 
-    // GET one item
+    // GET by ID
     @GetMapping("/{id}")
     public ResponseEntity<Inventory> getInventoryById(@PathVariable Long id) {
         return inventoryService.getInventoryById(id)
@@ -31,22 +32,21 @@ public class InventoryController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // POST create inventory
+    // POST create
     @PostMapping
     public Inventory createInventory(@RequestBody Inventory inventory) {
         return inventoryService.createInventory(inventory);
     }
 
-    // PUT update inventory
+    // PUT update
     @PutMapping("/{id}")
     public ResponseEntity<Inventory> updateInventory(@PathVariable Long id, @RequestBody Inventory updated) {
         return inventoryService.updateInventory(id, updated)
-            .map(ResponseEntity::ok)
-            .orElse(ResponseEntity.notFound().build());
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
-
-    // DELETE item
+    // DELETE
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteInventory(@PathVariable Long id) {
         return inventoryService.deleteInventory(id)
@@ -54,10 +54,20 @@ public class InventoryController {
                 : ResponseEntity.notFound().build();
     }
 
-    // PUT to deduct quantity
+    // PUT deduct quantity
     @PutMapping("/deduct/{id}")
     public ResponseEntity<Void> deductQuantity(@PathVariable Long id, @RequestParam int amount) {
         return inventoryService.deductQuantity(id, amount)
+                ? ResponseEntity.ok().build()
+                : ResponseEntity.badRequest().build();
+    }
+
+    // PUT add quantity and cost
+    @PutMapping("/add-stock/{id}")
+    public ResponseEntity<Void> addStock(@PathVariable Long id,
+                                         @RequestParam int quantity,
+                                         @RequestParam BigDecimal unitCost) {
+        return inventoryService.addQuantityAndCost(id, quantity, unitCost)
                 ? ResponseEntity.ok().build()
                 : ResponseEntity.badRequest().build();
     }
