@@ -23,7 +23,7 @@ public class AppointmentService {
     private AvailabilityRepository availabilityRepository;
 
     @Autowired
-    private TanServiceRepository serviceRepository;
+    private TanServiceRepository tanServiceRepository;
 
     // GET all appointments
     public List<Appointment> getAllAppointments() {
@@ -72,7 +72,7 @@ public class AppointmentService {
         existing.setStatus(updated.getStatus());
 
         if (updated.getService() != null && updated.getService().getServiceId() != null) {
-            serviceRepository.findById(updated.getService().getServiceId()).ifPresent(service -> {
+            tanServiceRepository.findById(updated.getService().getServiceId()).ifPresent(service -> {
                 existing.setService(service);
                 existing.setBasePrice(service.getBasePrice());
             });

@@ -48,7 +48,6 @@ public class Appointment {
     @OneToOne
     private Availability availability;
 
-
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
