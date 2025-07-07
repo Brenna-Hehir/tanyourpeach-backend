@@ -17,7 +17,7 @@ public class Appointment {
 
     @ManyToOne
     @JoinColumn(name = "service_id", nullable = false)
-    private Service service;
+    private TanService service;
 
     private String clientName;
 
@@ -45,6 +45,10 @@ public class Appointment {
 
     private LocalDateTime createdAt;
 
+    @OneToOne
+    private Availability availability;
+
+
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
@@ -71,11 +75,11 @@ public class Appointment {
         this.user = user;
     }
 
-    public Service getService() {
+    public TanService getService() {
         return service;
     }
 
-    public void setService(Service service) {
+    public void setService(TanService service) {
         this.service = service;
     }
 
@@ -171,5 +175,13 @@ public class Appointment {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public Availability getAvailability() {
+        return availability;
+    }
+
+    public void setAvailability(Availability availability) {
+        this.availability = availability;
     }
 }
