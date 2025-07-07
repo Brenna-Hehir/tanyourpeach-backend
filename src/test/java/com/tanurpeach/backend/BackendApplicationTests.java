@@ -1,4 +1,4 @@
-package com.tanurpeach.backend;
+package com.tanyourpeach.backend;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
