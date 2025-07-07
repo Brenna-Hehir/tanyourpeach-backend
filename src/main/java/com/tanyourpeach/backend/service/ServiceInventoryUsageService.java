@@ -57,6 +57,7 @@ public class ServiceInventoryUsageService {
         return Optional.of(usageRepository.save(usage));
     }
 
+    // Update the quantity used for a specific service-inventory usage record
     public Optional<ServiceInventoryUsage> updateQuantity(Long serviceId, Long itemId, int newQuantityUsed) {
         ServiceInventoryUsageKey key = new ServiceInventoryUsageKey(serviceId, itemId);
         Optional<ServiceInventoryUsage> usageOpt = usageRepository.findById(key);

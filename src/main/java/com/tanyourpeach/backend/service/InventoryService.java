@@ -1,10 +1,11 @@
 package com.tanyourpeach.backend.service;
 
+import com.tanyourpeach.backend.model.Inventory;
+import com.tanyourpeach.backend.model.FinancialLog;
+import com.tanyourpeach.backend.repository.InventoryRepository;
+import com.tanyourpeach.backend.repository.FinancialLogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.tanyourpeach.backend.model.Inventory;
-import com.tanyourpeach.backend.repository.InventoryRepository;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -15,6 +16,9 @@ public class InventoryService {
 
     @Autowired
     private InventoryRepository inventoryRepository;
+
+    @Autowired
+    private FinancialLogRepository financialLogRepository;
 
     // Get all inventory items
     public List<Inventory> getAllInventory() {
@@ -33,21 +37,58 @@ public class InventoryService {
         return inventoryRepository.save(inventory);
     }
 
-    // Update existing inventory item
+    // Update existing inventory item with expense logging
     public Optional<Inventory> updateInventory(Long id, Inventory updated) {
         return inventoryRepository.findById(id).map(existing -> {
+            int oldQuantity = existing.getQuantity() != null ? existing.getQuantity() : 0;
+            BigDecimal oldTotalSpent = existing.getTotalSpent() != null ? existing.getTotalSpent() : BigDecimal.ZERO;
+
             existing.setItemName(updated.getItemName());
             existing.setQuantity(updated.getQuantity());
             existing.setUnitCost(updated.getUnitCost());
-            existing.setTotalSpent(updated.getTotalSpent());
             existing.setNotes(updated.getNotes());
+
+            // Auto-log expense if more stock was added and unit cost is available
+            if (updated.getQuantity() > oldQuantity && updated.getUnitCost() != null) {
+                int addedQty = updated.getQuantity() - oldQuantity;
+                BigDecimal addedCost = updated.getUnitCost().multiply(BigDecimal.valueOf(addedQty));
+                existing.setTotalSpent(oldTotalSpent.add(addedCost));
+
+                FinancialLog log = new FinancialLog();
+                log.setType(FinancialLog.Type.expense);
+                log.setSource("inventory");
+                log.setReferenceId(existing.getItemId());
+                log.setAmount(addedCost);
+                log.setDescription("Added " + addedQty + " units of " + existing.getItemName());
+                financialLogRepository.save(log);
+            } else {
+                existing.setTotalSpent(updated.getTotalSpent()); // maintain current manual edit behavior
+            }
+
             return inventoryRepository.save(existing);
         });
     }
 
-    // Delete inventory item
+    // Delete inventory item with logging
     public boolean deleteInventory(Long id) {
-        if (!inventoryRepository.existsById(id)) return false;
+        Optional<Inventory> optional = inventoryRepository.findById(id);
+        if (optional.isEmpty()) return false;
+
+        Inventory item = optional.get();
+        int quantity = item.getQuantity() != null ? item.getQuantity() : 0;
+        BigDecimal totalSpent = item.getTotalSpent() != null ? item.getTotalSpent() : BigDecimal.ZERO;
+
+        // Only log if there's meaningful value to track
+        if (quantity > 0 && totalSpent.compareTo(BigDecimal.ZERO) > 0) {
+            FinancialLog log = new FinancialLog();
+            log.setType(FinancialLog.Type.expense);
+            log.setSource("inventory");
+            log.setReferenceId(item.getItemId());
+            log.setAmount(totalSpent);
+            log.setDescription("Deleted inventory item '" + item.getItemName() + "' with " + quantity + " units remaining");
+            financialLogRepository.save(log);
+        }
+
         inventoryRepository.deleteById(id);
         return true;
     }
