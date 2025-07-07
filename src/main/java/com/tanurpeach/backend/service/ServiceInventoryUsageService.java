@@ -57,6 +57,17 @@ public class ServiceInventoryUsageService {
         return Optional.of(usageRepository.save(usage));
     }
 
+    public Optional<ServiceInventoryUsage> updateQuantity(Long serviceId, Long itemId, int newQuantityUsed) {
+        ServiceInventoryUsageKey key = new ServiceInventoryUsageKey(serviceId, itemId);
+        Optional<ServiceInventoryUsage> usageOpt = usageRepository.findById(key);
+
+        if (usageOpt.isEmpty()) return Optional.empty();
+
+        ServiceInventoryUsage usage = usageOpt.get();
+        usage.setQuantityUsed(newQuantityUsed);
+        return Optional.of(usageRepository.save(usage));
+    }
+
     // Delete a service-inventory usage record
     public boolean deleteUsage(Long serviceId, Long itemId) {
         ServiceInventoryUsageKey key = new ServiceInventoryUsageKey(serviceId, itemId);

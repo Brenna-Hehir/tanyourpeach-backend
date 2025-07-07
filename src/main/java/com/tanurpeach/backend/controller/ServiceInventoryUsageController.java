@@ -43,6 +43,16 @@ public class ServiceInventoryUsageController {
                 .orElse(ResponseEntity.badRequest().build());
     }
 
+    // PUT update quantity used
+    @PutMapping("/{serviceId}/{itemId}")
+    public ResponseEntity<ServiceInventoryUsage> updateQuantityUsed(@PathVariable Long serviceId,
+                                                                    @PathVariable Long itemId,
+                                                                    @RequestParam int quantityUsed) {
+        return usageService.updateQuantity(serviceId, itemId, quantityUsed)
+            .map(ResponseEntity::ok)
+            .orElse(ResponseEntity.notFound().build());
+    }
+
     // DELETE a link
     @DeleteMapping("/{serviceId}/{itemId}")
     public ResponseEntity<Void> deleteUsage(@PathVariable Long serviceId, @PathVariable Long itemId) {

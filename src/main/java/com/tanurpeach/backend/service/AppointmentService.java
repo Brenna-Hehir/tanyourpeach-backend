@@ -6,6 +6,14 @@ import com.tanurpeach.backend.repository.AppointmentRepository;
 import com.tanurpeach.backend.repository.AvailabilityRepository;
 import com.tanurpeach.backend.repository.TanServiceRepository;
 
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.EnumType;
+
+import com.tanurpeach.backend.model.ServiceInventoryUsage;
+import com.tanurpeach.backend.model.ServiceInventoryUsageKey;
+import com.tanurpeach.backend.repository.ServiceInventoryUsageRepository;
+import com.tanurpeach.backend.repository.InventoryRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +32,21 @@ public class AppointmentService {
 
     @Autowired
     private TanServiceRepository tanServiceRepository;
+
+    @Autowired
+    private ServiceInventoryUsageRepository usageRepository;
+
+    @Autowired
+    private InventoryRepository inventoryRepository;
+
+    @Enumerated(EnumType.STRING)
+    private Status status;
+
+    public enum Status {
+        PENDING,
+        CONFIRMED,
+        CANCELLED
+    }
 
     // GET all appointments
     public List<Appointment> getAllAppointments() {
@@ -61,6 +84,7 @@ public class AppointmentService {
         if (existingOpt.isEmpty()) return Optional.empty();
 
         Appointment existing = existingOpt.get();
+        Appointment.Status oldStatus = existing.getStatus();
 
         existing.setClientName(updated.getClientName());
         existing.setClientEmail(updated.getClientEmail());
@@ -80,6 +104,35 @@ public class AppointmentService {
 
         double total = existing.getBasePrice() + (existing.getTravelFee() != null ? existing.getTravelFee() : 0);
         existing.setTotalPrice(total);
+
+        // Only trigger inventory deduction if confirming appointment
+        if (oldStatus != Appointment.Status.CONFIRMED && updated.getStatus() == Appointment.Status.CONFIRMED) { 
+            Long serviceId = existing.getService().getServiceId();
+            List<ServiceInventoryUsage> usages = usageRepository.findByService_ServiceId(serviceId);
+
+            boolean hasInsufficientInventory = usages.stream().anyMatch(usage -> {
+                Long itemId = usage.getItem().getItemId();
+                int quantityToDeduct = usage.getQuantityUsed();
+                return inventoryRepository.findById(itemId)
+                    .map(item -> item.getQuantity() < quantityToDeduct)
+                    .orElse(true); // Treat missing item as failure
+            });
+
+            if (hasInsufficientInventory) {
+                return Optional.empty(); // Cancel update due to insufficient inventory
+            }
+
+            // Deduct each item
+            for (ServiceInventoryUsage usage : usages) {
+                Long itemId = usage.getItem().getItemId();
+                int quantityToDeduct = usage.getQuantityUsed();
+
+                inventoryRepository.findById(itemId).ifPresent(item -> {
+                    item.setQuantity(item.getQuantity() - quantityToDeduct);
+                    inventoryRepository.save(item);
+                });
+            }
+        }
 
         Appointment saved = appointmentRepository.save(existing);
         return Optional.of(saved);
