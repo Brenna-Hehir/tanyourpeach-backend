@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.tanyourpeach.backend.model.Appointment;
 import com.tanyourpeach.backend.model.Availability;
+import com.tanyourpeach.backend.model.FinancialLog;
 import com.tanyourpeach.backend.model.Receipt;
 import com.tanyourpeach.backend.model.ServiceInventoryUsage;
 import com.tanyourpeach.backend.model.ServiceInventoryUsageKey;
@@ -17,6 +18,7 @@ import com.tanyourpeach.backend.repository.InventoryRepository;
 import com.tanyourpeach.backend.repository.ReceiptRepository;
 import com.tanyourpeach.backend.repository.ServiceInventoryUsageRepository;
 import com.tanyourpeach.backend.repository.TanServiceRepository;
+import com.tanyourpeach.backend.repository.FinancialLogRepository;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -31,6 +33,9 @@ public class AppointmentService {
 
     @Autowired
     private AvailabilityRepository availabilityRepository;
+
+    @Autowired
+    private FinancialLogRepository financialLogRepository;
 
     @Autowired
     private TanServiceRepository tanServiceRepository;
@@ -137,6 +142,15 @@ public class AppointmentService {
                     inventoryRepository.save(item);
                 });
             }
+
+            // Log revenue
+            FinancialLog log = new FinancialLog();
+            log.setType(FinancialLog.Type.revenue);
+            log.setSource("appointment");
+            log.setReferenceId(existing.getAppointmentId());
+            log.setAmount(BigDecimal.valueOf(existing.getTotalPrice()));
+            log.setDescription("Confirmed appointment for " + existing.getClientName());
+            financialLogRepository.save(log);
         }
 
         // Auto-generate receipt if one doesn't already exist
