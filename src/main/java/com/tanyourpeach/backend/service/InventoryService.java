@@ -47,6 +47,7 @@ public class InventoryService {
             existing.setQuantity(updated.getQuantity());
             existing.setUnitCost(updated.getUnitCost());
             existing.setNotes(updated.getNotes());
+            existing.setLowStockThreshold(updated.getLowStockThreshold());
 
             // Auto-log expense if more stock was added and unit cost is available
             if (updated.getQuantity() > oldQuantity && updated.getUnitCost() != null) {

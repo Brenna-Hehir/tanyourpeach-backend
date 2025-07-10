@@ -30,6 +30,9 @@ public class Inventory {
     @Column(name = "last_updated", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
     private LocalDateTime lastUpdated;
 
+    @Column(name = "low_stock_threshold")
+    private Integer lowStockThreshold;
+
     // Auto-update timestamp
     @PrePersist
     @PreUpdate
@@ -93,5 +96,13 @@ public class Inventory {
 
     public void setLastUpdated(LocalDateTime lastUpdated) {
         this.lastUpdated = lastUpdated;
+    }
+
+    public Integer getLowStockThreshold() {
+        return lowStockThreshold;
+    }
+
+    public void setLowStockThreshold(Integer lowStockThreshold) {
+        this.lowStockThreshold = lowStockThreshold;
     }
 }
