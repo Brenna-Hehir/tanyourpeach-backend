@@ -9,4 +9,7 @@ import com.tanyourpeach.backend.model.Appointment;
 
 public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
         List<Appointment> findByAppointmentDateAfterOrderByAppointmentDateAsc(LocalDateTime date);
+        List<Appointment> findByUser_UserIdOrderByAppointmentDateTimeDesc(Long userId);
+        long countByUserIsNull();       // Guest bookings
+        long countByUserIsNotNull();   // Registered user bookings
 }
