@@ -1,11 +1,16 @@
 package com.tanyourpeach.backend.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
+
 import java.time.LocalDateTime;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -18,19 +23,26 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
+    @Size(max = 100, message = "Name must be under 100 characters")
     private String name;
 
-    @Column(nullable = false, unique = true)
+    @Email(message = "Invalid email format")
+    @NotBlank(message = "Email is required")
+    @Column(unique = true, nullable = false)
     private String email;
 
+    @NotBlank(message = "Password is required")
+    @Column(name = "password_hash")
     private String passwordHash;
 
+    @Column(columnDefinition = "TEXT")
     private String address;
 
     private Boolean isAdmin;
 
     private LocalDateTime createdAt;
 
+    // Default constructor
     @PrePersist
     public void onCreate() {
         createdAt = LocalDateTime.now();
@@ -96,39 +108,51 @@ public class User implements UserDetails {
 
     // UserDetails interface methods
 
+    // This method returns the authorities granted to the user
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         String role = Boolean.TRUE.equals(isAdmin) ? "ROLE_ADMIN" : "ROLE_USER";
         return Collections.singletonList(new SimpleGrantedAuthority(role));
     }
 
+    // This method returns the username used for login
+    // In this case, we use the email as the username
     @Override
     public String getUsername() {
-        return email; // use email as the login username
+        return email;
     }
 
+    // This method returns the password hash stored in the database
     @Override
     public String getPassword() {
         return passwordHash;
     }
 
+    // This method determines if the user's account is expired
+    // Modify if you implement expiration logic
     @Override
     public boolean isAccountNonExpired() {
-        return true; // modify if you implement expiration
+        return true;
     }
 
+    // This method determines if the user's account is locked
+    // Modify if you implement locking logic
     @Override
     public boolean isAccountNonLocked() {
-        return true; // modify if you implement locking
+        return true;
     }
 
+    // This method determines if the user's credentials (password) are expired
+    // Modify if you implement password expiration
     @Override
     public boolean isCredentialsNonExpired() {
-        return true; // modify if you want credentials to expire
+        return true;
     }
 
+    // This method determines if the user is enabled or disabled
+    // Modify for disabled users if needed
     @Override
     public boolean isEnabled() {
-        return true; // modify for disabled users if needed
+        return true;
     }
 }

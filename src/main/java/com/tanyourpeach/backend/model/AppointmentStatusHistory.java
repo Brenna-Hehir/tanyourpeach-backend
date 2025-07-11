@@ -30,6 +30,7 @@ public class AppointmentStatusHistory {
     private LocalDateTime changedAt = LocalDateTime.now();
 
     // Getters and setters
+    
     public Integer getStatusHistoryId() {
         return statusHistoryId;
     }

@@ -13,6 +13,5 @@ public interface InventoryRepository extends JpaRepository<Inventory, Long> {
     @Query("SELECT i FROM Inventory i WHERE i.quantity <= i.lowStockThreshold")
     List<Inventory> findItemsBelowThreshold();
 
-    // findByItemName can help prevent duplicates
-    Inventory findByItemName(String itemName);
+    Inventory findByItemName(String itemName);  // can help prevent duplicates
 }

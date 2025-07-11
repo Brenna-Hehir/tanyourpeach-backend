@@ -27,6 +27,7 @@ public class Receipt {
     @Column(name = "date_issued", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime dateIssued;
 
+    // Default constructor
     @PrePersist
     public void onCreate() {
         dateIssued = LocalDateTime.now();

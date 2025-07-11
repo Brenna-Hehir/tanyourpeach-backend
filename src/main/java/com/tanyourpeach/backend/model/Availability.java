@@ -30,6 +30,7 @@ public class Availability {
 
     private LocalDateTime createdAt;
 
+    // Default constructor
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();

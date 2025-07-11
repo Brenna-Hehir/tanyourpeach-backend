@@ -6,8 +6,6 @@ import com.tanyourpeach.backend.model.Appointment;
 import com.tanyourpeach.backend.model.Inventory;
 import com.tanyourpeach.backend.repository.AppointmentRepository;
 import com.tanyourpeach.backend.repository.InventoryRepository;
-import com.tanyourpeach.backend.repository.UserRepository;
-import com.tanyourpeach.backend.repository.ReceiptRepository;
 import com.tanyourpeach.backend.repository.FinancialLogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,17 +23,12 @@ public class AdminStatsService {
     private AppointmentRepository appointmentRepository;
 
     @Autowired
-    private ReceiptRepository receiptRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
     private InventoryRepository inventoryRepository;
 
     @Autowired
     private FinancialLogRepository financialLogRepository;
 
+    // Retrieves the summary for the admin dashboard
     public AdminDashboardSummary getDashboardSummary() {
         AdminDashboardSummary summary = new AdminDashboardSummary();
 
@@ -51,10 +44,12 @@ public class AdminStatsService {
         return summary;
     }
 
+    // Retrieves the last four months' financial stats
     public List<MonthlyStats> getLastFourMonthsStats() {
         List<MonthlyStats> monthlyStatsList = new ArrayList<>();
         YearMonth currentMonth = YearMonth.now();
 
+        // Loop through the last 4 months
         for (int i = 1; i <= 4; i++) {
             YearMonth month = currentMonth.minusMonths(i);
             String monthStr = String.format("%02d-%d", month.getMonthValue(), month.getYear()); // MM-YYYY
@@ -79,10 +74,12 @@ public class AdminStatsService {
         return monthlyStatsList;
     }
 
+    // Retrieves upcoming appointments
     public List<Appointment> getUpcomingAppointments() {
-        return appointmentRepository.findByAppointmentDateAfterOrderByAppointmentDateAsc(LocalDateTime.now());
+        return appointmentRepository.findByAppointmentDateTimeAfterOrderByAppointmentDateTimeAsc(LocalDateTime.now());
     }
 
+    // Retrieves inventory items that are below the low stock threshold
     public List<Inventory> getLowStockInventory() {
         return inventoryRepository.findItemsBelowThreshold();
     }

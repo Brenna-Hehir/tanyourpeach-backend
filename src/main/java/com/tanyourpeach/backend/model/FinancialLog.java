@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 @Table(name = "financial_log")
 public class FinancialLog {
 
+    // Enum for financial log type
     public enum Type {
         revenue,
         expense

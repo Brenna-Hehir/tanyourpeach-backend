@@ -1,6 +1,11 @@
 package com.tanyourpeach.backend.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Email;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -15,17 +20,22 @@ public class Appointment {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @NotNull(message = "Service must be selected")
     @ManyToOne
     @JoinColumn(name = "service_id", nullable = false)
     private TanService service;
 
+    @NotBlank(message = "Client name is required")
+    @Size(max = 100, message = "Client name must be under 100 characters")
     private String clientName;
 
+    @Email(message = "Invalid email format")
     private String clientEmail;
 
     @Column(columnDefinition = "TEXT")
     private String clientAddress;
 
+    @NotNull(message = "Appointment date is required")
     @Column(name = "appointment_date_time")
     private LocalDateTime appointmentDateTime;
 
@@ -48,6 +58,7 @@ public class Appointment {
     @OneToOne
     private Availability availability;
 
+    // Default constructor
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
@@ -154,6 +165,7 @@ public class Appointment {
         this.notes = notes;
     }
 
+    // Enum for appointment status
     public enum Status {
         PENDING,
         CONFIRMED,

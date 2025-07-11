@@ -8,10 +8,12 @@ import java.util.Objects;
 public class ServiceInventoryUsageKey implements Serializable {
 
     private Long serviceId;
+    
     private Long itemId;
 
     public ServiceInventoryUsageKey() {}
 
+    // Constructor with parameters
     public ServiceInventoryUsageKey(Long serviceId, Long itemId) {
         this.serviceId = serviceId;
         this.itemId = itemId;
@@ -33,6 +35,7 @@ public class ServiceInventoryUsageKey implements Serializable {
         this.itemId = itemId;
     }
 
+    // Override equals and hashCode for proper comparison in collections
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -42,6 +45,7 @@ public class ServiceInventoryUsageKey implements Serializable {
                Objects.equals(itemId, that.itemId);
     }
 
+    // Ensure that the hashCode method is consistent with equals
     @Override
     public int hashCode() {
         return Objects.hash(serviceId, itemId);

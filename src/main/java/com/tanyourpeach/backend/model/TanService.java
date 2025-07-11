@@ -1,6 +1,13 @@
 package com.tanyourpeach.backend.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Size;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -11,26 +18,35 @@ public class TanService {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long serviceId;
 
+    @NotBlank(message = "Service name is required")
+    @Size(max = 100, message = "Service name must be under 100 characters")
     private String name;
 
     @Column(columnDefinition = "TEXT")
     private String description;
 
+    @NotNull(message = "Base price is required")
+    @DecimalMin(value = "0.0", inclusive = false, message = "Base price must be greater than 0")
     private Double basePrice;
 
+    @NotNull(message = "Duration is required")
+    @Min(value = 1, message = "Duration must be at least 1 minute")
     private Integer durationMinutes;
 
     private Boolean isActive;
 
     private LocalDateTime createdAt;
+    
     private LocalDateTime updatedAt;
 
+    // Default constructor
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
         updatedAt = LocalDateTime.now();
     }
 
+    // Automatically update the updatedAt field on every update
     @PreUpdate
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();

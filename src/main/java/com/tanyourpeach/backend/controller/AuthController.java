@@ -16,11 +16,13 @@ public class AuthController {
     @Autowired
     private UserAuthService userAuthService;
 
+    // Endpoint for user registration
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest request) {
         return ResponseEntity.ok(userAuthService.register(request));
     }
 
+    // Endpoint for user login
     @PostMapping("/login")
     public ResponseEntity<AuthenticationResponse> login(@RequestBody AuthenticationRequest request) {
         return ResponseEntity.ok(userAuthService.authenticate(request));

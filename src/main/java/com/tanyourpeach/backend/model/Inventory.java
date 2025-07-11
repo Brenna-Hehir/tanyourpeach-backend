@@ -1,6 +1,10 @@
 package com.tanyourpeach.backend.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.NotBlank;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -13,14 +17,19 @@ public class Inventory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long itemId;
 
+    @NotBlank(message = "Item name is required")
+    @Size(max = 100, message = "Item name must be under 100 characters")
     @Column(nullable = false, length = 100)
     private String itemName;
 
+    @Min(value = 0, message = "Quantity cannot be negative")
     private int quantity = 0;
 
+    @DecimalMin(value = "0.00", inclusive = false, message = "Unit cost must be greater than 0")
     @Column(precision = 6, scale = 2)
     private BigDecimal unitCost;
 
+    @DecimalMin(value = "0.00", message = "Total spent cannot be negative")
     @Column(precision = 10, scale = 2)
     private BigDecimal totalSpent = BigDecimal.ZERO;
 
@@ -30,6 +39,7 @@ public class Inventory {
     @Column(name = "last_updated", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
     private LocalDateTime lastUpdated;
 
+    @Min(value = 0, message = "Low stock threshold cannot be negative")
     @Column(name = "low_stock_threshold")
     private Integer lowStockThreshold;
 

@@ -63,10 +63,10 @@ public class AppointmentService {
     @Autowired
     private UserRepository userRepository;
 
-
     @Enumerated(EnumType.STRING)
     private Status status;
 
+    // Enum for appointment status
     public enum Status {
         PENDING,
         CONFIRMED,
@@ -248,6 +248,7 @@ public class AppointmentService {
         return Optional.of(saved);
     }
 
+    // GET appointment stats
     public Map<String, Long> getGuestVsRegisteredStats() {
         long guestCount = appointmentRepository.countByUserIsNull();
         long registeredCount = appointmentRepository.countByUserIsNotNull();
