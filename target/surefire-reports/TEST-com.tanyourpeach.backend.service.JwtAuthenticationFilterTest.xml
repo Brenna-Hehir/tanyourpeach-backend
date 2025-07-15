@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="com.tanyourpeach.backend.service.ReceiptServiceTest" time="0.285" tests="14" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="com.tanyourpeach.backend.service.JwtAuthenticationFilterTest" time="0.235" tests="6" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="17"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -62,22 +62,10 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="61.0"/>
   </properties>
-  <testcase name="updateReceipt_shouldNotSetNullTotalAmount" classname="com.tanyourpeach.backend.service.ReceiptServiceTest" time="0.037">
-    <system-out><![CDATA[2025-07-15T00:22:58.712-04:00  INFO 24428 --- [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.tanyourpeach.backend.service.ReceiptServiceTest]: ReceiptServiceTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2025-07-15T00:22:58.722-04:00  INFO 24428 --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.tanyourpeach.backend.BackendApplication for test class com.tanyourpeach.backend.service.ReceiptServiceTest
-]]></system-out>
-  </testcase>
-  <testcase name="getReceiptById_shouldReturnReceipt" classname="com.tanyourpeach.backend.service.ReceiptServiceTest" time="0.022"/>
-  <testcase name="createReceipt_shouldUseAppointmentTotal_whenNoAmountGiven" classname="com.tanyourpeach.backend.service.ReceiptServiceTest" time="0.012"/>
-  <testcase name="deleteReceipt_shouldFailWhenMissing" classname="com.tanyourpeach.backend.service.ReceiptServiceTest" time="0.01"/>
-  <testcase name="createReceipt_shouldRejectWhitespacePaymentMethod" classname="com.tanyourpeach.backend.service.ReceiptServiceTest" time="0.011"/>
-  <testcase name="deleteReceipt_shouldDeleteWhenExists" classname="com.tanyourpeach.backend.service.ReceiptServiceTest" time="0.011"/>
-  <testcase name="createReceipt_shouldReturnEmpty_whenAppointmentMissing" classname="com.tanyourpeach.backend.service.ReceiptServiceTest" time="0.011"/>
-  <testcase name="createReceipt_shouldLinkAppointmentProperly" classname="com.tanyourpeach.backend.service.ReceiptServiceTest" time="0.009"/>
-  <testcase name="getAllReceipts_shouldReturnList" classname="com.tanyourpeach.backend.service.ReceiptServiceTest" time="0.005"/>
-  <testcase name="updateReceipt_shouldApplyChanges" classname="com.tanyourpeach.backend.service.ReceiptServiceTest" time="0.007"/>
-  <testcase name="getReceiptByAppointmentId_shouldReturnReceipt" classname="com.tanyourpeach.backend.service.ReceiptServiceTest" time="0.004"/>
-  <testcase name="getReceiptByAppointmentId_shouldReturnEmpty_whenMissing" classname="com.tanyourpeach.backend.service.ReceiptServiceTest" time="0.014"/>
-  <testcase name="updateReceipt_shouldReturnEmpty_whenReceiptMissing" classname="com.tanyourpeach.backend.service.ReceiptServiceTest" time="0.007"/>
-  <testcase name="createReceipt_shouldPreserveProvidedAmount_whenSet" classname="com.tanyourpeach.backend.service.ReceiptServiceTest" time="0.0"/>
+  <testcase name="shouldSetAuthentication_whenValidJwtProvided" classname="com.tanyourpeach.backend.service.JwtAuthenticationFilterTest" time="0.19"/>
+  <testcase name="shouldSkipAuthentication_whenUsernameIsNull" classname="com.tanyourpeach.backend.service.JwtAuthenticationFilterTest" time="0.004"/>
+  <testcase name="shouldSkipAuthentication_whenTokenIsInvalid" classname="com.tanyourpeach.backend.service.JwtAuthenticationFilterTest" time="0.004"/>
+  <testcase name="shouldSkipAuthentication_whenNoAuthorizationHeader" classname="com.tanyourpeach.backend.service.JwtAuthenticationFilterTest" time="0.025"/>
+  <testcase name="shouldSkip_whenAuthenticationAlreadyExists" classname="com.tanyourpeach.backend.service.JwtAuthenticationFilterTest" time="0.003"/>
+  <testcase name="shouldSkipAuthentication_whenAuthorizationHeaderIsMalformed" classname="com.tanyourpeach.backend.service.JwtAuthenticationFilterTest" time="0.003"/>
 </testsuite>

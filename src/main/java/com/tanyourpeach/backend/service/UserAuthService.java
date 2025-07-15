@@ -28,6 +28,22 @@ public class UserAuthService {
 
     // REGISTER
     public AuthenticationResponse register(RegisterRequest request) {
+        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
+            throw new RuntimeException("Email already in use");
+        }
+        if (request.getName() == null || request.getName().trim().isEmpty()) {
+            throw new RuntimeException("Name is required");
+        }
+        if (request.getEmail() == null || request.getEmail().trim().isEmpty()) {
+            throw new RuntimeException("Email is required");
+        }
+        if (request.getPassword() == null || request.getPassword().trim().isEmpty()) {
+            throw new RuntimeException("Password is required");
+        }
+        if (request.getAddress() == null || request.getAddress().trim().isEmpty()) {
+            throw new RuntimeException("Address is required");
+        }
+
         User user = new User();
         user.setName(request.getName());
         user.setEmail(request.getEmail());

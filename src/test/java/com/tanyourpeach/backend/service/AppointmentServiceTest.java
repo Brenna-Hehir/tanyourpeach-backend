@@ -2,6 +2,7 @@ package com.tanyourpeach.backend.service;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.*;
 
 import java.math.BigDecimal;
@@ -74,6 +75,30 @@ class AppointmentServiceTest {
     }
 
     @Test
+    void getAppointmentById_shouldReturnAppointmentIfExists() {
+        Appointment mockAppointment = new Appointment();
+        mockAppointment.setAppointmentId(1L);
+
+        when(appointmentRepository.findById(1L)).thenReturn(Optional.of(mockAppointment));
+
+        Optional<Appointment> result = appointmentService.getAppointmentById(1L);
+
+        assertTrue(result.isPresent());
+        assertEquals(1L, result.get().getAppointmentId());
+    }
+
+    @Test
+    void getAllAppointments_shouldReturnAllAppointments() {
+        List<Appointment> mockList = List.of(new Appointment(), new Appointment());
+
+        when(appointmentRepository.findAll()).thenReturn(mockList);
+
+        List<Appointment> result = appointmentService.getAllAppointments();
+
+        assertEquals(2, result.size());
+    }
+
+    @Test
     void createAppointment_shouldSucceed_whenSlotAvailable() {
         when(availabilityRepository.findById(1L)).thenReturn(Optional.of(testSlot));
         when(tanServiceRepository.findById(1L)).thenReturn(Optional.of(testService));
@@ -102,6 +127,100 @@ class AppointmentServiceTest {
     }
 
     @Test
+    void createAppointment_shouldFail_whenSlotMissing() {
+        testAppointment.setAvailability(null); // no slot
+        Optional<Appointment> result = appointmentService.createAppointment(testAppointment, request);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void createAppointment_shouldFail_whenSlotNotFound() {
+        when(availabilityRepository.findById(1L)).thenReturn(Optional.empty());
+        Optional<Appointment> result = appointmentService.createAppointment(testAppointment, request);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void createAppointment_shouldHandleMissingServiceGracefully() {
+        testAppointment.setService(null); // simulate missing service
+        testAppointment.setAvailability(testSlot); // ensure slot is present
+        when(availabilityRepository.findById(1L)).thenReturn(Optional.of(testSlot));
+        when(appointmentRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+        when(availabilityRepository.save(any())).thenReturn(testSlot);
+
+        Optional<Appointment> result = appointmentService.createAppointment(testAppointment, request);
+
+        assertTrue(result.isPresent());
+        assertEquals(Appointment.Status.PENDING, result.get().getStatus());
+    }
+
+    @Test
+    void createAppointment_shouldLinkSlotToAppointment() {
+        when(availabilityRepository.findById(1L)).thenReturn(Optional.of(testSlot));
+        when(tanServiceRepository.findById(1L)).thenReturn(Optional.of(testService));
+        when(appointmentRepository.save(any())).thenAnswer(i -> {
+            Appointment a = i.getArgument(0);
+            a.setAppointmentId(123L);
+            return a;
+        });
+
+        when(availabilityRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+
+        Optional<Appointment> result = appointmentService.createAppointment(testAppointment, request);
+
+        assertTrue(result.isPresent());
+        verify(availabilityRepository).save(argThat(slot ->
+            slot.getIsBooked() &&
+            slot.getAppointment() != null &&
+            slot.getAppointment().getAppointmentId().equals(123L)
+        ));
+    }
+
+    @Test
+    void createAppointment_shouldLinkUserIfTokenPresent() {
+        String token = "fake-jwt-token";
+        String email = "testuser@example.com";
+
+        User mockUser = new User();
+        mockUser.setUserId(42L);
+        mockUser.setEmail(email);
+
+        when(request.getHeader("Authorization")).thenReturn("Bearer " + token);
+        when(jwtService.extractUsername(token)).thenReturn(email);
+        when(userRepository.findByEmail(email)).thenReturn(Optional.of(mockUser));
+
+        when(availabilityRepository.findById(1L)).thenReturn(Optional.of(testSlot));
+        when(tanServiceRepository.findById(1L)).thenReturn(Optional.of(testService));
+        when(appointmentRepository.save(any())).thenAnswer(i -> {
+            Appointment a = i.getArgument(0);
+            a.setAppointmentId(555L);
+            return a;
+        });
+
+        Optional<Appointment> result = appointmentService.createAppointment(testAppointment, request);
+
+        assertTrue(result.isPresent());
+        assertEquals(mockUser, result.get().getUser());
+    }
+
+    @Test
+    void createAppointment_shouldFail_whenClientFieldsInvalid() {
+        testAppointment.setClientName("  "); // blank
+        testAppointment.setClientEmail(null); // null
+
+        Optional<Appointment> result = appointmentService.createAppointment(testAppointment, request);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void createAppointment_shouldFail_whenTravelFeeNegative() {
+        testAppointment.setTravelFee(-5.0);
+
+        Optional<Appointment> result = appointmentService.createAppointment(testAppointment, request);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
     void updateAppointment_shouldUpdateFields_andConfirmStatus() {
         testAppointment.setAppointmentId(1L);
         testAppointment.setStatus(Appointment.Status.PENDING);
@@ -123,6 +242,85 @@ class AppointmentServiceTest {
 
         assertTrue(result.isPresent());
         assertEquals(Appointment.Status.CONFIRMED, result.get().getStatus());
+    }
+
+    @Test
+    void updateAppointment_shouldConfirmWithInventoryAndGenerateLogAndReceipt() {
+        Appointment existing = new Appointment();
+        existing.setAppointmentId(1L);
+        existing.setStatus(Appointment.Status.PENDING);
+        existing.setClientName("Peachy");
+        existing.setBasePrice(80.0);
+        existing.setTravelFee(10.0);
+
+        TanService service = new TanService();
+        service.setServiceId(20L);
+        existing.setService(service);
+
+        Appointment updated = new Appointment();
+        updated.setStatus(Appointment.Status.CONFIRMED);
+        updated.setService(service);
+        updated.setClientEmail("client@example.com");
+        updated.setClientName("Peachy");
+        updated.setTravelFee(10.0);
+
+        Inventory item = new Inventory();
+        item.setItemId(200L);
+        item.setQuantity(10); // enough inventory
+
+        ServiceInventoryUsage usage = new ServiceInventoryUsage();
+        usage.setItem(item);
+        usage.setQuantityUsed(5);
+
+        when(appointmentRepository.findById(1L)).thenReturn(Optional.of(existing));
+        when(tanServiceRepository.findById(20L)).thenReturn(Optional.of(service));
+        when(usageRepository.findByService_ServiceId(20L)).thenReturn(List.of(usage));
+        when(inventoryRepository.findById(200L)).thenReturn(Optional.of(item));
+        when(appointmentRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+        when(receiptRepository.findByAppointment_AppointmentId(1L)).thenReturn(null);
+
+        Optional<Appointment> result = appointmentService.updateAppointment(1L, updated, request);
+
+        assertTrue(result.isPresent());
+        verify(inventoryRepository).save(any()); // inventory deducted
+        verify(financialLogRepository).save(any()); // log generated
+        verify(receiptRepository).save(any()); // receipt generated
+
+        verify(receiptRepository).save(argThat(receipt ->
+            receipt.getPaymentMethod().equals("Unpaid") &&
+            receipt.getTotalAmount().equals(BigDecimal.valueOf(90.0)) // 80 base + 10 travel
+        ));
+    }
+
+    @Test
+    void updateAppointment_shouldNotCreateReceipt_ifAlreadyExists() {
+        Appointment existing = new Appointment();
+        existing.setAppointmentId(1L);
+        existing.setStatus(Appointment.Status.PENDING);
+        existing.setBasePrice(100.0);
+        existing.setTravelFee(20.0);
+
+        TanService service = new TanService();
+        service.setServiceId(42L);
+        existing.setService(service);
+
+        Appointment updated = new Appointment();
+        updated.setStatus(Appointment.Status.CONFIRMED);
+        updated.setService(service);
+        updated.setClientEmail("client@example.com");
+        updated.setClientName("Existing Client");
+        updated.setTravelFee(20.0);
+
+        when(appointmentRepository.findById(1L)).thenReturn(Optional.of(existing));
+        when(tanServiceRepository.findById(42L)).thenReturn(Optional.of(service));
+        when(usageRepository.findByService_ServiceId(42L)).thenReturn(List.of());
+        when(receiptRepository.findByAppointment_AppointmentId(1L)).thenReturn(new Receipt()); // already exists
+        when(appointmentRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+
+        Optional<Appointment> result = appointmentService.updateAppointment(1L, updated, request);
+
+        assertTrue(result.isPresent());
+        verify(receiptRepository, never()).save(any());
     }
 
     @Test
@@ -165,6 +363,71 @@ class AppointmentServiceTest {
     }
 
     @Test
+    void updateAppointment_shouldFail_whenClientFieldsInvalid() {
+        testAppointment.setAppointmentId(1L);
+        testAppointment.setStatus(Appointment.Status.PENDING);
+
+        Appointment updated = new Appointment();
+        updated.setClientName(" ");
+        updated.setClientEmail("");
+        updated.setStatus(Appointment.Status.CONFIRMED);
+
+        when(appointmentRepository.findById(1L)).thenReturn(Optional.of(testAppointment));
+
+        Optional<Appointment> result = appointmentService.updateAppointment(1L, updated, request);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void updateAppointment_shouldFail_whenTravelFeeNegative() {
+        testAppointment.setAppointmentId(1L);
+        testAppointment.setStatus(Appointment.Status.PENDING);
+
+        Appointment updated = new Appointment();
+        updated.setClientName("Client");
+        updated.setClientEmail("client@example.com");
+        updated.setStatus(Appointment.Status.CONFIRMED);
+        updated.setTravelFee(-2.0);
+
+        when(appointmentRepository.findById(1L)).thenReturn(Optional.of(testAppointment));
+
+        Optional<Appointment> result = appointmentService.updateAppointment(1L, updated, request);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void updateAppointment_shouldSkipStatusLogic_whenStatusUnchanged() {
+        testAppointment.setAppointmentId(1L);
+        testAppointment.setStatus(Appointment.Status.PENDING);
+
+        Appointment updated = new Appointment();
+        updated.setStatus(Appointment.Status.PENDING); // no change
+        updated.setService(testService);
+        updated.setClientEmail("client@example.com");
+        updated.setClientName("Test Client");
+        updated.setTravelFee(0.0);
+
+        when(appointmentRepository.findById(1L)).thenReturn(Optional.of(testAppointment));
+        when(tanServiceRepository.findById(1L)).thenReturn(Optional.of(testService));
+        when(appointmentRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+
+        Optional<Appointment> result = appointmentService.updateAppointment(1L, updated, request);
+
+        assertTrue(result.isPresent());
+        verify(statusHistoryRepository, never()).save(any());
+        verify(financialLogRepository, never()).save(any());
+        verify(receiptRepository, never()).save(any());
+    }
+
+    @Test
+    void updateAppointment_shouldFail_whenAppointmentNotFound() {
+        when(appointmentRepository.findById(1L)).thenReturn(Optional.empty());
+        Appointment updated = new Appointment();
+        Optional<Appointment> result = appointmentService.updateAppointment(1L, updated, request);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
     void deleteAppointment_shouldSucceed() {
         when(appointmentRepository.existsById(1L)).thenReturn(true);
 
@@ -172,6 +435,12 @@ class AppointmentServiceTest {
 
         assertTrue(result);
         verify(appointmentRepository).deleteById(1L);
+    }
+
+    @Test
+    void deleteAppointment_shouldReturnFalse_whenAppointmentNotFound() {
+        when(appointmentRepository.existsById(1L)).thenReturn(false);
+        assertFalse(appointmentService.deleteAppointment(1L));
     }
 
     @Test

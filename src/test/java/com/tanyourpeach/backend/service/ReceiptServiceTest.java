@@ -80,8 +80,17 @@ class ReceiptServiceTest {
     }
 
     @Test
+    void getReceiptByAppointmentId_shouldReturnEmpty_whenMissing() {
+        when(receiptRepository.findByAppointment_AppointmentId(777L)).thenReturn(null);
+
+        Optional<Receipt> result = receiptService.getReceiptByAppointmentId(777L);
+
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
     void createReceipt_shouldUseAppointmentTotal_whenNoAmountGiven() {
-        Receipt newReceipt = new Receipt(); // missing totalAmount
+        Receipt newReceipt = new Receipt();
         newReceipt.setPaymentMethod("Venmo");
 
         when(appointmentRepository.findById(1L)).thenReturn(Optional.of(appointment));
@@ -92,6 +101,59 @@ class ReceiptServiceTest {
         assertTrue(result.isPresent());
         assertEquals(BigDecimal.valueOf(120.0), result.get().getTotalAmount());
         assertEquals("Venmo", result.get().getPaymentMethod());
+    }
+
+    @Test
+    void createReceipt_shouldPreserveProvidedAmount_whenSet() {
+        Receipt newReceipt = new Receipt();
+        newReceipt.setTotalAmount(BigDecimal.valueOf(88.00));
+        newReceipt.setPaymentMethod("Card");
+
+        when(appointmentRepository.findById(1L)).thenReturn(Optional.of(appointment));
+        when(receiptRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+
+        Optional<Receipt> result = receiptService.createReceipt(1L, newReceipt);
+
+        assertTrue(result.isPresent());
+        assertEquals(BigDecimal.valueOf(88.00), result.get().getTotalAmount());
+    }
+
+    @Test
+    void createReceipt_shouldReturnEmpty_whenAppointmentMissing() {
+        Receipt newReceipt = new Receipt();
+        when(appointmentRepository.findById(99L)).thenReturn(Optional.empty());
+
+        Optional<Receipt> result = receiptService.createReceipt(99L, newReceipt);
+
+        assertTrue(result.isEmpty());
+        verify(receiptRepository, never()).save(any());
+    }
+
+    @Test
+    void createReceipt_shouldLinkAppointmentProperly() {
+        Receipt newReceipt = new Receipt();
+        newReceipt.setPaymentMethod("Cash");
+
+        when(appointmentRepository.findById(1L)).thenReturn(Optional.of(appointment));
+        when(receiptRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+
+        Optional<Receipt> result = receiptService.createReceipt(1L, newReceipt);
+
+        assertTrue(result.isPresent());
+        assertEquals(1L, result.get().getAppointment().getAppointmentId());
+    }
+
+    @Test
+    void createReceipt_shouldRejectWhitespacePaymentMethod() {
+        Receipt newReceipt = new Receipt();
+        newReceipt.setPaymentMethod("   "); // whitespace only
+
+        when(appointmentRepository.findById(1L)).thenReturn(Optional.of(appointment));
+
+        Optional<Receipt> result = receiptService.createReceipt(1L, newReceipt);
+
+        assertTrue(result.isEmpty());
+        verify(receiptRepository, never()).save(any());
     }
 
     @Test
@@ -113,6 +175,37 @@ class ReceiptServiceTest {
     }
 
     @Test
+    void updateReceipt_shouldReturnEmpty_whenReceiptMissing() {
+        Receipt updated = new Receipt();
+        updated.setPaymentMethod("CashApp");
+        updated.setTotalAmount(BigDecimal.valueOf(50));
+
+        when(receiptRepository.findById(999L)).thenReturn(Optional.empty());
+
+        Optional<Receipt> result = receiptService.updateReceipt(999L, updated);
+
+        assertTrue(result.isEmpty());
+        verify(receiptRepository, never()).save(any());
+    }
+
+    @Test
+    void updateReceipt_shouldNotSetNullTotalAmount() {
+        receipt.setTotalAmount(BigDecimal.valueOf(120.0));
+
+        Receipt updated = new Receipt();
+        updated.setPaymentMethod("Zelle");
+        updated.setTotalAmount(null); // simulate null update
+
+        when(receiptRepository.findById(10L)).thenReturn(Optional.of(receipt));
+        when(receiptRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+
+        Optional<Receipt> result = receiptService.updateReceipt(10L, updated);
+
+        assertTrue(result.isPresent());
+        assertEquals(BigDecimal.valueOf(120.0), result.get().getTotalAmount()); // unchanged
+    }
+
+    @Test
     void deleteReceipt_shouldDeleteWhenExists() {
         when(receiptRepository.existsById(10L)).thenReturn(true);
 
@@ -130,54 +223,5 @@ class ReceiptServiceTest {
 
         assertFalse(result);
         verify(receiptRepository, never()).deleteById(any());
-    }
-
-    @Test
-    void createReceipt_shouldReturnEmpty_whenAppointmentMissing() {
-        Receipt newReceipt = new Receipt();
-        when(appointmentRepository.findById(99L)).thenReturn(Optional.empty());
-
-        Optional<Receipt> result = receiptService.createReceipt(99L, newReceipt);
-
-        assertTrue(result.isEmpty());
-        verify(receiptRepository, never()).save(any());
-    }
-
-    @Test
-    void createReceipt_shouldPreserveProvidedAmount_whenSet() {
-        Receipt newReceipt = new Receipt();
-        newReceipt.setTotalAmount(BigDecimal.valueOf(88.00));
-        newReceipt.setPaymentMethod("Card");
-
-        when(appointmentRepository.findById(1L)).thenReturn(Optional.of(appointment));
-        when(receiptRepository.save(any())).thenAnswer(i -> i.getArgument(0));
-
-        Optional<Receipt> result = receiptService.createReceipt(1L, newReceipt);
-
-        assertTrue(result.isPresent());
-        assertEquals(BigDecimal.valueOf(88.00), result.get().getTotalAmount());
-    }
-
-    @Test
-    void updateReceipt_shouldReturnEmpty_whenReceiptMissing() {
-        Receipt updated = new Receipt();
-        updated.setPaymentMethod("CashApp");
-        updated.setTotalAmount(BigDecimal.valueOf(50));
-
-        when(receiptRepository.findById(999L)).thenReturn(Optional.empty());
-
-        Optional<Receipt> result = receiptService.updateReceipt(999L, updated);
-
-        assertTrue(result.isEmpty());
-        verify(receiptRepository, never()).save(any());
-    }
-
-    @Test
-    void getReceiptByAppointmentId_shouldReturnEmpty_whenMissing() {
-        when(receiptRepository.findByAppointment_AppointmentId(777L)).thenReturn(null);
-
-        Optional<Receipt> result = receiptService.getReceiptByAppointmentId(777L);
-
-        assertTrue(result.isEmpty());
     }
 }

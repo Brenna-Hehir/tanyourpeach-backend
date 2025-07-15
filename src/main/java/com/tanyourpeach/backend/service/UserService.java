@@ -27,11 +27,15 @@ public class UserService {
 
     // POST create new user
     public User createUser(User user) {
+        validateUserFields(user);
         return userRepository.save(user);
     }
 
     // PUT update user
     public Optional<User> updateUser(Long id, User updatedUser) {
+        if (!userRepository.existsById(id)) return Optional.empty();
+        validateUserFields(updatedUser);
+
         return userRepository.findById(id).map(user -> {
             user.setName(updatedUser.getName());
             user.setEmail(updatedUser.getEmail());
@@ -47,5 +51,20 @@ public class UserService {
         if (!userRepository.existsById(id)) return false;
         userRepository.deleteById(id);
         return true;
+    }
+
+    private void validateUserFields(User user) {
+        if (user.getName() == null || user.getName().trim().isEmpty()) {
+            throw new RuntimeException("Name is required");
+        }
+        if (user.getEmail() == null || user.getEmail().trim().isEmpty()) {
+            throw new RuntimeException("Email is required");
+        }
+        if (user.getPasswordHash() == null || user.getPasswordHash().trim().isEmpty()) {
+            throw new RuntimeException("Password is required");
+        }
+        if (user.getAddress() == null || user.getAddress().trim().isEmpty()) {
+            throw new RuntimeException("Address is required");
+        }
     }
 }

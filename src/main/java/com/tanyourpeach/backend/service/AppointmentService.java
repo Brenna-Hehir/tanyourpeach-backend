@@ -93,6 +93,11 @@ public class AppointmentService {
             userRepository.findByEmail(email).ifPresent(appointment::setUser);
         }
 
+        // Validate client info
+        if (appointment.getClientName() == null || appointment.getClientName().trim().isEmpty()) return Optional.empty();
+        if (appointment.getClientEmail() == null || appointment.getClientEmail().trim().isEmpty()) return Optional.empty();
+        if (appointment.getTravelFee() != null && appointment.getTravelFee() < 0) return Optional.empty();
+
         // Validate availability slot
         Long slotId = appointment.getAvailability() != null ? appointment.getAvailability().getSlotId() : null;
         if (slotId == null) return Optional.empty();
@@ -113,6 +118,8 @@ public class AppointmentService {
                 appointment.setService(service);
                 appointment.setBasePrice(service.getBasePrice());
             });
+        } else {
+            appointment.setBasePrice(0.0);
         }
 
         // Calculate total price
@@ -153,6 +160,11 @@ public class AppointmentService {
 
         Appointment.Status oldStatus = existing.getStatus();
 
+        // Validate fields before applying update
+        if (updated.getClientName() == null || updated.getClientName().trim().isEmpty()) return Optional.empty();
+        if (updated.getClientEmail() == null || updated.getClientEmail().trim().isEmpty()) return Optional.empty();
+        if (updated.getTravelFee() != null && updated.getTravelFee() < 0) return Optional.empty();
+
         // Basic field updates
         existing.setClientName(updated.getClientName());
         existing.setClientEmail(updated.getClientEmail());
@@ -172,7 +184,9 @@ public class AppointmentService {
         }
 
         // Recalculate total price
-        double total = existing.getBasePrice() + (existing.getTravelFee() != null ? existing.getTravelFee() : 0);
+        double base = existing.getBasePrice() != null ? existing.getBasePrice() : 0.0;
+        double travel = existing.getTravelFee() != null ? existing.getTravelFee() : 0.0;
+        double total = base + travel;
         existing.setTotalPrice(total);
 
         // Update availability slot if provided

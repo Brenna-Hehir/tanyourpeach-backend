@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 class ServiceInventoryUsageServiceTest {
@@ -93,6 +94,29 @@ class ServiceInventoryUsageServiceTest {
     }
 
     @Test
+    void createUsage_shouldFail_whenQuantityUsedIsZeroOrNegative() {
+        usage.setQuantityUsed(0);
+        when(tanServiceRepository.findById(1L)).thenReturn(Optional.of(tanService));
+        when(inventoryRepository.findById(100L)).thenReturn(Optional.of(item));
+
+        Optional<ServiceInventoryUsage> result = service.createUsage(usage);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void createUsage_shouldSetCompositeKeyCorrectly() {
+        when(tanServiceRepository.findById(1L)).thenReturn(Optional.of(tanService));
+        when(inventoryRepository.findById(100L)).thenReturn(Optional.of(item));
+        when(usageRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+
+        Optional<ServiceInventoryUsage> result = service.createUsage(usage);
+
+        assertTrue(result.isPresent());
+        assertEquals(1L, result.get().getId().getServiceId());
+        assertEquals(100L, result.get().getId().getItemId());
+    }
+
+    @Test
     void updateQuantity_shouldSucceed_whenUsageExists() {
         ServiceInventoryUsageKey key = new ServiceInventoryUsageKey(1L, 100L);
         when(usageRepository.findById(key)).thenReturn(Optional.of(usage));
@@ -110,6 +134,19 @@ class ServiceInventoryUsageServiceTest {
 
         Optional<ServiceInventoryUsage> result = service.updateQuantity(1L, 100L, 5);
         assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void updateQuantity_shouldFail_whenQuantityIsZeroOrNegative() {
+        ServiceInventoryUsageKey key = new ServiceInventoryUsageKey(1L, 100L);
+        when(usageRepository.findById(key)).thenReturn(Optional.of(usage));
+
+        Optional<ServiceInventoryUsage> resultZero = service.updateQuantity(1L, 100L, 0);
+        Optional<ServiceInventoryUsage> resultNegative = service.updateQuantity(1L, 100L, -3);
+
+        assertTrue(resultZero.isEmpty());
+        assertTrue(resultNegative.isEmpty());
+        verify(usageRepository, never()).save(any());
     }
 
     @Test

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="com.tanyourpeach.backend.service.ReceiptServiceTest" time="0.285" tests="14" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="com.tanyourpeach.backend.service.AdminStatsServiceTest" time="2.625" tests="8" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="17"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -10,7 +10,6 @@
     <property name="user.variant" value=""/>
     <property name="java.vendor.url" value="https://java.oracle.com/"/>
     <property name="user.timezone" value="America/New_York"/>
-    <property name="org.jboss.logging.provider" value="slf4j"/>
     <property name="os.name" value="Windows 11"/>
     <property name="java.vm.specification.version" value="17"/>
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
@@ -31,8 +30,6 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
-    <property name="FILE_LOG_CHARSET" value="windows-1252"/>
-    <property name="java.awt.headless" value="true"/>
     <property name="surefire.real.class.path" value="C:\Users\Koolb\AppData\Local\Temp\surefire6640126949649196078\surefirebooter-20250715002240935_3.jar"/>
     <property name="user.script" value=""/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
@@ -46,14 +43,11 @@
     <property name="localRepository" value="C:\Users\Koolb\.m2\repository"/>
     <property name="java.vendor.url.bug" value="https://bugreport.java.com/bugreport/"/>
     <property name="java.io.tmpdir" value="C:\Users\Koolb\AppData\Local\Temp\"/>
-    <property name="com.zaxxer.hikari.pool_number" value="1"/>
     <property name="java.version" value="17.0.12"/>
     <property name="user.dir" value="C:\Users\Koolb\OneDrive\Documents\Database Management\tanUrPeach_backend\backend"/>
     <property name="os.arch" value="amd64"/>
     <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
-    <property name="PID" value="24428"/>
     <property name="sun.os.patch.level" value=""/>
-    <property name="CONSOLE_LOG_CHARSET" value="windows-1252"/>
     <property name="native.encoding" value="Cp1252"/>
     <property name="java.library.path" value="C:\Program Files\Java\jdk-17\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\Python311\Scripts\;C:\Python311\;C:\Program Files\Common Files\Oracle\Java\javapath;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\110\Tools\Binn\;C:\Program Files (x86)\Microsoft SQL Server\120\Tools\Binn\;C:\Program Files\Microsoft SQL Server\120\Tools\Binn\;C:\Program Files\Microsoft SQL Server\120\DTS\Binn\;C:\Program Files (x86)\Windows Kits\8.1\Windows Performance Toolkit\;C:\ProgramData\chocolatey\bin;C:\Program Files\HP\HP One Agent;C:\Program Files\Wireshark;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Docker\Docker\resources\bin;C:\Program Files\Apache\Maven\apache-maven-3.9.9\bin;C:\Program Files\Java\jdk-17\bin;C:\Program Files\Git\cmd;C:\Program Files\nodejs\;C:\Program Files\MySQL\MySQL Shell 8.0\bin\;C:\texlive\2022\bin\win32;C:\Users\Koolb\AppData\Local\Microsoft\WindowsApps;C:\Users\Koolb\AppData\Local\Programs\MiKTeX\miktex\bin\x64\;C:\Users\Koolb\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\Koolb\AppData\Local\GitHubDesktop\bin;C:\Users\Koolb\AppData\Roaming\npm;c:\Users\Koolb\AppData\Roaming\Code\User\globalStorage\github.copilot-chat\debugCommand;."/>
     <property name="java.vm.info" value="mixed mode, sharing"/>
@@ -62,22 +56,12 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="61.0"/>
   </properties>
-  <testcase name="updateReceipt_shouldNotSetNullTotalAmount" classname="com.tanyourpeach.backend.service.ReceiptServiceTest" time="0.037">
-    <system-out><![CDATA[2025-07-15T00:22:58.712-04:00  INFO 24428 --- [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.tanyourpeach.backend.service.ReceiptServiceTest]: ReceiptServiceTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2025-07-15T00:22:58.722-04:00  INFO 24428 --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.tanyourpeach.backend.BackendApplication for test class com.tanyourpeach.backend.service.ReceiptServiceTest
-]]></system-out>
-  </testcase>
-  <testcase name="getReceiptById_shouldReturnReceipt" classname="com.tanyourpeach.backend.service.ReceiptServiceTest" time="0.022"/>
-  <testcase name="createReceipt_shouldUseAppointmentTotal_whenNoAmountGiven" classname="com.tanyourpeach.backend.service.ReceiptServiceTest" time="0.012"/>
-  <testcase name="deleteReceipt_shouldFailWhenMissing" classname="com.tanyourpeach.backend.service.ReceiptServiceTest" time="0.01"/>
-  <testcase name="createReceipt_shouldRejectWhitespacePaymentMethod" classname="com.tanyourpeach.backend.service.ReceiptServiceTest" time="0.011"/>
-  <testcase name="deleteReceipt_shouldDeleteWhenExists" classname="com.tanyourpeach.backend.service.ReceiptServiceTest" time="0.011"/>
-  <testcase name="createReceipt_shouldReturnEmpty_whenAppointmentMissing" classname="com.tanyourpeach.backend.service.ReceiptServiceTest" time="0.011"/>
-  <testcase name="createReceipt_shouldLinkAppointmentProperly" classname="com.tanyourpeach.backend.service.ReceiptServiceTest" time="0.009"/>
-  <testcase name="getAllReceipts_shouldReturnList" classname="com.tanyourpeach.backend.service.ReceiptServiceTest" time="0.005"/>
-  <testcase name="updateReceipt_shouldApplyChanges" classname="com.tanyourpeach.backend.service.ReceiptServiceTest" time="0.007"/>
-  <testcase name="getReceiptByAppointmentId_shouldReturnReceipt" classname="com.tanyourpeach.backend.service.ReceiptServiceTest" time="0.004"/>
-  <testcase name="getReceiptByAppointmentId_shouldReturnEmpty_whenMissing" classname="com.tanyourpeach.backend.service.ReceiptServiceTest" time="0.014"/>
-  <testcase name="updateReceipt_shouldReturnEmpty_whenReceiptMissing" classname="com.tanyourpeach.backend.service.ReceiptServiceTest" time="0.007"/>
-  <testcase name="createReceipt_shouldPreserveProvidedAmount_whenSet" classname="com.tanyourpeach.backend.service.ReceiptServiceTest" time="0.0"/>
+  <testcase name="getLowStockInventory_shouldReturnEmptyList_whenNoLowStockItemsExist" classname="com.tanyourpeach.backend.service.AdminStatsServiceTest" time="2.451"/>
+  <testcase name="getLastFourMonthsStats_shouldReturnValidStatsList" classname="com.tanyourpeach.backend.service.AdminStatsServiceTest" time="0.047"/>
+  <testcase name="getUpcomingAppointments_shouldReturnEmptyList_whenNoAppointmentsExist" classname="com.tanyourpeach.backend.service.AdminStatsServiceTest" time="0.015"/>
+  <testcase name="getUpcomingAppointments_shouldReturnList" classname="com.tanyourpeach.backend.service.AdminStatsServiceTest" time="0.014"/>
+  <testcase name="getDashboardSummary_shouldReturnCorrectProfit" classname="com.tanyourpeach.backend.service.AdminStatsServiceTest" time="0.01"/>
+  <testcase name="getLastFourMonthsStats_shouldHandleMixedAndNullValues" classname="com.tanyourpeach.backend.service.AdminStatsServiceTest" time="0.012"/>
+  <testcase name="getLowStockInventory_shouldReturnLowStockItems" classname="com.tanyourpeach.backend.service.AdminStatsServiceTest" time="0.009"/>
+  <testcase name="getDashboardSummary_shouldHandleNullValuesSafely" classname="com.tanyourpeach.backend.service.AdminStatsServiceTest" time="0.008"/>
 </testsuite>

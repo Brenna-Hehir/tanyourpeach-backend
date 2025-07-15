@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
@@ -105,5 +106,59 @@ class FinancialLogServiceTest {
         when(financialLogRepository.existsById(99L)).thenReturn(false);
         boolean deleted = financialLogService.deleteLog(99L);
         assertFalse(deleted);
+    }
+
+    @Test
+    void getAllLogs_shouldReturnEmptyList_whenNoLogsExist() {
+        when(financialLogRepository.findAll()).thenReturn(List.of());
+
+        List<FinancialLog> logs = financialLogService.getAllLogs();
+
+        assertNotNull(logs);
+        assertTrue(logs.isEmpty());
+    }
+
+    @Test
+    void updateLog_shouldPreserveLogId_whenUpdating() {
+        FinancialLog updated = new FinancialLog();
+        updated.setType(FinancialLog.Type.expense);
+        updated.setSource("inventory");
+        updated.setReferenceId(200L);
+        updated.setDescription("Updated log");
+        updated.setAmount(BigDecimal.valueOf(80.0));
+
+        when(financialLogRepository.findById(1L)).thenReturn(Optional.of(log));
+        when(financialLogRepository.save(any())).thenAnswer(i -> i.getArgument(0)); // simulate in-place update
+
+        Optional<FinancialLog> result = financialLogService.updateLog(1L, updated);
+
+        assertTrue(result.isPresent());
+        assertEquals(1L, result.get().getLogId()); // original ID
+        assertEquals("inventory", result.get().getSource());
+    }
+
+    @Test
+    void createLog_shouldHandleLogWithoutId() {
+        FinancialLog newLog = new FinancialLog();
+        newLog.setType(FinancialLog.Type.expense);
+        newLog.setSource("manual");
+        newLog.setReferenceId(300L);
+        newLog.setDescription("No ID yet");
+        newLog.setAmount(BigDecimal.valueOf(25.0));
+
+        FinancialLog saved = new FinancialLog();
+        saved.setLogId(10L);
+        saved.setType(newLog.getType());
+        saved.setSource(newLog.getSource());
+        saved.setReferenceId(newLog.getReferenceId());
+        saved.setDescription(newLog.getDescription());
+        saved.setAmount(newLog.getAmount());
+
+        when(financialLogRepository.save(newLog)).thenReturn(saved);
+
+        FinancialLog result = financialLogService.createLog(newLog);
+
+        assertNotNull(result);
+        assertEquals(10L, result.getLogId());
     }
 }

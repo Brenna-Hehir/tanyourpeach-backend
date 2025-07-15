@@ -41,11 +41,14 @@ public class ReceiptService {
         Optional<Appointment> appointmentOpt = appointmentRepository.findById(appointmentId);
         if (appointmentOpt.isEmpty()) return Optional.empty();
 
+        if (receiptData.getPaymentMethod() == null || receiptData.getPaymentMethod().trim().isEmpty()) {
+            return Optional.empty();
+        }
+
         receiptData.setAppointment(appointmentOpt.get());
 
-        // If no totalAmount was provided, use total from appointment
         if (receiptData.getTotalAmount() == null) {
-        Double total = appointmentOpt.get().getTotalPrice();
+            Double total = appointmentOpt.get().getTotalPrice();
             if (total != null) {
                 receiptData.setTotalAmount(BigDecimal.valueOf(total));
             }
@@ -57,9 +60,14 @@ public class ReceiptService {
     // Update an existing receipt
     public Optional<Receipt> updateReceipt(Long id, Receipt updated) {
         return receiptRepository.findById(id).map(existing -> {
+            if (updated.getPaymentMethod() == null || updated.getPaymentMethod().trim().isEmpty()) {
+                return existing; // don't update with invalid method
+            }
             existing.setPaymentMethod(updated.getPaymentMethod());
             existing.setNotes(updated.getNotes());
-            existing.setTotalAmount(updated.getTotalAmount());
+            if (updated.getTotalAmount() != null) {
+                existing.setTotalAmount(updated.getTotalAmount());
+            }
             return receiptRepository.save(existing);
         });
     }

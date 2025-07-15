@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 class InventoryServiceTest {
@@ -54,6 +55,15 @@ class InventoryServiceTest {
         Optional<Inventory> result = inventoryService.getInventoryById(1L);
         assertTrue(result.isPresent());
         assertEquals("Gloves", result.get().getItemName());
+    }
+
+    @Test
+    void getInventoryById_shouldReturnEmpty_whenItemNotFound() {
+        when(inventoryRepository.findById(2L)).thenReturn(Optional.empty());
+
+        Optional<Inventory> result = inventoryService.getInventoryById(2L);
+
+        assertTrue(result.isEmpty());
     }
 
     @Test
@@ -102,6 +112,15 @@ class InventoryServiceTest {
     }
 
     @Test
+    void updateInventory_shouldReturnEmpty_whenItemNotFound() {
+        when(inventoryRepository.findById(99L)).thenReturn(Optional.empty());
+
+        Optional<Inventory> result = inventoryService.updateInventory(99L, new Inventory());
+
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
     void deleteInventory_shouldLogAndDelete_whenValid() {
         when(inventoryRepository.findById(1L)).thenReturn(Optional.of(item));
 
@@ -140,6 +159,15 @@ class InventoryServiceTest {
     }
 
     @Test
+    void deductQuantity_shouldFail_whenItemNotFound() {
+        when(inventoryRepository.findById(999L)).thenReturn(Optional.empty());
+
+        boolean result = inventoryService.deductQuantity(999L, 5);
+
+        assertFalse(result);
+    }
+
+    @Test
     void addQuantityAndCost_shouldSucceed_whenValid() {
         when(inventoryRepository.findById(1L)).thenReturn(Optional.of(item));
         when(inventoryRepository.save(any())).thenAnswer(i -> i.getArgument(0));
@@ -154,6 +182,15 @@ class InventoryServiceTest {
     @Test
     void addQuantityAndCost_shouldFail_whenInvalid() {
         boolean result = inventoryService.addQuantityAndCost(1L, 0, null);
+        assertFalse(result);
+    }
+
+    @Test
+    void addQuantityAndCost_shouldFail_whenItemNotFound() {
+        when(inventoryRepository.findById(999L)).thenReturn(Optional.empty());
+
+        boolean result = inventoryService.addQuantityAndCost(999L, 5, BigDecimal.valueOf(2.00));
+
         assertFalse(result);
     }
 }

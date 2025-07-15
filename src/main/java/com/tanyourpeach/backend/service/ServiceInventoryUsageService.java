@@ -48,6 +48,7 @@ public class ServiceInventoryUsageService {
         Optional<Inventory> itemOpt = inventoryRepository.findById(itemId);
 
         if (serviceOpt.isEmpty() || itemOpt.isEmpty()) return Optional.empty();
+        if (usage.getQuantityUsed() <= 0) return Optional.empty(); // Must use positive quantity
 
         ServiceInventoryUsageKey key = new ServiceInventoryUsageKey(serviceId, itemId);
         usage.setId(key);
@@ -63,6 +64,7 @@ public class ServiceInventoryUsageService {
         Optional<ServiceInventoryUsage> usageOpt = usageRepository.findById(key);
 
         if (usageOpt.isEmpty()) return Optional.empty();
+        if (newQuantityUsed <= 0) return Optional.empty(); // Must use positive quantity
 
         ServiceInventoryUsage usage = usageOpt.get();
         usage.setQuantityUsed(newQuantityUsed);

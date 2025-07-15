@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 class AvailabilityServiceTest {
@@ -92,6 +93,29 @@ class AvailabilityServiceTest {
 
         Optional<Availability> result = availabilityService.updateAvailability(99L, availability);
         assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void updateAvailability_shouldUpdateAllFieldsCorrectly() {
+        when(availabilityRepository.findById(1L)).thenReturn(Optional.of(availability));
+        when(availabilityRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+
+        Availability updated = new Availability();
+        updated.setDate(LocalDate.of(2025, 8, 3));
+        updated.setStartTime(LocalTime.of(13, 0));
+        updated.setEndTime(LocalTime.of(14, 0));
+        updated.setIsBooked(true);
+        updated.setNotes("Updated slot");
+
+        Optional<Availability> result = availabilityService.updateAvailability(1L, updated);
+
+        assertTrue(result.isPresent());
+        Availability resultSlot = result.get();
+        assertEquals(LocalDate.of(2025, 8, 3), resultSlot.getDate());
+        assertEquals(LocalTime.of(13, 0), resultSlot.getStartTime());
+        assertEquals(LocalTime.of(14, 0), resultSlot.getEndTime());
+        assertTrue(resultSlot.getIsBooked());
+        assertEquals("Updated slot", resultSlot.getNotes());
     }
 
     @Test
