@@ -20,7 +20,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
 @SpringBootTest
 class AppointmentServiceTest {
@@ -75,6 +74,17 @@ class AppointmentServiceTest {
     }
 
     @Test
+    void getAllAppointments_shouldReturnAllAppointments() {
+        List<Appointment> mockList = List.of(new Appointment(), new Appointment());
+
+        when(appointmentRepository.findAll()).thenReturn(mockList);
+
+        List<Appointment> result = appointmentService.getAllAppointments();
+
+        assertEquals(2, result.size());
+    }
+
+    @Test
     void getAppointmentById_shouldReturnAppointmentIfExists() {
         Appointment mockAppointment = new Appointment();
         mockAppointment.setAppointmentId(1L);
@@ -88,14 +98,14 @@ class AppointmentServiceTest {
     }
 
     @Test
-    void getAllAppointments_shouldReturnAllAppointments() {
-        List<Appointment> mockList = List.of(new Appointment(), new Appointment());
+    void getGuestVsRegisteredStats_shouldReturnCounts() {
+        when(appointmentRepository.countByUserIsNull()).thenReturn(3L);
+        when(appointmentRepository.countByUserIsNotNull()).thenReturn(7L);
 
-        when(appointmentRepository.findAll()).thenReturn(mockList);
+        Map<String, Long> stats = appointmentService.getGuestVsRegisteredStats();
 
-        List<Appointment> result = appointmentService.getAllAppointments();
-
-        assertEquals(2, result.size());
+        assertEquals(3L, stats.get("guestAppointments"));
+        assertEquals(7L, stats.get("registeredAppointments"));
     }
 
     @Test
@@ -136,20 +146,6 @@ class AppointmentServiceTest {
             history.getStatus().equals("PENDING") &&
             history.getChangedByClientEmail().equals("guest@example.com")
         ));
-    }
-
-    @Test
-    void createAppointment_shouldHandleMissingServiceGracefully() {
-        testAppointment.setService(null); // simulate missing service
-        testAppointment.setAvailability(testSlot); // ensure slot is present
-        when(availabilityRepository.findById(1L)).thenReturn(Optional.of(testSlot));
-        when(appointmentRepository.save(any())).thenAnswer(i -> i.getArgument(0));
-        when(availabilityRepository.save(any())).thenReturn(testSlot);
-
-        Optional<Appointment> result = appointmentService.createAppointment(testAppointment, request);
-
-        assertTrue(result.isPresent());
-        assertEquals(Appointment.Status.PENDING, result.get().getStatus());
     }
 
     @Test
@@ -199,6 +195,20 @@ class AppointmentServiceTest {
 
         assertTrue(result.isPresent());
         assertEquals(mockUser, result.get().getUser());
+    }
+
+    @Test
+    void createAppointment_shouldHandleMissingServiceGracefully() {
+        testAppointment.setService(null); // simulate missing service
+        testAppointment.setAvailability(testSlot); // ensure slot is present
+        when(availabilityRepository.findById(1L)).thenReturn(Optional.of(testSlot));
+        when(appointmentRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+        when(availabilityRepository.save(any())).thenReturn(testSlot);
+
+        Optional<Appointment> result = appointmentService.createAppointment(testAppointment, request);
+
+        assertTrue(result.isPresent());
+        assertEquals(Appointment.Status.PENDING, result.get().getStatus());
     }
 
     @Test
@@ -356,6 +366,30 @@ class AppointmentServiceTest {
     }
 
     @Test
+    void updateAppointment_shouldSkipStatusLogic_whenStatusUnchanged() {
+        testAppointment.setAppointmentId(1L);
+        testAppointment.setStatus(Appointment.Status.PENDING);
+
+        Appointment updated = new Appointment();
+        updated.setStatus(Appointment.Status.PENDING); // no change
+        updated.setService(testService);
+        updated.setClientEmail("client@example.com");
+        updated.setClientName("Test Client");
+        updated.setTravelFee(0.0);
+
+        when(appointmentRepository.findById(1L)).thenReturn(Optional.of(testAppointment));
+        when(tanServiceRepository.findById(1L)).thenReturn(Optional.of(testService));
+        when(appointmentRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+
+        Optional<Appointment> result = appointmentService.updateAppointment(1L, updated, request);
+
+        assertTrue(result.isPresent());
+        verify(statusHistoryRepository, never()).save(any());
+        verify(financialLogRepository, never()).save(any());
+        verify(receiptRepository, never()).save(any());
+    }
+
+    @Test
     void updateAppointment_shouldNotUpdate_ifServiceMissing() {
         Long appointmentId = 1L;
 
@@ -369,9 +403,9 @@ class AppointmentServiceTest {
         existing.setBasePrice(40.0);
 
         TanService existingService = new TanService();
-        existingService.setServiceId(5L); // ✅ must be non-null
+        existingService.setServiceId(5L); // must be non-null
         existingService.setBasePrice(40.0);
-        existing.setService(existingService); // ✅ must be set
+        existing.setService(existingService); // must be set
 
         // Updated appointment with null service
         Appointment updated = new Appointment();
@@ -379,7 +413,7 @@ class AppointmentServiceTest {
         updated.setClientEmail("bob@example.com");
         updated.setStatus(Appointment.Status.CONFIRMED); // triggers inventory logic
         updated.setTravelFee(10.0);
-        updated.setService(null); // ❌ Missing service triggers validation
+        updated.setService(null); // Missing service triggers validation
 
         when(appointmentRepository.findById(appointmentId)).thenReturn(Optional.of(existing));
 
@@ -546,30 +580,6 @@ class AppointmentServiceTest {
     }
 
     @Test
-    void updateAppointment_shouldSkipStatusLogic_whenStatusUnchanged() {
-        testAppointment.setAppointmentId(1L);
-        testAppointment.setStatus(Appointment.Status.PENDING);
-
-        Appointment updated = new Appointment();
-        updated.setStatus(Appointment.Status.PENDING); // no change
-        updated.setService(testService);
-        updated.setClientEmail("client@example.com");
-        updated.setClientName("Test Client");
-        updated.setTravelFee(0.0);
-
-        when(appointmentRepository.findById(1L)).thenReturn(Optional.of(testAppointment));
-        when(tanServiceRepository.findById(1L)).thenReturn(Optional.of(testService));
-        when(appointmentRepository.save(any())).thenAnswer(i -> i.getArgument(0));
-
-        Optional<Appointment> result = appointmentService.updateAppointment(1L, updated, request);
-
-        assertTrue(result.isPresent());
-        verify(statusHistoryRepository, never()).save(any());
-        verify(financialLogRepository, never()).save(any());
-        verify(receiptRepository, never()).save(any());
-    }
-
-    @Test
     void updateAppointment_shouldFail_whenAppointmentNotFound() {
         when(appointmentRepository.findById(1L)).thenReturn(Optional.empty());
         Appointment updated = new Appointment();
@@ -591,16 +601,5 @@ class AppointmentServiceTest {
     void deleteAppointment_shouldReturnFalse_whenAppointmentNotFound() {
         when(appointmentRepository.existsById(1L)).thenReturn(false);
         assertFalse(appointmentService.deleteAppointment(1L));
-    }
-
-    @Test
-    void getGuestVsRegisteredStats_shouldReturnCounts() {
-        when(appointmentRepository.countByUserIsNull()).thenReturn(3L);
-        when(appointmentRepository.countByUserIsNotNull()).thenReturn(7L);
-
-        Map<String, Long> stats = appointmentService.getGuestVsRegisteredStats();
-
-        assertEquals(3L, stats.get("guestAppointments"));
-        assertEquals(7L, stats.get("registeredAppointments"));
     }
 }

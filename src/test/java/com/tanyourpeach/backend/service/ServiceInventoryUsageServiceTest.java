@@ -87,23 +87,6 @@ class ServiceInventoryUsageServiceTest {
     }
 
     @Test
-    void createUsage_shouldFail_whenServiceOrItemMissing() {
-        when(tanServiceRepository.findById(1L)).thenReturn(Optional.empty());
-        Optional<ServiceInventoryUsage> result = service.createUsage(usage);
-        assertTrue(result.isEmpty());
-    }
-
-    @Test
-    void createUsage_shouldFail_whenQuantityUsedIsZeroOrNegative() {
-        usage.setQuantityUsed(0);
-        when(tanServiceRepository.findById(1L)).thenReturn(Optional.of(tanService));
-        when(inventoryRepository.findById(100L)).thenReturn(Optional.of(item));
-
-        Optional<ServiceInventoryUsage> result = service.createUsage(usage);
-        assertTrue(result.isEmpty());
-    }
-
-    @Test
     void createUsage_shouldSetCompositeKeyCorrectly() {
         when(tanServiceRepository.findById(1L)).thenReturn(Optional.of(tanService));
         when(inventoryRepository.findById(100L)).thenReturn(Optional.of(item));
@@ -114,6 +97,54 @@ class ServiceInventoryUsageServiceTest {
         assertTrue(result.isPresent());
         assertEquals(1L, result.get().getId().getServiceId());
         assertEquals(100L, result.get().getId().getItemId());
+    }
+
+    @Test
+    void createUsage_shouldDefaultQuantityUsedToOne_ifZero() {
+        usage.setQuantityUsed(0); // simulate zero
+
+        when(tanServiceRepository.findById(1L)).thenReturn(Optional.of(tanService));
+        when(inventoryRepository.findById(100L)).thenReturn(Optional.of(item));
+        when(usageRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+
+        Optional<ServiceInventoryUsage> result = service.createUsage(usage);
+
+        assertTrue(result.isPresent());
+        assertEquals(1, result.get().getQuantityUsed());
+    }
+
+    @Test
+    void createUsage_shouldDefaultQuantityUsedToOne_ifNull() {
+        usage.setQuantityUsed(null);
+        usage.setService(tanService);
+        usage.setItem(item);
+
+        when(tanServiceRepository.findById(1L)).thenReturn(Optional.of(tanService));
+        when(inventoryRepository.findById(100L)).thenReturn(Optional.of(item));
+        when(usageRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+
+        Optional<ServiceInventoryUsage> result = service.createUsage(usage);
+
+        assertTrue(result.isPresent());
+        assertEquals(1, result.get().getQuantityUsed());
+    }
+
+    @Test
+    void createUsage_shouldFail_whenServiceOrItemMissing() {
+        when(tanServiceRepository.findById(1L)).thenReturn(Optional.empty());
+        Optional<ServiceInventoryUsage> result = service.createUsage(usage);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void createUsage_shouldFail_whenServiceOrItemIsNull() {
+        usage.setService(null);  // simulate missing service
+        usage.setItem(null);     // simulate missing item
+
+        Optional<ServiceInventoryUsage> result = service.createUsage(usage);
+
+        assertTrue(result.isEmpty());
+        verify(usageRepository, never()).save(any());
     }
 
     @Test

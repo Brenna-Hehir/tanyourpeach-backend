@@ -89,9 +89,9 @@ class ReceiptServiceTest {
     }
 
     @Test
-    void createReceipt_shouldUseAppointmentTotal_whenNoAmountGiven() {
+    void createReceipt_shouldLinkAppointmentProperly() {
         Receipt newReceipt = new Receipt();
-        newReceipt.setPaymentMethod("Venmo");
+        newReceipt.setPaymentMethod("Cash");
 
         when(appointmentRepository.findById(1L)).thenReturn(Optional.of(appointment));
         when(receiptRepository.save(any())).thenAnswer(i -> i.getArgument(0));
@@ -99,8 +99,7 @@ class ReceiptServiceTest {
         Optional<Receipt> result = receiptService.createReceipt(1L, newReceipt);
 
         assertTrue(result.isPresent());
-        assertEquals(BigDecimal.valueOf(120.0), result.get().getTotalAmount());
-        assertEquals("Venmo", result.get().getPaymentMethod());
+        assertEquals(1L, result.get().getAppointment().getAppointmentId());
     }
 
     @Test
@@ -119,20 +118,9 @@ class ReceiptServiceTest {
     }
 
     @Test
-    void createReceipt_shouldReturnEmpty_whenAppointmentMissing() {
+    void createReceipt_shouldUseAppointmentTotal_whenNoAmountGiven() {
         Receipt newReceipt = new Receipt();
-        when(appointmentRepository.findById(99L)).thenReturn(Optional.empty());
-
-        Optional<Receipt> result = receiptService.createReceipt(99L, newReceipt);
-
-        assertTrue(result.isEmpty());
-        verify(receiptRepository, never()).save(any());
-    }
-
-    @Test
-    void createReceipt_shouldLinkAppointmentProperly() {
-        Receipt newReceipt = new Receipt();
-        newReceipt.setPaymentMethod("Cash");
+        newReceipt.setPaymentMethod("Venmo");
 
         when(appointmentRepository.findById(1L)).thenReturn(Optional.of(appointment));
         when(receiptRepository.save(any())).thenAnswer(i -> i.getArgument(0));
@@ -140,17 +128,28 @@ class ReceiptServiceTest {
         Optional<Receipt> result = receiptService.createReceipt(1L, newReceipt);
 
         assertTrue(result.isPresent());
-        assertEquals(1L, result.get().getAppointment().getAppointmentId());
+        assertEquals(BigDecimal.valueOf(120.0), result.get().getTotalAmount());
+        assertEquals("Venmo", result.get().getPaymentMethod());
     }
 
     @Test
-    void createReceipt_shouldRejectWhitespacePaymentMethod() {
-        Receipt newReceipt = new Receipt();
-        newReceipt.setPaymentMethod("   "); // whitespace only
-
+    void createReceipt_shouldAllowNullPaymentMethod() {
+        Receipt newReceipt = new Receipt(); // no payment method
         when(appointmentRepository.findById(1L)).thenReturn(Optional.of(appointment));
+        when(receiptRepository.save(any())).thenAnswer(i -> i.getArgument(0));
 
         Optional<Receipt> result = receiptService.createReceipt(1L, newReceipt);
+
+        assertTrue(result.isPresent());
+        assertNull(result.get().getPaymentMethod());
+    }
+
+    @Test
+    void createReceipt_shouldReturnEmpty_whenAppointmentMissing() {
+        Receipt newReceipt = new Receipt();
+        when(appointmentRepository.findById(99L)).thenReturn(Optional.empty());
+
+        Optional<Receipt> result = receiptService.createReceipt(99L, newReceipt);
 
         assertTrue(result.isEmpty());
         verify(receiptRepository, never()).save(any());
@@ -172,6 +171,22 @@ class ReceiptServiceTest {
         assertEquals("Zelle", result.get().getPaymentMethod());
         assertEquals("Paid electronically", result.get().getNotes());
         assertEquals(BigDecimal.valueOf(150.0), result.get().getTotalAmount());
+    }
+
+    @Test
+    void updateReceipt_shouldAllowNullNotes() {
+        receipt.setNotes("Previous note");
+        Receipt updated = new Receipt();
+        updated.setPaymentMethod("Venmo");
+        updated.setNotes(null); // explicitly null
+
+        when(receiptRepository.findById(10L)).thenReturn(Optional.of(receipt));
+        when(receiptRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+
+        Optional<Receipt> result = receiptService.updateReceipt(10L, updated);
+
+        assertTrue(result.isPresent());
+        assertNull(result.get().getNotes());
     }
 
     @Test

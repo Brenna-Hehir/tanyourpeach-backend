@@ -1,6 +1,5 @@
 package com.tanyourpeach.backend.service;
 
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -63,23 +62,6 @@ class JwtServiceTest {
     }
 
     @Test
-    void expiredToken_shouldBeInvalid() {
-        String token = Jwts.builder()
-                .setSubject("user@example.com")
-                .setIssuedAt(new Date(System.currentTimeMillis() - 1000 * 60 * 60 * 2)) // 2 hours ago
-                .setExpiration(new Date(System.currentTimeMillis() - 1000 * 60 * 60)) // 1 hour ago
-                .signWith(key, SignatureAlgorithm.HS256)
-                .compact();
-
-        boolean valid = false;
-        try {
-            valid = jwtService.isTokenValid(token, springUser);
-        } catch (Exception ignored) {}
-
-        assertFalse(valid);
-    }
-
-    @Test
     void extractToken_shouldReturnToken_whenHeaderValid() {
         var request = new MockHttpServletRequest();
         request.addHeader("Authorization", "Bearer test.token.value");
@@ -105,6 +87,60 @@ class JwtServiceTest {
     }
 
     @Test
+    void tokenJustBeforeExpiration_shouldStillBeValid() {
+        long now = System.currentTimeMillis();
+        String token = Jwts.builder()
+                .setSubject("user@example.com")
+                .setIssuedAt(new Date(now - 1000 * 60 * 60))
+                .setExpiration(new Date(now + 5000)) // give a 5 second buffer
+                .signWith(getKeyUsedByJwtService(), SignatureAlgorithm.HS256)
+                .compact();
+
+        boolean valid = jwtService.isTokenValid(token, springUser);
+        assertTrue(valid);
+    }
+
+    @Test
+    void futureIssuedToken_shouldBeValid_butMayRaiseConcern() {
+        String token = Jwts.builder()
+                .setSubject("future@example.com")
+                .setIssuedAt(new Date(System.currentTimeMillis() + 1000 * 60 * 60)) // 1hr in future
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 2))
+                .signWith(getKeyUsedByJwtService(), SignatureAlgorithm.HS256)
+                .compact();
+
+        assertDoesNotThrow(() -> jwtService.extractUsername(token));
+    }
+
+    @Test
+    void tokenMissingSubject_shouldFailExtractUsername() {
+        String token = Jwts.builder()
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + 100000))
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
+
+        assertNull(jwtService.extractUsername(token));
+    }
+
+    @Test
+    void expiredToken_shouldBeInvalid() {
+        String token = Jwts.builder()
+                .setSubject("user@example.com")
+                .setIssuedAt(new Date(System.currentTimeMillis() - 1000 * 60 * 60 * 2)) // 2 hours ago
+                .setExpiration(new Date(System.currentTimeMillis() - 1000 * 60 * 60)) // 1 hour ago
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
+
+        boolean valid = false;
+        try {
+            valid = jwtService.isTokenValid(token, springUser);
+        } catch (Exception ignored) {}
+
+        assertFalse(valid);
+    }
+
+    @Test
     void tamperedToken_shouldBeInvalid() {
         String token = jwtService.generateToken(appUser);
         // Remove signature part completely (split by '.')
@@ -123,29 +159,6 @@ class JwtServiceTest {
     void malformedToken_shouldBeInvalid() {
         String malformed = "not.a.jwt";
         assertThrows(Exception.class, () -> jwtService.isTokenValid(malformed, springUser));
-    }
-
-    @Test
-    void tokenMissingSubject_shouldFailExtractUsername() {
-        String token = Jwts.builder()
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 100000))
-                .signWith(key, SignatureAlgorithm.HS256)
-                .compact();
-
-        assertNull(jwtService.extractUsername(token));
-    }
-
-    @Test
-    void futureIssuedToken_shouldBeValid_butMayRaiseConcern() {
-        String token = Jwts.builder()
-                .setSubject("future@example.com")
-                .setIssuedAt(new Date(System.currentTimeMillis() + 1000 * 60 * 60)) // 1hr in future
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 2))
-                .signWith(getKeyUsedByJwtService(), SignatureAlgorithm.HS256)
-                .compact();
-
-        assertDoesNotThrow(() -> jwtService.extractUsername(token));
     }
 
     @Test

@@ -40,6 +40,8 @@ public class ServiceInventoryUsageService {
 
     // Create a new service-inventory usage record
     public Optional<ServiceInventoryUsage> createUsage(ServiceInventoryUsage usage) {
+        if (usage.getService() == null || usage.getItem() == null) return Optional.empty();
+
         // Defensive check: ensure service and item exist
         Long serviceId = usage.getService().getServiceId();
         Long itemId = usage.getItem().getItemId();
@@ -48,7 +50,10 @@ public class ServiceInventoryUsageService {
         Optional<Inventory> itemOpt = inventoryRepository.findById(itemId);
 
         if (serviceOpt.isEmpty() || itemOpt.isEmpty()) return Optional.empty();
-        if (usage.getQuantityUsed() <= 0) return Optional.empty(); // Must use positive quantity
+        Integer quantity = usage.getQuantityUsed();
+        if (quantity == null || quantity <= 0) {
+            usage.setQuantityUsed(1); // Default to 1 if not specified or invalid
+        }
 
         ServiceInventoryUsageKey key = new ServiceInventoryUsageKey(serviceId, itemId);
         usage.setId(key);

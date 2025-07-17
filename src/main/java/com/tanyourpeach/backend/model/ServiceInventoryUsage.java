@@ -19,7 +19,8 @@ public class ServiceInventoryUsage {
     @JoinColumn(name = "item_id")
     private Inventory item;
 
-    private int quantityUsed = 1;
+    @Column(name = "quantity_used", columnDefinition = "INT DEFAULT 1")
+    private Integer quantityUsed = 1;
 
     public ServiceInventoryUsageKey getId() {
         return id;
@@ -45,11 +46,11 @@ public class ServiceInventoryUsage {
         this.item = item;
     }
 
-    public int getQuantityUsed() {
+    public Integer getQuantityUsed() {
         return quantityUsed;
     }
 
-    public void setQuantityUsed(int quantityUsed) {
+    public void setQuantityUsed(Integer quantityUsed) {
         this.quantityUsed = quantityUsed;
     }
 }

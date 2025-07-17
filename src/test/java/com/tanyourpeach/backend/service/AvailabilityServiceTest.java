@@ -69,25 +69,6 @@ class AvailabilityServiceTest {
     }
 
     @Test
-    void updateAvailability_shouldUpdateFields() {
-        when(availabilityRepository.findById(1L)).thenReturn(Optional.of(availability));
-        when(availabilityRepository.save(any())).thenReturn(availability);
-
-        Availability updated = new Availability();
-        updated.setDate(LocalDate.of(2025, 8, 2));
-        updated.setStartTime(LocalTime.of(12, 0));
-        updated.setEndTime(LocalTime.of(13, 0));
-        updated.setIsBooked(true);
-        updated.setNotes("Updated time");
-
-        Optional<Availability> result = availabilityService.updateAvailability(1L, updated);
-
-        assertTrue(result.isPresent());
-        assertEquals(LocalDate.of(2025, 8, 2), result.get().getDate());
-        assertTrue(result.get().getIsBooked());
-    }
-
-    @Test
     void createAvailability_shouldReturnNull_whenDateIsInPast() {
         Availability pastSlot = new Availability();
         pastSlot.setDate(LocalDate.now().minusDays(1));
@@ -128,6 +109,25 @@ class AvailabilityServiceTest {
         Availability result = availabilityService.createAvailability(invalidSlot);
         assertNull(result);
         verify(availabilityRepository, never()).save(any());
+    }
+
+    @Test
+    void updateAvailability_shouldUpdateFields() {
+        when(availabilityRepository.findById(1L)).thenReturn(Optional.of(availability));
+        when(availabilityRepository.save(any())).thenReturn(availability);
+
+        Availability updated = new Availability();
+        updated.setDate(LocalDate.of(2025, 8, 2));
+        updated.setStartTime(LocalTime.of(12, 0));
+        updated.setEndTime(LocalTime.of(13, 0));
+        updated.setIsBooked(true);
+        updated.setNotes("Updated time");
+
+        Optional<Availability> result = availabilityService.updateAvailability(1L, updated);
+
+        assertTrue(result.isPresent());
+        assertEquals(LocalDate.of(2025, 8, 2), result.get().getDate());
+        assertTrue(result.get().getIsBooked());
     }
 
     @Test

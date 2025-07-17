@@ -83,6 +83,17 @@ public class AppointmentService {
         return appointmentRepository.findById(id);
     }
 
+    // GET appointment stats
+    public Map<String, Long> getGuestVsRegisteredStats() {
+        long guestCount = appointmentRepository.countByUserIsNull();
+        long registeredCount = appointmentRepository.countByUserIsNotNull();
+
+        Map<String, Long> stats = new HashMap<>();
+        stats.put("guestAppointments", guestCount);
+        stats.put("registeredAppointments", registeredCount);
+        return stats;
+    }
+
     // POST create new appointment
     public Optional<Appointment> createAppointment(Appointment appointment, HttpServletRequest request) {
         // Attempt to extract user from JWT if logged in
@@ -261,17 +272,6 @@ public class AppointmentService {
         // Save updated appointment
         Appointment saved = appointmentRepository.save(existing);
         return Optional.of(saved);
-    }
-
-    // GET appointment stats
-    public Map<String, Long> getGuestVsRegisteredStats() {
-        long guestCount = appointmentRepository.countByUserIsNull();
-        long registeredCount = appointmentRepository.countByUserIsNotNull();
-
-        Map<String, Long> stats = new HashMap<>();
-        stats.put("guestAppointments", guestCount);
-        stats.put("registeredAppointments", registeredCount);
-        return stats;
     }
 
     // DELETE appointment

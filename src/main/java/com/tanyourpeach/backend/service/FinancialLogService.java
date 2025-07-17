@@ -28,7 +28,7 @@ public class FinancialLogService {
     public FinancialLog createLog(FinancialLog log) {
         // Basic validation
         if (log.getAmount() == null || log.getAmount().signum() < 0 ||
-            log.getType() == null || log.getSource() == null) {
+            log.getType() == null) {
             return null; // or throw IllegalArgumentException if preferred
         }
 
@@ -39,7 +39,7 @@ public class FinancialLogService {
     public Optional<FinancialLog> updateLog(Long id, FinancialLog updated) {
         // Basic validation
         if (updated.getAmount() == null || updated.getAmount().signum() < 0 ||
-            updated.getType() == null || updated.getSource() == null) {
+            updated.getType() == null) {
             return Optional.empty(); // prevent update if invalid
         }
 

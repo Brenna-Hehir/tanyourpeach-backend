@@ -80,6 +80,29 @@ class InventoryServiceTest {
     }
 
     @Test
+    void createInventory_shouldDefaultToZero_whenQuantityOrCostIsNull() {
+        // Arrange
+        Inventory input = new Inventory();
+        input.setItemName("Gloves");
+        input.setQuantity(null);               // testing null
+        input.setTotalSpent(null);            // testing null
+        input.setUnitCost(new BigDecimal("1.50"));
+
+        when(inventoryRepository.save(any(Inventory.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        // Act
+        Inventory result = inventoryService.createInventory(input);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(0, result.getQuantity());
+        assertEquals(BigDecimal.ZERO, result.getTotalSpent());
+        assertEquals(new BigDecimal("1.50"), result.getUnitCost());
+
+        verify(inventoryRepository).save(any());
+    }
+
+    @Test
     void createInventory_shouldRejectBlankItemName() {
         Inventory input = new Inventory();
         input.setItemName("   "); // Invalid name
@@ -129,29 +152,6 @@ class InventoryServiceTest {
     }
 
     @Test
-    void createInventory_shouldDefaultToZero_whenQuantityOrCostIsNull() {
-        // Arrange
-        Inventory input = new Inventory();
-        input.setItemName("Gloves");
-        input.setQuantity(null);               // testing null
-        input.setTotalSpent(null);            // testing null
-        input.setUnitCost(new BigDecimal("1.50"));
-
-        when(inventoryRepository.save(any(Inventory.class))).thenAnswer(invocation -> invocation.getArgument(0));
-
-        // Act
-        Inventory result = inventoryService.createInventory(input);
-
-        // Assert
-        assertNotNull(result);
-        assertEquals(0, result.getQuantity());
-        assertEquals(BigDecimal.ZERO, result.getTotalSpent());
-        assertEquals(new BigDecimal("1.50"), result.getUnitCost());
-
-        verify(inventoryRepository).save(any());
-    }
-
-    @Test
     void updateInventory_shouldLogExpense_whenQuantityIncreases() {
         Inventory updated = new Inventory();
         updated.setItemName("Gloves");
@@ -170,6 +170,20 @@ class InventoryServiceTest {
     }
 
     @Test
+    void updateInventory_shouldNotLogExpense_whenQuantityDoesNotIncrease() {
+        Inventory updated = new Inventory();
+        updated.setItemName("Gloves");
+        updated.setQuantity(5);
+        updated.setTotalSpent(BigDecimal.valueOf(30));
+
+        when(inventoryRepository.findById(1L)).thenReturn(Optional.of(item));
+
+        inventoryService.updateInventory(1L, updated);
+
+        verify(financialLogRepository, never()).save(any());
+    }
+
+    @Test
     void updateInventory_shouldHandleNullUnitCostGracefully() {
         Inventory updated = new Inventory();
         updated.setItemName("Gloves");
@@ -182,20 +196,6 @@ class InventoryServiceTest {
         Optional<Inventory> result = inventoryService.updateInventory(1L, updated);
 
         assertTrue(result.isPresent());
-        verify(financialLogRepository, never()).save(any());
-    }
-
-    @Test
-    void updateInventory_shouldNotLogExpense_whenQuantityDoesNotIncrease() {
-        Inventory updated = new Inventory();
-        updated.setItemName("Gloves");
-        updated.setQuantity(5);
-        updated.setTotalSpent(BigDecimal.valueOf(30));
-
-        when(inventoryRepository.findById(1L)).thenReturn(Optional.of(item));
-
-        inventoryService.updateInventory(1L, updated);
-
         verify(financialLogRepository, never()).save(any());
     }
 

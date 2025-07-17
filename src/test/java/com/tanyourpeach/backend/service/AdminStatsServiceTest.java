@@ -80,25 +80,6 @@ class AdminStatsServiceTest {
     }
 
     @Test
-    void getUpcomingAppointments_shouldReturnList() {
-        List<Appointment> mockAppointments = List.of(new Appointment(), new Appointment());
-        when(appointmentRepository.findByAppointmentDateTimeAfterOrderByAppointmentDateTimeAsc(any()))
-                .thenReturn(mockAppointments);
-
-        List<Appointment> result = adminStatsService.getUpcomingAppointments();
-        assertEquals(2, result.size());
-    }
-
-    @Test
-    void getLowStockInventory_shouldReturnLowStockItems() {
-        List<Inventory> mockItems = List.of(new Inventory());
-        when(inventoryRepository.findItemsBelowThreshold()).thenReturn(mockItems);
-
-        List<Inventory> result = adminStatsService.getLowStockInventory();
-        assertEquals(1, result.size());
-    }
-
-    @Test
     void getLastFourMonthsStats_shouldHandleMixedAndNullValues() {
         when(financialLogRepository.sumByTypeAndMonth(eq("revenue"), anyString()))
             .thenReturn(BigDecimal.valueOf(150))
@@ -122,6 +103,16 @@ class AdminStatsServiceTest {
     }
 
     @Test
+    void getUpcomingAppointments_shouldReturnList() {
+        List<Appointment> mockAppointments = List.of(new Appointment(), new Appointment());
+        when(appointmentRepository.findByAppointmentDateTimeAfterOrderByAppointmentDateTimeAsc(any()))
+                .thenReturn(mockAppointments);
+
+        List<Appointment> result = adminStatsService.getUpcomingAppointments();
+        assertEquals(2, result.size());
+    }
+
+    @Test
     void getUpcomingAppointments_shouldReturnEmptyList_whenNoAppointmentsExist() {
         when(appointmentRepository.findByAppointmentDateTimeAfterOrderByAppointmentDateTimeAsc(any()))
                 .thenReturn(List.of());
@@ -129,6 +120,15 @@ class AdminStatsServiceTest {
         List<Appointment> result = adminStatsService.getUpcomingAppointments();
         assertNotNull(result);
         assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void getLowStockInventory_shouldReturnLowStockItems() {
+        List<Inventory> mockItems = List.of(new Inventory());
+        when(inventoryRepository.findItemsBelowThreshold()).thenReturn(mockItems);
+
+        List<Inventory> result = adminStatsService.getLowStockInventory();
+        assertEquals(1, result.size());
     }
 
     @Test

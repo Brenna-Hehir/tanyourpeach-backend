@@ -45,15 +45,6 @@ class CustomUserDetailsServiceTest {
     }
 
     @Test
-    void loadUserByUsername_shouldThrowException_whenUserNotFound() {
-        when(userRepository.findByEmail("missing@example.com")).thenReturn(Optional.empty());
-
-        assertThrows(UsernameNotFoundException.class, () -> {
-            customUserDetailsService.loadUserByUsername("missing@example.com");
-        });
-    }
-
-    @Test
     void loadUserByUsername_shouldAssignUserRole_whenNotAdmin() {
         User user = new User();
         user.setEmail("user@example.com");
@@ -80,5 +71,29 @@ class CustomUserDetailsServiceTest {
 
         assertEquals(1, userDetails.getAuthorities().size());
         assertTrue(userDetails.getAuthorities().stream().anyMatch(auth -> auth.getAuthority().equals("ROLE_USER")));
+    }
+
+    @Test
+    void loadUserByUsername_shouldReturnUserDetails_evenIfPasswordEmpty() {
+        User user = new User();
+        user.setEmail("empty@example.com");
+        user.setPasswordHash(""); // Empty password
+        user.setIsAdmin(false);
+
+        when(userRepository.findByEmail("empty@example.com")).thenReturn(Optional.of(user));
+
+        UserDetails userDetails = customUserDetailsService.loadUserByUsername("empty@example.com");
+
+        assertEquals("empty@example.com", userDetails.getUsername());
+        assertEquals("", userDetails.getPassword());
+    }
+
+    @Test
+    void loadUserByUsername_shouldThrowException_whenUserNotFound() {
+        when(userRepository.findByEmail("missing@example.com")).thenReturn(Optional.empty());
+
+        assertThrows(UsernameNotFoundException.class, () -> {
+            customUserDetailsService.loadUserByUsername("missing@example.com");
+        });
     }
 }

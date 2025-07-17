@@ -41,11 +41,28 @@ class FinancialLogServiceTest {
     }
 
     @Test
+    void getAllLogs_shouldReturnList() {
+        when(financialLogRepository.findAll()).thenReturn(List.of(log));
+        List<FinancialLog> logs = financialLogService.getAllLogs();
+        assertEquals(1, logs.size());
+    }
+
+    @Test
     void getLogById_shouldReturnLog_whenExists() {
         when(financialLogRepository.findById(1L)).thenReturn(Optional.of(log));
         Optional<FinancialLog> found = financialLogService.getLogById(1L);
         assertTrue(found.isPresent());
         assertEquals(log.getLogId(), found.get().getLogId());
+    }
+
+    @Test
+    void getAllLogs_shouldReturnEmptyList_whenNoLogsExist() {
+        when(financialLogRepository.findAll()).thenReturn(List.of());
+
+        List<FinancialLog> logs = financialLogService.getAllLogs();
+
+        assertNotNull(logs);
+        assertTrue(logs.isEmpty());
     }
 
     @Test
@@ -56,17 +73,53 @@ class FinancialLogServiceTest {
     }
 
     @Test
-    void getAllLogs_shouldReturnList() {
-        when(financialLogRepository.findAll()).thenReturn(List.of(log));
-        List<FinancialLog> logs = financialLogService.getAllLogs();
-        assertEquals(1, logs.size());
-    }
-
-    @Test
     void createLog_shouldSaveSuccessfully() {
         when(financialLogRepository.save(log)).thenReturn(log);
         FinancialLog created = financialLogService.createLog(log);
         assertEquals(log.getLogId(), created.getLogId());
+    }
+
+    @Test
+    void createLog_shouldHandleLogWithoutId() {
+        FinancialLog newLog = new FinancialLog();
+        newLog.setType(FinancialLog.Type.expense);
+        newLog.setSource("manual");
+        newLog.setReferenceId(300L);
+        newLog.setDescription("No ID yet");
+        newLog.setAmount(BigDecimal.valueOf(25.0));
+
+        FinancialLog saved = new FinancialLog();
+        saved.setLogId(10L);
+        saved.setType(newLog.getType());
+        saved.setSource(newLog.getSource());
+        saved.setReferenceId(newLog.getReferenceId());
+        saved.setDescription(newLog.getDescription());
+        saved.setAmount(newLog.getAmount());
+
+        when(financialLogRepository.save(newLog)).thenReturn(saved);
+
+        FinancialLog result = financialLogService.createLog(newLog);
+
+        assertNotNull(result);
+        assertEquals(10L, result.getLogId());
+    }
+
+    @Test
+    void createLog_shouldAllowNullSource() {
+        FinancialLog log = new FinancialLog();
+        log.setType(FinancialLog.Type.revenue);
+        log.setSource(null); // Allowed
+        log.setAmount(BigDecimal.valueOf(30.0));
+
+        when(financialLogRepository.save(any())).thenAnswer(i -> {
+            FinancialLog saved = i.getArgument(0);
+            saved.setLogId(55L);
+            return saved;
+        });
+
+        FinancialLog result = financialLogService.createLog(log);
+        assertNotNull(result);
+        assertEquals(55L, result.getLogId());
     }
 
     @Test
@@ -106,6 +159,44 @@ class FinancialLogServiceTest {
     }
 
     @Test
+    void updateLog_shouldPreserveLogId_whenUpdating() {
+        FinancialLog updated = new FinancialLog();
+        updated.setType(FinancialLog.Type.expense);
+        updated.setSource("inventory");
+        updated.setReferenceId(200L);
+        updated.setDescription("Updated log");
+        updated.setAmount(BigDecimal.valueOf(80.0));
+
+        when(financialLogRepository.findById(1L)).thenReturn(Optional.of(log));
+        when(financialLogRepository.save(any())).thenAnswer(i -> i.getArgument(0)); // simulate in-place update
+
+        Optional<FinancialLog> result = financialLogService.updateLog(1L, updated);
+
+        assertTrue(result.isPresent());
+        assertEquals(1L, result.get().getLogId()); // original ID
+        assertEquals("inventory", result.get().getSource());
+    }
+
+    @Test
+    void updateLog_shouldAllowNullSource() {
+        FinancialLog updated = new FinancialLog();
+        updated.setType(FinancialLog.Type.expense);
+        updated.setSource(null); // now allowed
+        updated.setReferenceId(42L);
+        updated.setDescription("Null source update");
+        updated.setAmount(BigDecimal.valueOf(75.00));
+
+        when(financialLogRepository.findById(1L)).thenReturn(Optional.of(log));
+        when(financialLogRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+
+        Optional<FinancialLog> result = financialLogService.updateLog(1L, updated);
+
+        assertTrue(result.isPresent());
+        assertNull(result.get().getSource());
+        assertEquals(BigDecimal.valueOf(75.00), result.get().getAmount());
+    }
+
+    @Test
     void updateLog_shouldReturnEmpty_whenValidationFails() {
         FinancialLog updated = new FinancialLog();
         updated.setAmount(BigDecimal.valueOf(-5)); // invalid
@@ -137,59 +228,5 @@ class FinancialLogServiceTest {
         when(financialLogRepository.existsById(99L)).thenReturn(false);
         boolean deleted = financialLogService.deleteLog(99L);
         assertFalse(deleted);
-    }
-
-    @Test
-    void getAllLogs_shouldReturnEmptyList_whenNoLogsExist() {
-        when(financialLogRepository.findAll()).thenReturn(List.of());
-
-        List<FinancialLog> logs = financialLogService.getAllLogs();
-
-        assertNotNull(logs);
-        assertTrue(logs.isEmpty());
-    }
-
-    @Test
-    void updateLog_shouldPreserveLogId_whenUpdating() {
-        FinancialLog updated = new FinancialLog();
-        updated.setType(FinancialLog.Type.expense);
-        updated.setSource("inventory");
-        updated.setReferenceId(200L);
-        updated.setDescription("Updated log");
-        updated.setAmount(BigDecimal.valueOf(80.0));
-
-        when(financialLogRepository.findById(1L)).thenReturn(Optional.of(log));
-        when(financialLogRepository.save(any())).thenAnswer(i -> i.getArgument(0)); // simulate in-place update
-
-        Optional<FinancialLog> result = financialLogService.updateLog(1L, updated);
-
-        assertTrue(result.isPresent());
-        assertEquals(1L, result.get().getLogId()); // original ID
-        assertEquals("inventory", result.get().getSource());
-    }
-
-    @Test
-    void createLog_shouldHandleLogWithoutId() {
-        FinancialLog newLog = new FinancialLog();
-        newLog.setType(FinancialLog.Type.expense);
-        newLog.setSource("manual");
-        newLog.setReferenceId(300L);
-        newLog.setDescription("No ID yet");
-        newLog.setAmount(BigDecimal.valueOf(25.0));
-
-        FinancialLog saved = new FinancialLog();
-        saved.setLogId(10L);
-        saved.setType(newLog.getType());
-        saved.setSource(newLog.getSource());
-        saved.setReferenceId(newLog.getReferenceId());
-        saved.setDescription(newLog.getDescription());
-        saved.setAmount(newLog.getAmount());
-
-        when(financialLogRepository.save(newLog)).thenReturn(saved);
-
-        FinancialLog result = financialLogService.createLog(newLog);
-
-        assertNotNull(result);
-        assertEquals(10L, result.getLogId());
     }
 }
