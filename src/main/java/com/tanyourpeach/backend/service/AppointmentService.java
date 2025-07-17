@@ -107,6 +107,7 @@ public class AppointmentService {
         // Validate client info
         if (appointment.getClientName() == null || appointment.getClientName().trim().isEmpty()) return Optional.empty();
         if (appointment.getClientEmail() == null || appointment.getClientEmail().trim().isEmpty()) return Optional.empty();
+        if (appointment.getClientAddress() == null || appointment.getClientAddress().trim().isEmpty()) return Optional.empty();
         if (appointment.getTravelFee() != null && appointment.getTravelFee() < 0) return Optional.empty();
 
         // Validate availability slot
@@ -174,6 +175,7 @@ public class AppointmentService {
         // Validate fields before applying update
         if (updated.getClientName() == null || updated.getClientName().trim().isEmpty()) return Optional.empty();
         if (updated.getClientEmail() == null || updated.getClientEmail().trim().isEmpty()) return Optional.empty();
+        if (updated.getClientAddress() == null || updated.getClientAddress().trim().isEmpty()) return Optional.empty();
         if (updated.getTravelFee() != null && updated.getTravelFee() < 0) return Optional.empty();
         if (updated.getService() == null || updated.getService().getServiceId() == null) return Optional.empty();
 

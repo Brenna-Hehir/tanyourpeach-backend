@@ -80,26 +80,59 @@ class AdminStatsServiceTest {
     }
 
     @Test
-    void getLastFourMonthsStats_shouldHandleMixedAndNullValues() {
+    void getLastFourMonthsStats_shouldCalculateCorrectProfit_withMixedValues() {
         when(financialLogRepository.sumByTypeAndMonth(eq("revenue"), anyString()))
-            .thenReturn(BigDecimal.valueOf(150))
-            .thenReturn(null)
-            .thenReturn(BigDecimal.valueOf(0))
-            .thenReturn(BigDecimal.valueOf(50));
+            .thenReturn(BigDecimal.valueOf(150))  // Month 1
+            .thenReturn(null)                     // Month 2
+            .thenReturn(BigDecimal.ZERO)         // Month 3
+            .thenReturn(BigDecimal.valueOf(50)); // Month 4
 
         when(financialLogRepository.sumByTypeAndMonth(eq("expense"), anyString()))
-            .thenReturn(BigDecimal.valueOf(100))
-            .thenReturn(BigDecimal.valueOf(200))
-            .thenReturn(null)
-            .thenReturn(BigDecimal.valueOf(20));
+            .thenReturn(BigDecimal.valueOf(100))  // Month 1
+            .thenReturn(BigDecimal.valueOf(200))  // Month 2
+            .thenReturn(null)                     // Month 3
+            .thenReturn(BigDecimal.valueOf(20));  // Month 4
+
+        List<MonthlyStats> stats = adminStatsService.getLastFourMonthsStats();
+
+        assertEquals(BigDecimal.valueOf(50), stats.get(0).getProfit());   // 150 - 100
+        assertEquals(BigDecimal.ZERO.subtract(BigDecimal.valueOf(200)), stats.get(1).getProfit()); // 0 - 200
+        assertEquals(BigDecimal.ZERO, stats.get(2).getProfit());          // 0 - 0
+        assertEquals(BigDecimal.valueOf(30), stats.get(3).getProfit());   // 50 - 20
+    }
+
+    @Test
+    void getLastFourMonthsStats_shouldHandleAllNullValues() {
+        when(financialLogRepository.sumByTypeAndMonth(eq("revenue"), anyString()))
+            .thenReturn(null, null, null, null);
+        when(financialLogRepository.sumByTypeAndMonth(eq("expense"), anyString()))
+            .thenReturn(null, null, null, null);
 
         List<MonthlyStats> stats = adminStatsService.getLastFourMonthsStats();
 
         assertEquals(4, stats.size());
-        assertEquals(BigDecimal.valueOf(50), stats.get(0).getProfit());   // 150 - 100
-        assertEquals(BigDecimal.valueOf(0).subtract(BigDecimal.valueOf(200)), stats.get(1).getProfit()); // 0 - 200
-        assertEquals(BigDecimal.valueOf(0), stats.get(2).getProfit());    // 0 - 0 (nulls)
-        assertEquals(BigDecimal.valueOf(30), stats.get(3).getProfit());   // 50 - 20
+        for (MonthlyStats stat : stats) {
+            assertEquals(BigDecimal.ZERO, stat.getRevenue());
+            assertEquals(BigDecimal.ZERO, stat.getExpenses());
+            assertEquals(BigDecimal.ZERO, stat.getProfit());
+        }
+    }
+
+    @Test
+    void getLastFourMonthsStats_shouldHandleAllZeroValues() {
+        when(financialLogRepository.sumByTypeAndMonth(eq("revenue"), anyString()))
+            .thenReturn(BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO);
+        when(financialLogRepository.sumByTypeAndMonth(eq("expense"), anyString()))
+            .thenReturn(BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO);
+
+        List<MonthlyStats> stats = adminStatsService.getLastFourMonthsStats();
+
+        assertEquals(4, stats.size());
+        for (MonthlyStats stat : stats) {
+            assertEquals(BigDecimal.ZERO, stat.getRevenue());
+            assertEquals(BigDecimal.ZERO, stat.getExpenses());
+            assertEquals(BigDecimal.ZERO, stat.getProfit());
+        }
     }
 
     @Test

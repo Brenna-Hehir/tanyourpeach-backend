@@ -145,6 +145,22 @@ class ReceiptServiceTest {
     }
 
     @Test
+    void createReceipt_shouldNotSetTotal_whenAppointmentTotalPriceNull() {
+        appointment.setTotalPrice(null); // simulate missing appointment total
+
+        Receipt newReceipt = new Receipt(); // no totalAmount provided
+        newReceipt.setPaymentMethod("Cash");
+
+        when(appointmentRepository.findById(1L)).thenReturn(Optional.of(appointment));
+        when(receiptRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+
+        Optional<Receipt> result = receiptService.createReceipt(1L, newReceipt);
+
+        assertTrue(result.isPresent());
+        assertNull(result.get().getTotalAmount()); // still null
+    }
+
+    @Test
     void createReceipt_shouldReturnEmpty_whenAppointmentMissing() {
         Receipt newReceipt = new Receipt();
         when(appointmentRepository.findById(99L)).thenReturn(Optional.empty());

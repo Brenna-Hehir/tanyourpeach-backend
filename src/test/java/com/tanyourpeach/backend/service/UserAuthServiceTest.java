@@ -104,16 +104,72 @@ class UserAuthServiceTest {
     }
 
     @Test
-    void register_shouldFail_whenFieldsAreBlank() {
+    void register_shouldFail_whenNameIsBlank() {
         RegisterRequest request = new RegisterRequest();
-        request.setName("   ");  // blank
-        request.setEmail(" ");   // blank
-        request.setPassword(""); // blank
-        request.setAddress(null);
+        request.setName("   "); // blank
+        request.setEmail("test@example.com");
+        request.setPassword("password");
+        request.setAddress("123 Peach St");
         request.setIsAdmin(false);
 
         RuntimeException ex = assertThrows(RuntimeException.class, () -> userAuthService.register(request));
-        assertEquals("Name is required", ex.getMessage()); // stops at first validation
+        assertEquals("Name is required", ex.getMessage());
+    }
+
+    @Test
+    void register_shouldFail_whenEmailIsBlank() {
+        RegisterRequest request = new RegisterRequest();
+        request.setName("Test User");
+        request.setEmail(" ");
+        request.setPassword("password");
+        request.setAddress("123 Peach St");
+        request.setIsAdmin(false);
+
+        RuntimeException ex = assertThrows(RuntimeException.class, () -> userAuthService.register(request));
+        assertEquals("Email is required", ex.getMessage());
+    }
+
+    @Test
+    void register_shouldFail_whenPasswordIsBlank() {
+        RegisterRequest request = new RegisterRequest();
+        request.setName("Test User");
+        request.setEmail("test@example.com");
+        request.setPassword("   ");
+        request.setAddress("123 Peach St");
+        request.setIsAdmin(false);
+
+        RuntimeException ex = assertThrows(RuntimeException.class, () -> userAuthService.register(request));
+        assertEquals("Password is required", ex.getMessage());
+    }
+
+    @Test
+    void register_shouldFail_whenAddressIsBlank() {
+        RegisterRequest request = new RegisterRequest();
+        request.setName("Test User");
+        request.setEmail("test@example.com");
+        request.setPassword("password");
+        request.setAddress("   "); // blank
+        request.setIsAdmin(false);
+
+        RuntimeException ex = assertThrows(RuntimeException.class, () -> userAuthService.register(request));
+        assertEquals("Address is required", ex.getMessage());
+    }
+
+    @Test
+    void register_shouldFail_whenEmailAlreadyExists() {
+        RegisterRequest request = new RegisterRequest();
+        request.setName("Test User");
+        request.setEmail("test@example.com");
+        request.setPassword("password");
+        request.setAddress("123 Peach St");
+        request.setIsAdmin(false);
+
+        when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.of(testUser));
+
+        RuntimeException ex = assertThrows(RuntimeException.class, () -> userAuthService.register(request));
+        assertEquals("Email already in use", ex.getMessage());
+
+        verify(userRepository, never()).save(any(User.class));
     }
 
     @Test
@@ -156,22 +212,5 @@ class UserAuthServiceTest {
         when(userRepository.findByEmail("missing@example.com")).thenReturn(Optional.empty());
 
         assertThrows(RuntimeException.class, () -> userAuthService.authenticate(request));
-    }
-
-    @Test
-    void register_shouldFail_whenEmailAlreadyExists() {
-        RegisterRequest request = new RegisterRequest();
-        request.setName("Test User");
-        request.setEmail("test@example.com");
-        request.setPassword("password");
-        request.setAddress("123 Peach St");
-        request.setIsAdmin(false);
-
-        when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.of(testUser));
-
-        RuntimeException ex = assertThrows(RuntimeException.class, () -> userAuthService.register(request));
-        assertEquals("Email already in use", ex.getMessage());
-
-        verify(userRepository, never()).save(any(User.class));
     }
 }

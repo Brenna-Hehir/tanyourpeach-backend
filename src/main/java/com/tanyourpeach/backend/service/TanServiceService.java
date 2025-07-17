@@ -28,7 +28,6 @@ public class TanServiceService {
     // POST create new service
     public TanService createService(TanService service) {
         if (service.getName() == null || service.getName().trim().isEmpty()) return null;
-        if (service.getDescription() == null || service.getDescription().trim().isEmpty()) return null;
         if (service.getBasePrice() == null || service.getBasePrice() <= 0) return null;
         if (service.getDurationMinutes() == null || service.getDurationMinutes() <= 0) return null;
 
@@ -41,7 +40,6 @@ public class TanServiceService {
         if (existingOpt.isEmpty()) return Optional.empty();
 
         if (updated.getName() == null || updated.getName().trim().isEmpty()) return Optional.empty();
-        if (updated.getDescription() == null || updated.getDescription().trim().isEmpty()) return Optional.empty();
         if (updated.getBasePrice() == null || updated.getBasePrice() <= 0) return Optional.empty();
         if (updated.getDurationMinutes() == null || updated.getDurationMinutes() <= 0) return Optional.empty();
 

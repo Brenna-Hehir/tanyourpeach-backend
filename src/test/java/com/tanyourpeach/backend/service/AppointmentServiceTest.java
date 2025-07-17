@@ -70,6 +70,7 @@ class AppointmentServiceTest {
         testAppointment.setService(testService);
         testAppointment.setClientEmail("client@example.com");
         testAppointment.setClientName("Test Client");
+        testAppointment.setClientAddress("123 Peach St");
         testAppointment.setAvailability(testSlot);
     }
 
@@ -217,6 +218,7 @@ class AppointmentServiceTest {
         Appointment appointment = new Appointment();
         appointment.setClientName("Jane Doe");
         appointment.setClientEmail("jane@example.com");
+        appointment.setClientAddress("456 Main St");
         appointment.setTravelFee(20.0);
 
         // No service set (or you could set a service with null ID)
@@ -274,9 +276,36 @@ class AppointmentServiceTest {
     }
 
     @Test
-    void createAppointment_shouldFail_whenClientFieldsInvalid() {
-        testAppointment.setClientName("  "); // blank
-        testAppointment.setClientEmail(null); // null
+    void createAppointment_shouldFail_whenClientNameBlank() {
+        testAppointment.setClientName(" ");
+        testAppointment.setClientEmail("client@example.com");
+        testAppointment.setClientAddress("123 Peach St");
+        testAppointment.setAvailability(testSlot);
+        testAppointment.setService(testService);
+
+        Optional<Appointment> result = appointmentService.createAppointment(testAppointment, request);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void createAppointment_shouldFail_whenClientEmailMissing() {
+        testAppointment.setClientName("Valid Name");
+        testAppointment.setClientEmail(null);
+        testAppointment.setClientAddress("123 Peach St");
+        testAppointment.setAvailability(testSlot);
+        testAppointment.setService(testService);
+
+        Optional<Appointment> result = appointmentService.createAppointment(testAppointment, request);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void createAppointment_shouldFail_whenClientAddressInvalid() {
+        testAppointment.setClientName("Valid Name");
+        testAppointment.setClientEmail("valid@example.com");
+        testAppointment.setClientAddress(" "); // invalid address
+        testAppointment.setAvailability(testSlot);
+        testAppointment.setService(testService);
 
         Optional<Appointment> result = appointmentService.createAppointment(testAppointment, request);
         assertTrue(result.isEmpty());
@@ -299,6 +328,7 @@ class AppointmentServiceTest {
         updated.setService(testService);
         updated.setClientEmail("client@example.com");
         updated.setClientName("Updated Client");
+        updated.setClientAddress("456 Peach St");
         updated.setStatus(Appointment.Status.CONFIRMED);
         updated.setAppointmentDateTime(LocalDateTime.now());
 
@@ -320,6 +350,7 @@ class AppointmentServiceTest {
         existing.setAppointmentId(1L);
         existing.setStatus(Appointment.Status.PENDING);
         existing.setClientName("Peachy");
+
         existing.setBasePrice(80.0);
         existing.setTravelFee(10.0);
 
@@ -333,6 +364,7 @@ class AppointmentServiceTest {
         updated.setService(service);
         updated.setClientEmail("client@example.com");
         updated.setClientName("Peachy");
+        updated.setClientAddress("123 Peach St");
         updated.setTravelFee(10.0);
 
         Inventory item = new Inventory();
@@ -375,6 +407,7 @@ class AppointmentServiceTest {
         updated.setService(testService);
         updated.setClientEmail("client@example.com");
         updated.setClientName("Test Client");
+        updated.setClientAddress("123 Peach St");
         updated.setTravelFee(0.0);
 
         when(appointmentRepository.findById(1L)).thenReturn(Optional.of(testAppointment));
@@ -398,6 +431,7 @@ class AppointmentServiceTest {
         existing.setAppointmentId(appointmentId);
         existing.setClientName("Bob");
         existing.setClientEmail("bob@example.com");
+        existing.setClientAddress("456 Peach St");
         existing.setStatus(Appointment.Status.PENDING);
         existing.setTravelFee(10.0);
         existing.setBasePrice(40.0);
@@ -445,6 +479,7 @@ class AppointmentServiceTest {
         updated.setService(service);
         updated.setClientEmail("client@example.com");
         updated.setClientName("Existing Client");
+        updated.setClientAddress("123 Peach St");
         updated.setTravelFee(20.0);
 
         when(appointmentRepository.findById(1L)).thenReturn(Optional.of(existing));
@@ -469,6 +504,7 @@ class AppointmentServiceTest {
         existing.setAppointmentId(appointmentId);
         existing.setClientName("Alice");
         existing.setClientEmail("alice@example.com");
+        existing.setClientAddress("123 Peach St");
         existing.setStatus(Appointment.Status.PENDING);
         existing.setTravelFee(15.0);
         existing.setBasePrice(50.0);
@@ -482,6 +518,7 @@ class AppointmentServiceTest {
         Appointment updated = new Appointment();
         updated.setClientName("Alice");
         updated.setClientEmail("alice@example.com");
+        updated.setClientAddress("123 Peach St");
         updated.setStatus(Appointment.Status.PENDING); // no status change
         updated.setTravelFee(15.0);
         updated.setService(service);
@@ -547,14 +584,52 @@ class AppointmentServiceTest {
     }
 
     @Test
-    void updateAppointment_shouldFail_whenClientFieldsInvalid() {
+    void updateAppointment_shouldFail_whenClientNameBlank() {
         testAppointment.setAppointmentId(1L);
         testAppointment.setStatus(Appointment.Status.PENDING);
 
         Appointment updated = new Appointment();
         updated.setClientName(" ");
-        updated.setClientEmail("");
+        updated.setClientEmail("valid@example.com");
+        updated.setClientAddress("123 Peach St");
         updated.setStatus(Appointment.Status.CONFIRMED);
+        updated.setService(testService);
+
+        when(appointmentRepository.findById(1L)).thenReturn(Optional.of(testAppointment));
+
+        Optional<Appointment> result = appointmentService.updateAppointment(1L, updated, request);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void updateAppointment_shouldFail_whenClientEmailBlank() {
+        testAppointment.setAppointmentId(1L);
+        testAppointment.setStatus(Appointment.Status.PENDING);
+
+        Appointment updated = new Appointment();
+        updated.setClientName("Valid Name");
+        updated.setClientEmail(" ");
+        updated.setClientAddress("123 Peach St");
+        updated.setStatus(Appointment.Status.CONFIRMED);
+        updated.setService(testService);
+
+        when(appointmentRepository.findById(1L)).thenReturn(Optional.of(testAppointment));
+
+        Optional<Appointment> result = appointmentService.updateAppointment(1L, updated, request);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void updateAppointment_shouldFail_whenClientAddressBlank() {
+        testAppointment.setAppointmentId(1L);
+        testAppointment.setStatus(Appointment.Status.PENDING);
+
+        Appointment updated = new Appointment();
+        updated.setClientName("Valid Name");
+        updated.setClientEmail("valid@example.com");
+        updated.setClientAddress(" ");
+        updated.setStatus(Appointment.Status.CONFIRMED);
+        updated.setService(testService);
 
         when(appointmentRepository.findById(1L)).thenReturn(Optional.of(testAppointment));
 

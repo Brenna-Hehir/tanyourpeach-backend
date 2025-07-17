@@ -1,5 +1,6 @@
 package com.tanyourpeach.backend.service;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -84,6 +85,37 @@ class JwtServiceTest {
     void extractUsername_shouldReturnNull_whenTokenMalformed() {
         String malformed = "invalid.token.value";
         assertNull(jwtService.extractUsername(malformed));
+    }
+
+    @Test
+    void extractClaim_shouldReturnCustomClaimValue() {
+        String token = jwtService.generateToken(appUser);
+
+        String subject = jwtService.extractClaim(token, Claims::getSubject);
+
+        assertEquals("user@example.com", subject);
+    }
+
+    @Test
+    void extractClaim_shouldReturnIsAdminFlag_whenPresent() {
+        User adminUser = new User();
+        adminUser.setEmail("admin@example.com");
+        adminUser.setIsAdmin(true);
+
+        String token = jwtService.generateToken(adminUser);
+
+        Boolean isAdmin = jwtService.extractClaim(token, claims -> claims.get("isAdmin", Boolean.class));
+
+        assertTrue(isAdmin);
+    }
+
+    @Test
+    void extractClaim_shouldReturnSubject_whenTokenValid() {
+        String token = jwtService.generateToken(appUser);
+
+        String subject = jwtService.extractClaim(token, Claims::getSubject);
+
+        assertEquals("user@example.com", subject);
     }
 
     @Test

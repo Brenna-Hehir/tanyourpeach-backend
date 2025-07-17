@@ -130,6 +130,20 @@ class ServiceInventoryUsageServiceTest {
     }
 
     @Test
+    void createUsage_shouldPreserveQuantityUsed_ifPositive() {
+        usage.setQuantityUsed(3); // valid input
+
+        when(tanServiceRepository.findById(1L)).thenReturn(Optional.of(tanService));
+        when(inventoryRepository.findById(100L)).thenReturn(Optional.of(item));
+        when(usageRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+
+        Optional<ServiceInventoryUsage> result = service.createUsage(usage);
+
+        assertTrue(result.isPresent());
+        assertEquals(3, result.get().getQuantityUsed());
+    }
+
+    @Test
     void createUsage_shouldFail_whenServiceOrItemMissing() {
         when(tanServiceRepository.findById(1L)).thenReturn(Optional.empty());
         Optional<ServiceInventoryUsage> result = service.createUsage(usage);
@@ -156,6 +170,18 @@ class ServiceInventoryUsageServiceTest {
         Optional<ServiceInventoryUsage> result = service.updateQuantity(1L, 100L, 5);
         assertTrue(result.isPresent());
         assertEquals(5, result.get().getQuantityUsed());
+    }
+
+    @Test
+    void updateQuantity_shouldAllowQuantityOfOne() {
+        ServiceInventoryUsageKey key = new ServiceInventoryUsageKey(1L, 100L);
+        when(usageRepository.findById(key)).thenReturn(Optional.of(usage));
+        when(usageRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+
+        Optional<ServiceInventoryUsage> result = service.updateQuantity(1L, 100L, 1);
+
+        assertTrue(result.isPresent());
+        assertEquals(1, result.get().getQuantityUsed());
     }
 
     @Test

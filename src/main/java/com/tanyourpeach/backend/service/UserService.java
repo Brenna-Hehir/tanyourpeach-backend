@@ -53,6 +53,7 @@ public class UserService {
         return true;
     }
 
+    // Validate required fields
     private void validateUserFields(User user) {
         if (user.getName() == null || user.getName().trim().isEmpty()) {
             throw new RuntimeException("Name is required");
@@ -61,10 +62,7 @@ public class UserService {
             throw new RuntimeException("Email is required");
         }
         if (user.getPasswordHash() == null || user.getPasswordHash().trim().isEmpty()) {
-            throw new RuntimeException("Password is required");
-        }
-        if (user.getAddress() == null || user.getAddress().trim().isEmpty()) {
-            throw new RuntimeException("Address is required");
+            throw new RuntimeException("Password is required for registered users");
         }
     }
 }

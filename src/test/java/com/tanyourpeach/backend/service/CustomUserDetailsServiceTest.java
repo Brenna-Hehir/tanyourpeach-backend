@@ -96,4 +96,26 @@ class CustomUserDetailsServiceTest {
             customUserDetailsService.loadUserByUsername("missing@example.com");
         });
     }
+
+    @Test
+    void loadUserByUsername_shouldThrowException_whenEmailIsNull() {
+        assertThrows(UsernameNotFoundException.class, () -> {
+            customUserDetailsService.loadUserByUsername(null);
+        });
+    }
+
+    @Test
+    void loadUserByUsername_shouldReturnUserDetails_whenEmailIsMixedCase() {
+        User mockUser = new User();
+        mockUser.setEmail("admin@example.com"); // Stored in lowercase
+        mockUser.setPasswordHash("pass");
+        mockUser.setIsAdmin(false);
+
+        // Repository still expects exact match unless custom logic added
+        when(userRepository.findByEmail("admin@example.com")).thenReturn(Optional.of(mockUser));
+
+        UserDetails userDetails = customUserDetailsService.loadUserByUsername("Admin@Example.com");
+
+        assertEquals("admin@example.com", userDetails.getUsername());
+    }
 }

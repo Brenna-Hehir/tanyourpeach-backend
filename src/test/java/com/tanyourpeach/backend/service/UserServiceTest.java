@@ -70,15 +70,38 @@ class UserServiceTest {
     }
 
     @Test
-    void createUser_shouldFail_whenInvalidFields() {
+    void createUser_shouldFail_whenNameMissing() {
         User invalid = new User();
-        invalid.setName("  ");
-        invalid.setEmail(null);
-        invalid.setPasswordHash("");
-        invalid.setAddress(" ");
+        invalid.setName(" ");
+        invalid.setEmail("valid@example.com");
+        invalid.setPasswordHash("valid_pw");
 
         RuntimeException ex = assertThrows(RuntimeException.class, () -> userService.createUser(invalid));
         assertEquals("Name is required", ex.getMessage());
+        verify(userRepository, never()).save(any());
+    }
+
+    @Test
+    void createUser_shouldFail_whenEmailMissing() {
+        User invalid = new User();
+        invalid.setName("Valid");
+        invalid.setEmail("  ");
+        invalid.setPasswordHash("valid_pw");
+
+        RuntimeException ex = assertThrows(RuntimeException.class, () -> userService.createUser(invalid));
+        assertEquals("Email is required", ex.getMessage());
+        verify(userRepository, never()).save(any());
+    }
+
+    @Test
+    void createUser_shouldFail_whenPasswordMissing() {
+        User invalid = new User();
+        invalid.setName("Valid");
+        invalid.setEmail("valid@example.com");
+        invalid.setPasswordHash("  "); // blank password
+
+        RuntimeException ex = assertThrows(RuntimeException.class, () -> userService.createUser(invalid));
+        assertEquals("Password is required for registered users", ex.getMessage());
         verify(userRepository, never()).save(any());
     }
 
@@ -110,18 +133,48 @@ class UserServiceTest {
     }
 
     @Test
-    void updateUser_shouldFail_whenInvalidFields() {
+    void updateUser_shouldFail_whenNameMissing() {
         when(userRepository.existsById(1L)).thenReturn(true);
         when(userRepository.findById(1L)).thenReturn(Optional.of(testUser));
 
         User invalid = new User();
         invalid.setName(" ");
-        invalid.setEmail(null);
-        invalid.setPasswordHash(" ");
-        invalid.setAddress("");
+        invalid.setEmail("valid@example.com");
+        invalid.setPasswordHash("valid_pw");
 
         RuntimeException ex = assertThrows(RuntimeException.class, () -> userService.updateUser(1L, invalid));
         assertEquals("Name is required", ex.getMessage());
+        verify(userRepository, never()).save(any());
+    }
+
+    @Test
+    void updateUser_shouldFail_whenEmailMissing() {
+        when(userRepository.existsById(1L)).thenReturn(true);
+        when(userRepository.findById(1L)).thenReturn(Optional.of(testUser));
+
+        User invalid = new User();
+        invalid.setName("Valid");
+        invalid.setEmail(" ");
+        invalid.setPasswordHash("valid_pw");
+
+        RuntimeException ex = assertThrows(RuntimeException.class, () -> userService.updateUser(1L, invalid));
+        assertEquals("Email is required", ex.getMessage());
+        verify(userRepository, never()).save(any());
+    }
+
+    @Test
+    void updateUser_shouldFail_whenPasswordMissing() {
+        when(userRepository.existsById(1L)).thenReturn(true);
+        when(userRepository.findById(1L)).thenReturn(Optional.of(testUser));
+
+        User invalid = new User();
+        invalid.setName("Valid");
+        invalid.setEmail("valid@example.com");
+        invalid.setPasswordHash("  "); // blank password
+        invalid.setAddress("Some address");
+
+        RuntimeException ex = assertThrows(RuntimeException.class, () -> userService.updateUser(1L, invalid));
+        assertEquals("Password is required for registered users", ex.getMessage());
         verify(userRepository, never()).save(any());
     }
 

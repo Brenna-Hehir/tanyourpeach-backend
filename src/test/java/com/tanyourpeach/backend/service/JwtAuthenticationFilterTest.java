@@ -133,4 +133,16 @@ class JwtAuthenticationFilterTest {
         assertEquals("user@example.com", SecurityContextHolder.getContext().getAuthentication().getName());
         verify(filterChain).doFilter(request, response);
     }
+
+    @Test
+    void shouldSkipAuthentication_whenTokenIsEmpty() throws Exception {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.addHeader("Authorization", "Bearer "); // only prefix, no token
+        MockHttpServletResponse response = new MockHttpServletResponse();
+
+        jwtFilter.doFilterInternal(request, response, filterChain);
+
+        assertNull(SecurityContextHolder.getContext().getAuthentication());
+        verify(filterChain).doFilter(request, response);
+    }
 }

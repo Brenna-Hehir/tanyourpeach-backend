@@ -68,6 +68,30 @@ class TanServiceServiceTest {
     }
 
     @Test
+    void createService_shouldSucceed_withNullDescription() {
+        testService.setDescription(null); // allowed
+        when(serviceRepository.save(any())).thenReturn(testService);
+
+        TanService result = tanServiceService.createService(testService);
+
+        assertNotNull(result);
+        assertNull(result.getDescription());
+        verify(serviceRepository).save(any());
+    }
+
+    @Test
+    void createService_shouldSucceed_withBlankDescription() {
+        testService.setDescription("   "); // allowed
+        when(serviceRepository.save(any())).thenReturn(testService);
+
+        TanService result = tanServiceService.createService(testService);
+
+        assertNotNull(result);
+        assertEquals("   ", result.getDescription());
+        verify(serviceRepository).save(any());
+    }
+
+    @Test
     void createService_shouldFail_whenInvalid() {
         TanService invalid = new TanService();
         invalid.setName(" "); // blank
@@ -96,6 +120,24 @@ class TanServiceServiceTest {
         Optional<TanService> result = tanServiceService.updateService(1L, updated);
         assertTrue(result.isPresent());
         assertEquals("New Glow", result.get().getName());
+    }
+
+    @Test
+    void updateService_shouldSucceed_withNullDescription() {
+        TanService updated = new TanService();
+        updated.setName("Updated Name");
+        updated.setDescription(null); // allowed
+        updated.setBasePrice(60.0);
+        updated.setDurationMinutes(45);
+        updated.setIsActive(true);
+
+        when(serviceRepository.findById(1L)).thenReturn(Optional.of(testService));
+        when(serviceRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+
+        Optional<TanService> result = tanServiceService.updateService(1L, updated);
+
+        assertTrue(result.isPresent());
+        assertNull(result.get().getDescription());
     }
 
     @Test

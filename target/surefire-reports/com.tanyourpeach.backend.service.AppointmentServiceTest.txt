@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.tanyourpeach.backend.service.AppointmentServiceTest
 -------------------------------------------------------------------------------
-Tests run: 26, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 12.55 s -- in com.tanyourpeach.backend.service.AppointmentServiceTest
+Tests run: 30, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 13.04 s -- in com.tanyourpeach.backend.service.AppointmentServiceTest
