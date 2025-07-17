@@ -41,13 +41,6 @@ class FinancialLogServiceTest {
     }
 
     @Test
-    void createLog_shouldSaveSuccessfully() {
-        when(financialLogRepository.save(log)).thenReturn(log);
-        FinancialLog created = financialLogService.createLog(log);
-        assertEquals(log.getLogId(), created.getLogId());
-    }
-
-    @Test
     void getLogById_shouldReturnLog_whenExists() {
         when(financialLogRepository.findById(1L)).thenReturn(Optional.of(log));
         Optional<FinancialLog> found = financialLogService.getLogById(1L);
@@ -70,6 +63,32 @@ class FinancialLogServiceTest {
     }
 
     @Test
+    void createLog_shouldSaveSuccessfully() {
+        when(financialLogRepository.save(log)).thenReturn(log);
+        FinancialLog created = financialLogService.createLog(log);
+        assertEquals(log.getLogId(), created.getLogId());
+    }
+
+    @Test
+    void createLog_shouldReturnNull_whenAmountIsNegative() {
+        FinancialLog invalidLog = new FinancialLog();
+        invalidLog.setAmount(BigDecimal.valueOf(-10));
+        invalidLog.setType(FinancialLog.Type.expense);
+        invalidLog.setSource("test");
+        invalidLog.setDescription("Invalid");
+
+        FinancialLog result = financialLogService.createLog(invalidLog);
+        assertNull(result);
+    }
+
+    @Test
+    void createLog_shouldReturnNull_whenRequiredFieldsMissing() {
+        FinancialLog incompleteLog = new FinancialLog(); // no amount, type, etc.
+        FinancialLog result = financialLogService.createLog(incompleteLog);
+        assertNull(result);
+    }
+
+    @Test
     void updateLog_shouldModifyAndSave() {
         FinancialLog updated = new FinancialLog();
         updated.setType(FinancialLog.Type.expense);
@@ -84,6 +103,18 @@ class FinancialLogServiceTest {
         Optional<FinancialLog> result = financialLogService.updateLog(1L, updated);
         assertTrue(result.isPresent());
         assertEquals(FinancialLog.Type.expense, result.get().getType());
+    }
+
+    @Test
+    void updateLog_shouldReturnEmpty_whenValidationFails() {
+        FinancialLog updated = new FinancialLog();
+        updated.setAmount(BigDecimal.valueOf(-5)); // invalid
+        updated.setType(FinancialLog.Type.revenue);
+        updated.setSource("test");
+        updated.setDescription("bad");
+
+        Optional<FinancialLog> result = financialLogService.updateLog(1L, updated);
+        assertTrue(result.isEmpty());
     }
 
     @Test

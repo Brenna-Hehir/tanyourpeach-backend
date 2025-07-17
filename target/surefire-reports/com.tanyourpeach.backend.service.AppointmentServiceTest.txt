@@ -1,28 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.tanyourpeach.backend.service.AppointmentServiceTest
 -------------------------------------------------------------------------------
-Tests run: 22, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 12.48 s <<< FAILURE! -- in com.tanyourpeach.backend.service.AppointmentServiceTest
-com.tanyourpeach.backend.service.AppointmentServiceTest.updateAppointment_shouldConfirmWithInventoryAndGenerateLogAndReceipt -- Time elapsed: 0.048 s <<< FAILURE!
-Wanted but not invoked:
-receiptRepository.save(
-    <custom argument matcher>
-);
--> at com.tanyourpeach.backend.service.AppointmentServiceTest.updateAppointment_shouldConfirmWithInventoryAndGenerateLogAndReceipt(AppointmentServiceTest.java:289)
-
-However, there were exactly 2 interactions with this mock:
-receiptRepository.findByAppointment_AppointmentId(
-    1L
-);
--> at com.tanyourpeach.backend.service.AppointmentService.updateAppointment(AppointmentService.java:250)
-
-receiptRepository.save(
-    com.tanyourpeach.backend.model.Receipt@4b11a972
-);
--> at com.tanyourpeach.backend.service.AppointmentService.updateAppointment(AppointmentService.java:256)
-
-
-	at com.tanyourpeach.backend.service.AppointmentServiceTest.updateAppointment_shouldConfirmWithInventoryAndGenerateLogAndReceipt(AppointmentServiceTest.java:289)
-	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
-	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
-	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
-
+Tests run: 26, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 12.56 s -- in com.tanyourpeach.backend.service.AppointmentServiceTest

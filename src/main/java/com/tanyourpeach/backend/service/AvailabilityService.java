@@ -28,13 +28,54 @@ public class AvailabilityService {
 
     // POST create new availability slot
     public Availability createAvailability(Availability availability) {
+        // Prevent past dates
+        if (availability.getDate() != null && availability.getDate().isBefore(LocalDate.now())) {
+            return null; // Or throw an exception depending on your preference
+        }
+
+        // Prevent end time <= start time
+        if (availability.getEndTime().isBefore(availability.getStartTime()) ||
+            availability.getEndTime().equals(availability.getStartTime())) {
+            return null; // or throw IllegalArgumentException if you prefer
+        }
+
+        // Prevent overlap
+        List<Availability> overlaps = availabilityRepository.findByDate(availability.getDate()).stream()
+            .filter(existing ->
+                !(availability.getEndTime().isBefore(existing.getStartTime()) ||
+                availability.getStartTime().isAfter(existing.getEndTime()))
+            ).toList();
+
+        if (!overlaps.isEmpty()) {
+            return null;
+        }
+
         return availabilityRepository.save(availability);
     }
 
     // PUT update availability slot
     public Optional<Availability> updateAvailability(Long id, Availability updated) {
+        // Skip self in overlap check
+        List<Availability> overlaps = availabilityRepository.findByDate(updated.getDate()).stream()
+            .filter(existing -> !existing.getSlotId().equals(id))
+            .filter(existing ->
+                !(updated.getEndTime().isBefore(existing.getStartTime()) ||
+                updated.getStartTime().isAfter(existing.getEndTime()))
+            ).toList();
+
+        if (!overlaps.isEmpty() ||
+            updated.getEndTime().isBefore(updated.getStartTime()) ||
+            updated.getEndTime().equals(updated.getStartTime())) {
+            return Optional.empty();
+        }
+
         Optional<Availability> existingOpt = availabilityRepository.findById(id);
         if (existingOpt.isEmpty()) return Optional.empty();
+
+        // Prevent past dates
+        if (updated.getDate() != null && updated.getDate().isBefore(LocalDate.now())) {
+            return Optional.empty();
+        }
 
         Availability existing = existingOpt.get();
         existing.setDate(updated.getDate());

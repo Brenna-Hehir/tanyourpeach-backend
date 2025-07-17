@@ -99,6 +99,12 @@ class JwtServiceTest {
     }
 
     @Test
+    void extractUsername_shouldReturnNull_whenTokenMalformed() {
+        String malformed = "invalid.token.value";
+        assertNull(jwtService.extractUsername(malformed));
+    }
+
+    @Test
     void tamperedToken_shouldBeInvalid() {
         String token = jwtService.generateToken(appUser);
         // Remove signature part completely (split by '.')

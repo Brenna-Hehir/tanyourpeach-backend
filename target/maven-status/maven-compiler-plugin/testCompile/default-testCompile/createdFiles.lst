@@ -1,0 +1,13 @@
+com\tanyourpeach\backend\service\FinancialLogServiceTest.class
+com\tanyourpeach\backend\service\TanServiceServiceTest.class
+com\tanyourpeach\backend\service\ReceiptServiceTest.class
+com\tanyourpeach\backend\service\UserAuthServiceTest.class
+com\tanyourpeach\backend\service\AppointmentServiceTest.class
+com\tanyourpeach\backend\service\CustomUserDetailsServiceTest.class
+com\tanyourpeach\backend\service\AvailabilityServiceTest.class
+com\tanyourpeach\backend\service\JwtAuthenticationFilterTest.class
+com\tanyourpeach\backend\service\ServiceInventoryUsageServiceTest.class
+com\tanyourpeach\backend\service\UserServiceTest.class
+com\tanyourpeach\backend\service\InventoryServiceTest.class
+com\tanyourpeach\backend\service\JwtServiceTest.class
+com\tanyourpeach\backend\service\AdminStatsServiceTest.class

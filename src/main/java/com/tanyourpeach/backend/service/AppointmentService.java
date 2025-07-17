@@ -164,6 +164,7 @@ public class AppointmentService {
         if (updated.getClientName() == null || updated.getClientName().trim().isEmpty()) return Optional.empty();
         if (updated.getClientEmail() == null || updated.getClientEmail().trim().isEmpty()) return Optional.empty();
         if (updated.getTravelFee() != null && updated.getTravelFee() < 0) return Optional.empty();
+        if (updated.getService() == null || updated.getService().getServiceId() == null) return Optional.empty();
 
         // Basic field updates
         existing.setClientName(updated.getClientName());

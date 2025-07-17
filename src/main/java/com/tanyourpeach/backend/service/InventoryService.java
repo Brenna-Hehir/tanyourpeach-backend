@@ -32,13 +32,23 @@ public class InventoryService {
 
     // Create new inventory item
     public Inventory createInventory(Inventory inventory) {
-        if (inventory.getQuantity() < 0) inventory.setQuantity(0);
+        // Basic validation
+        if (inventory.getItemName() == null || inventory.getItemName().isBlank()) return null;
+        if (inventory.getUnitCost() != null && inventory.getUnitCost().compareTo(BigDecimal.ZERO) < 0) return null;
+
+        if (inventory.getQuantity() == null || inventory.getQuantity() < 0) inventory.setQuantity(0);
         if (inventory.getTotalSpent() == null) inventory.setTotalSpent(BigDecimal.ZERO);
+
         return inventoryRepository.save(inventory);
     }
 
+
     // Update existing inventory item with expense logging
     public Optional<Inventory> updateInventory(Long id, Inventory updated) {
+        // Basic validation
+        if (updated.getItemName() == null || updated.getItemName().isBlank()) return Optional.empty();
+        if (updated.getUnitCost() != null && updated.getUnitCost().compareTo(BigDecimal.ZERO) < 0) return Optional.empty();
+
         return inventoryRepository.findById(id).map(existing -> {
             int oldQuantity = existing.getQuantity() != null ? existing.getQuantity() : 0;
             BigDecimal oldTotalSpent = existing.getTotalSpent() != null ? existing.getTotalSpent() : BigDecimal.ZERO;

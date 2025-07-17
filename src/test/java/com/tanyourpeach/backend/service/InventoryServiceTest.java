@@ -80,6 +80,78 @@ class InventoryServiceTest {
     }
 
     @Test
+    void createInventory_shouldRejectBlankItemName() {
+        Inventory input = new Inventory();
+        input.setItemName("   "); // Invalid name
+        input.setQuantity(5);
+        input.setUnitCost(BigDecimal.valueOf(1.00));
+        input.setTotalSpent(BigDecimal.ZERO);
+
+        Inventory result = inventoryService.createInventory(input);
+
+        assertNull(result); // Should be rejected
+        verify(inventoryRepository, never()).save(any());
+    }
+
+    @Test
+    void createInventory_shouldRejectNegativeUnitCost() {
+        Inventory input = new Inventory();
+        input.setItemName("Test Item");
+        input.setQuantity(5);
+        input.setUnitCost(BigDecimal.valueOf(-1.00)); // Invalid
+        input.setTotalSpent(BigDecimal.ZERO);
+
+        Inventory result = inventoryService.createInventory(input);
+
+        assertNull(result); // Should return null
+        verify(inventoryRepository, never()).save(any());
+    }
+
+    @Test
+    void createInventory_shouldFail_whenItemNameIsBlank() {
+        Inventory newItem = new Inventory();
+        newItem.setItemName("   ");
+        newItem.setQuantity(5);
+
+        Inventory result = inventoryService.createInventory(newItem);
+        assertNull(result);
+    }
+
+    @Test
+    void createInventory_shouldFail_whenUnitCostIsNegative() {
+        Inventory newItem = new Inventory();
+        newItem.setItemName("Spray");
+        newItem.setQuantity(5);
+        newItem.setUnitCost(BigDecimal.valueOf(-1.00));
+
+        Inventory result = inventoryService.createInventory(newItem);
+        assertNull(result);
+    }
+
+    @Test
+    void createInventory_shouldDefaultToZero_whenQuantityOrCostIsNull() {
+        // Arrange
+        Inventory input = new Inventory();
+        input.setItemName("Gloves");
+        input.setQuantity(null);               // testing null
+        input.setTotalSpent(null);            // testing null
+        input.setUnitCost(new BigDecimal("1.50"));
+
+        when(inventoryRepository.save(any(Inventory.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        // Act
+        Inventory result = inventoryService.createInventory(input);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(0, result.getQuantity());
+        assertEquals(BigDecimal.ZERO, result.getTotalSpent());
+        assertEquals(new BigDecimal("1.50"), result.getUnitCost());
+
+        verify(inventoryRepository).save(any());
+    }
+
+    @Test
     void updateInventory_shouldLogExpense_whenQuantityIncreases() {
         Inventory updated = new Inventory();
         updated.setItemName("Gloves");
@@ -95,6 +167,22 @@ class InventoryServiceTest {
 
         assertTrue(result.isPresent());
         verify(financialLogRepository).save(any(FinancialLog.class));
+    }
+
+    @Test
+    void updateInventory_shouldHandleNullUnitCostGracefully() {
+        Inventory updated = new Inventory();
+        updated.setItemName("Gloves");
+        updated.setQuantity(15); // increased
+        updated.setUnitCost(null); // null cost should skip logging
+
+        when(inventoryRepository.findById(1L)).thenReturn(Optional.of(item));
+        when(inventoryRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+
+        Optional<Inventory> result = inventoryService.updateInventory(1L, updated);
+
+        assertTrue(result.isPresent());
+        verify(financialLogRepository, never()).save(any());
     }
 
     @Test
@@ -117,6 +205,29 @@ class InventoryServiceTest {
 
         Optional<Inventory> result = inventoryService.updateInventory(99L, new Inventory());
 
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void updateInventory_shouldRejectNegativeUnitCost() {
+        Inventory update = new Inventory();
+        update.setItemName("Updated Item");
+        update.setQuantity(5);
+        update.setUnitCost(BigDecimal.valueOf(-5.00)); // Invalid
+
+        Optional<Inventory> result = inventoryService.updateInventory(1L, update);
+
+        assertTrue(result.isEmpty()); // Should not update
+        verify(inventoryRepository, never()).save(any());
+    }
+
+    @Test
+    void updateInventory_shouldFail_whenInvalidData() {
+        Inventory badUpdate = new Inventory();
+        badUpdate.setItemName(null);
+        badUpdate.setUnitCost(BigDecimal.valueOf(-2.00));
+
+        Optional<Inventory> result = inventoryService.updateInventory(1L, badUpdate);
         assertTrue(result.isEmpty());
     }
 

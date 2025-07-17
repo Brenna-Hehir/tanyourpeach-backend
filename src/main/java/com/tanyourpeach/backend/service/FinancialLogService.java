@@ -26,11 +26,23 @@ public class FinancialLogService {
 
     // Create a new log
     public FinancialLog createLog(FinancialLog log) {
+        // Basic validation
+        if (log.getAmount() == null || log.getAmount().signum() < 0 ||
+            log.getType() == null || log.getSource() == null) {
+            return null; // or throw IllegalArgumentException if preferred
+        }
+
         return financialLogRepository.save(log);
     }
 
     // Update an existing log
     public Optional<FinancialLog> updateLog(Long id, FinancialLog updated) {
+        // Basic validation
+        if (updated.getAmount() == null || updated.getAmount().signum() < 0 ||
+            updated.getType() == null || updated.getSource() == null) {
+            return Optional.empty(); // prevent update if invalid
+        }
+
         return financialLogRepository.findById(id).map(existing -> {
             existing.setType(updated.getType());
             existing.setSource(updated.getSource());

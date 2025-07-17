@@ -88,11 +88,46 @@ class AvailabilityServiceTest {
     }
 
     @Test
-    void updateAvailability_shouldReturnEmptyIfNotFound() {
-        when(availabilityRepository.findById(99L)).thenReturn(Optional.empty());
+    void createAvailability_shouldReturnNull_whenDateIsInPast() {
+        Availability pastSlot = new Availability();
+        pastSlot.setDate(LocalDate.now().minusDays(1));
+        pastSlot.setStartTime(LocalTime.of(9, 0));
+        pastSlot.setEndTime(LocalTime.of(10, 0));
 
-        Optional<Availability> result = availabilityService.updateAvailability(99L, availability);
-        assertTrue(result.isEmpty());
+        Availability result = availabilityService.createAvailability(pastSlot);
+        assertNull(result);
+    }
+
+    @Test
+    void createAvailability_shouldReturnNull_ifTimeOverlaps() {
+        Availability existingSlot = new Availability();
+        existingSlot.setSlotId(1L);
+        existingSlot.setDate(LocalDate.of(2025, 8, 1));
+        existingSlot.setStartTime(LocalTime.of(10, 0));
+        existingSlot.setEndTime(LocalTime.of(11, 0));
+
+        Availability newSlot = new Availability();
+        newSlot.setDate(LocalDate.of(2025, 8, 1));
+        newSlot.setStartTime(LocalTime.of(10, 30)); // overlaps
+        newSlot.setEndTime(LocalTime.of(11, 30));
+
+        when(availabilityRepository.findByDate(LocalDate.of(2025, 8, 1))).thenReturn(List.of(existingSlot));
+
+        Availability result = availabilityService.createAvailability(newSlot);
+        assertNull(result);
+        verify(availabilityRepository, never()).save(any());
+    }
+
+    @Test
+    void createAvailability_shouldReturnNull_ifEndTimeNotAfterStartTime() {
+        Availability invalidSlot = new Availability();
+        invalidSlot.setDate(LocalDate.of(2025, 8, 2));
+        invalidSlot.setStartTime(LocalTime.of(15, 0));
+        invalidSlot.setEndTime(LocalTime.of(15, 0)); // not after
+
+        Availability result = availabilityService.createAvailability(invalidSlot);
+        assertNull(result);
+        verify(availabilityRepository, never()).save(any());
     }
 
     @Test
@@ -116,6 +151,65 @@ class AvailabilityServiceTest {
         assertEquals(LocalTime.of(14, 0), resultSlot.getEndTime());
         assertTrue(resultSlot.getIsBooked());
         assertEquals("Updated slot", resultSlot.getNotes());
+    }
+
+    @Test
+    void updateAvailability_shouldReturnEmptyIfNotFound() {
+        when(availabilityRepository.findById(99L)).thenReturn(Optional.empty());
+
+        Optional<Availability> result = availabilityService.updateAvailability(99L, availability);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void updateAvailability_shouldReturnEmpty_whenDateIsInPast() {
+        when(availabilityRepository.findById(1L)).thenReturn(Optional.of(availability));
+
+        Availability updated = new Availability();
+        updated.setDate(LocalDate.now().minusDays(1));
+        updated.setStartTime(LocalTime.of(10, 0));
+        updated.setEndTime(LocalTime.of(11, 0));
+        updated.setIsBooked(false);
+
+        Optional<Availability> result = availabilityService.updateAvailability(1L, updated);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void updateAvailability_shouldReturnEmpty_ifTimeOverlaps() {
+        Availability existingSlot = new Availability();
+        existingSlot.setSlotId(2L); // another slot on same day
+        existingSlot.setDate(LocalDate.of(2025, 8, 1));
+        existingSlot.setStartTime(LocalTime.of(12, 0));
+        existingSlot.setEndTime(LocalTime.of(13, 0));
+
+        when(availabilityRepository.findById(1L)).thenReturn(Optional.of(availability));
+        when(availabilityRepository.findByDate(availability.getDate())).thenReturn(List.of(availability, existingSlot));
+
+        Availability updated = new Availability();
+        updated.setDate(LocalDate.of(2025, 8, 1));
+        updated.setStartTime(LocalTime.of(12, 30)); // overlaps with slotId 2
+        updated.setEndTime(LocalTime.of(13, 30));
+        updated.setIsBooked(false);
+
+        Optional<Availability> result = availabilityService.updateAvailability(1L, updated);
+        assertTrue(result.isEmpty());
+        verify(availabilityRepository, never()).save(any());
+    }
+
+    @Test
+    void updateAvailability_shouldReturnEmpty_ifEndTimeNotAfterStartTime() {
+        when(availabilityRepository.findById(1L)).thenReturn(Optional.of(availability));
+
+        Availability updated = new Availability();
+        updated.setDate(LocalDate.of(2025, 8, 1));
+        updated.setStartTime(LocalTime.of(14, 0));
+        updated.setEndTime(LocalTime.of(14, 0)); // invalid
+        updated.setIsBooked(false);
+
+        Optional<Availability> result = availabilityService.updateAvailability(1L, updated);
+        assertTrue(result.isEmpty());
+        verify(availabilityRepository, never()).save(any());
     }
 
     @Test

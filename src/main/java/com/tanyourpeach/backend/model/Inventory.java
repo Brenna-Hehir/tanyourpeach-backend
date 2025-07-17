@@ -23,7 +23,7 @@ public class Inventory {
     private String itemName;
 
     @Min(value = 0, message = "Quantity cannot be negative")
-    private int quantity = 0;
+    private Integer quantity = 0;
 
     @DecimalMin(value = "0.00", inclusive = false, message = "Unit cost must be greater than 0")
     @Column(precision = 6, scale = 2)
