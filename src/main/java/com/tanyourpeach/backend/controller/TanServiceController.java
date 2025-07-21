@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import com.tanyourpeach.backend.model.TanService;
 import com.tanyourpeach.backend.service.TanServiceService;
 
+import jakarta.validation.Valid;
+
 import java.util.List;
 
 @RestController
@@ -34,7 +36,7 @@ public class TanServiceController {
 
     // POST create a new service
     @PostMapping
-    public ResponseEntity<TanService> createService(@RequestBody TanService service) {
+    public ResponseEntity<TanService> createService(@Valid @RequestBody TanService service) {
         TanService created = serviceService.createService(service);
         return created != null
             ? ResponseEntity.status(HttpStatus.CREATED).body(created)
@@ -43,7 +45,7 @@ public class TanServiceController {
 
     // PUT update an existing service
     @PutMapping("/{id}")
-    public ResponseEntity<TanService> updateService(@PathVariable Long id, @RequestBody TanService updated) {
+    public ResponseEntity<TanService> updateService(@PathVariable Long id, @Valid @RequestBody TanService updated) {
         return serviceService.updateService(id, updated)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());

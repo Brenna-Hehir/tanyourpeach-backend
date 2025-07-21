@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="com.tanyourpeach.backend.service.ReceiptServiceTest" time="0.139" tests="16" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="com.tanyourpeach.backend.DbConnectionTest" time="1.681" tests="1" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="17"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -62,24 +62,44 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="61.0"/>
   </properties>
-  <testcase name="updateReceipt_shouldNotSetNullTotalAmount" classname="com.tanyourpeach.backend.service.ReceiptServiceTest" time="0.01">
-    <system-out><![CDATA[2025-07-21T17:04:55.823-04:00  INFO 34028 --- [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.tanyourpeach.backend.service.ReceiptServiceTest]: ReceiptServiceTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2025-07-21T17:04:55.825-04:00  INFO 34028 --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.tanyourpeach.backend.BackendApplication for test class com.tanyourpeach.backend.service.ReceiptServiceTest
+  <testcase name="testConnection" classname="com.tanyourpeach.backend.DbConnectionTest" time="0.012">
+    <system-out><![CDATA[2025-07-21T17:04:52.510-04:00  INFO 34028 --- [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.tanyourpeach.backend.DbConnectionTest]: DbConnectionTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2025-07-21T17:04:52.537-04:00  INFO 34028 --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.tanyourpeach.backend.BackendApplication for test class com.tanyourpeach.backend.DbConnectionTest
+2025-07-21T17:04:52.544-04:00  INFO 34028 --- [           main] o.s.b.d.r.RestartApplicationListener     : Restart disabled due to context in which it is running
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.5.3)
+
+2025-07-21T17:04:52.603-04:00  INFO 34028 --- [           main] c.tanyourpeach.backend.DbConnectionTest  : Starting DbConnectionTest using Java 17.0.12 with PID 34028 (started by Koolb in C:\Users\Koolb\OneDrive\Documents\Database Management\tanUrPeach_backend\backend)
+2025-07-21T17:04:52.603-04:00  INFO 34028 --- [           main] c.tanyourpeach.backend.DbConnectionTest  : No active profile set, falling back to 1 default profile: "default"
+2025-07-21T17:04:52.975-04:00  INFO 34028 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-07-21T17:04:53.011-04:00  INFO 34028 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 38 ms. Found 10 JPA repository interfaces.
+2025-07-21T17:04:53.211-04:00  INFO 34028 --- [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-07-21T17:04:53.220-04:00  INFO 34028 --- [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2025-07-21T17:04:53.251-04:00  INFO 34028 --- [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-07-21T17:04:53.255-04:00  INFO 34028 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Starting...
+2025-07-21T17:04:53.309-04:00  INFO 34028 --- [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-2 - Added connection com.mysql.cj.jdbc.ConnectionImpl@3151caf8
+2025-07-21T17:04:53.309-04:00  INFO 34028 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Start completed.
+2025-07-21T17:04:53.313-04:00  WARN 34028 --- [           main] org.hibernate.orm.deprecation            : HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-07-21T17:04:53.314-04:00  INFO 34028 --- [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-2)']
+	Database driver: undefined/unknown
+	Database version: 8.4.5
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-07-21T17:04:53.533-04:00  INFO 34028 --- [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-07-21T17:04:53.533-04:00  INFO 34028 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-07-21T17:04:53.757-04:00  WARN 34028 --- [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-07-21T17:04:53.974-04:00  INFO 34028 --- [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-07-21T17:04:54.173-04:00  INFO 34028 --- [           main] c.tanyourpeach.backend.DbConnectionTest  : Started DbConnectionTest in 1.63 seconds (process running for 20.224)
 ]]></system-out>
   </testcase>
-  <testcase name="createReceipt_shouldAllowNullPaymentMethod" classname="com.tanyourpeach.backend.service.ReceiptServiceTest" time="0.006"/>
-  <testcase name="getReceiptById_shouldReturnReceipt" classname="com.tanyourpeach.backend.service.ReceiptServiceTest" time="0.008"/>
-  <testcase name="createReceipt_shouldUseAppointmentTotal_whenNoAmountGiven" classname="com.tanyourpeach.backend.service.ReceiptServiceTest" time="0.005"/>
-  <testcase name="deleteReceipt_shouldFailWhenMissing" classname="com.tanyourpeach.backend.service.ReceiptServiceTest" time="0.002"/>
-  <testcase name="updateReceipt_shouldAllowNullNotes" classname="com.tanyourpeach.backend.service.ReceiptServiceTest" time="0.012"/>
-  <testcase name="deleteReceipt_shouldDeleteWhenExists" classname="com.tanyourpeach.backend.service.ReceiptServiceTest" time="0.005"/>
-  <testcase name="createReceipt_shouldReturnEmpty_whenAppointmentMissing" classname="com.tanyourpeach.backend.service.ReceiptServiceTest" time="0.006"/>
-  <testcase name="createReceipt_shouldLinkAppointmentProperly" classname="com.tanyourpeach.backend.service.ReceiptServiceTest" time="0.007"/>
-  <testcase name="getAllReceipts_shouldReturnList" classname="com.tanyourpeach.backend.service.ReceiptServiceTest" time="0.004"/>
-  <testcase name="updateReceipt_shouldApplyChanges" classname="com.tanyourpeach.backend.service.ReceiptServiceTest" time="0.014"/>
-  <testcase name="getReceiptByAppointmentId_shouldReturnReceipt" classname="com.tanyourpeach.backend.service.ReceiptServiceTest" time="0.004"/>
-  <testcase name="getReceiptByAppointmentId_shouldReturnEmpty_whenMissing" classname="com.tanyourpeach.backend.service.ReceiptServiceTest" time="0.005"/>
-  <testcase name="createReceipt_shouldNotSetTotal_whenAppointmentTotalPriceNull" classname="com.tanyourpeach.backend.service.ReceiptServiceTest" time="0.002"/>
-  <testcase name="updateReceipt_shouldReturnEmpty_whenReceiptMissing" classname="com.tanyourpeach.backend.service.ReceiptServiceTest" time="0.004"/>
-  <testcase name="createReceipt_shouldPreserveProvidedAmount_whenSet" classname="com.tanyourpeach.backend.service.ReceiptServiceTest" time="0.006"/>
 </testsuite>
