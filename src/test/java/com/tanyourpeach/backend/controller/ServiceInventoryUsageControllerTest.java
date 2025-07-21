@@ -94,19 +94,19 @@ class ServiceInventoryUsageControllerTest {
     }
 
     @Test
-    void updateQuantityUsed_shouldReturnNotFound_ifNotFound() {
-        when(usageService.updateQuantity(1L, 100L, 5)).thenReturn(Optional.empty());
-
-        ResponseEntity<ServiceInventoryUsage> response = controller.updateQuantityUsed(1L, 100L, 5);
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-    }
-
-    @Test
     void deleteUsage_shouldReturnNoContent_ifDeleted() {
         when(usageService.deleteUsage(1L, 100L)).thenReturn(true);
 
         ResponseEntity<Void> response = controller.deleteUsage(1L, 100L);
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+    }
+
+    @Test
+    void updateQuantityUsed_shouldReturnNotFound_ifNotFound() {
+        when(usageService.updateQuantity(1L, 100L, 5)).thenReturn(Optional.empty());
+
+        ResponseEntity<ServiceInventoryUsage> response = controller.updateQuantityUsed(1L, 100L, 5);
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
     @Test

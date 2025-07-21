@@ -168,13 +168,6 @@ class AppointmentControllerTest {
     }
 
     @Test
-    void getUserAppointments_shouldReturn401_ifEmailNull() {
-        when(request.getHeader("Authorization")).thenReturn(null);
-        ResponseEntity<?> response = controller.getUserAppointments(request);
-        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
-    }
-
-    @Test
     void getUserAppointments_shouldReturnAppointmentsForUser() {
         Appointment a2 = new Appointment();
         a2.setClientEmail("someone@example.com");
@@ -186,6 +179,13 @@ class AppointmentControllerTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         List<?> list = (List<?>) response.getBody();
         assertEquals(1, list.size());
+    }
+
+    @Test
+    void getUserAppointments_shouldReturn401_ifEmailNull() {
+        when(request.getHeader("Authorization")).thenReturn(null);
+        ResponseEntity<?> response = controller.getUserAppointments(request);
+        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
     }
 
     @Test

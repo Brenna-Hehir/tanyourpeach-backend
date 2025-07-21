@@ -72,36 +72,16 @@ class UserControllerTest {
     void createUser_shouldReturnCreatedUser() {
         when(userService.createUser(testUser)).thenReturn(testUser);
 
-        User result = controller.createUser(testUser);
-
-        assertNotNull(result);
-        assertEquals("Brenna", result.getName());
+        ResponseEntity<User> response = controller.createUser(testUser);
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        assertEquals(testUser, response.getBody());
     }
 
     @Test
-    void createUser_shouldReturnNull_whenInvalidInput() {
-        User invalidUser = new User();
-        invalidUser.setName(" "); // blank name
-        invalidUser.setEmail(" "); // blank email
-
+    void createUser_shouldReturn400_whenInvalidInput() {
         when(userService.createUser(any())).thenReturn(null);
-
-        User result = controller.createUser(invalidUser);
-        assertNull(result);
-        verify(userService).createUser(any());
-    }
-
-    @Test
-    void createUser_shouldReturnNull_whenFieldsAreNull() {
-        User nullUser = new User();
-        nullUser.setName(null);
-        nullUser.setEmail(null);
-
-        when(userService.createUser(any())).thenReturn(null);
-
-        User result = controller.createUser(nullUser);
-        assertNull(result);
-        verify(userService).createUser(any());
+        ResponseEntity<User> response = controller.createUser(new User());
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
 
     @Test

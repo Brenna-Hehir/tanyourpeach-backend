@@ -50,19 +50,28 @@ class AvailabilityControllerTest {
         assertEquals(testAvailability.getSlotId(), result.get(0).getSlotId());
     }
 
-    @Test
+   @Test
     void getAvailableSlotsByDate_shouldReturnSlots() {
         LocalDate date = LocalDate.of(2025, 7, 20);
         when(availabilityService.getAvailableSlotsByDate(date)).thenReturn(List.of(testAvailability));
 
-        List<Availability> result = availabilityController.getAvailableSlotsByDate("2025-07-20");
+        ResponseEntity<?> response = availabilityController.getAvailableSlotsByDate("2025-07-20");
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+
+        List<?> result = (List<?>) response.getBody();
         assertEquals(1, result.size());
-        assertEquals(LocalTime.of(9, 0), result.get(0).getStartTime());
+
+        Availability returned = (Availability) result.get(0);
+        assertEquals(LocalTime.of(9, 0), returned.getStartTime());
     }
 
     @Test
-    void getAvailableSlotsByDate_shouldThrow_ifDateInvalid() {
-        assertThrows(Exception.class, () -> availabilityController.getAvailableSlotsByDate("not-a-date"));
+    void getAvailableSlotsByDate_shouldReturn400_ifDateInvalid() {
+        ResponseEntity<?> response = availabilityController.getAvailableSlotsByDate("not-a-date");
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals("Invalid date format", response.getBody());
     }
 
     @Test

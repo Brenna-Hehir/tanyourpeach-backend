@@ -20,6 +20,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 class InventoryControllerTest {
@@ -100,11 +102,42 @@ class InventoryControllerTest {
     }
 
     @Test
+    void createInventory_shouldReturn403_whenAuthorizationHeaderMissing() {
+        when(request.getHeader("Authorization")).thenReturn(null);
+        ResponseEntity<?> response = controller.createInventory(testItem, request);
+        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+    }
+
+    @Test
+    void createInventory_shouldReturn403_whenAuthorizationHeaderMalformed() {
+        when(request.getHeader("Authorization")).thenReturn("bad");
+        ResponseEntity<?> response = controller.createInventory(testItem, request);
+        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+    }
+
+    @Test
     void updateInventory_shouldReturnItem_ifFound() {
         when(inventoryService.updateInventory(eq(1L), any())).thenReturn(Optional.of(testItem));
 
         ResponseEntity<?> response = controller.updateInventory(1L, testItem, request);
         assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
+    void updateInventory_shouldReturn403_whenUserNotFound() {
+        when(request.getHeader("Authorization")).thenReturn(token);
+        when(jwtService.extractUsername("mock-token")).thenReturn(email);
+        when(userRepository.findByEmail(email)).thenReturn(Optional.empty());
+
+        ResponseEntity<?> response = controller.updateInventory(1L, testItem, request);
+        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+    }
+
+    @Test
+    void updateInventory_shouldReturn403_ifNotAdmin() {
+        adminUser.setIsAdmin(false);
+        ResponseEntity<?> response = controller.updateInventory(1L, testItem, request);
+        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
     }
 
     @Test
@@ -116,13 +149,6 @@ class InventoryControllerTest {
     }
 
     @Test
-    void updateInventory_shouldReturn403_ifNotAdmin() {
-        adminUser.setIsAdmin(false);
-        ResponseEntity<?> response = controller.updateInventory(1L, testItem, request);
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
-    }
-
-    @Test
     void deleteInventory_shouldReturn204_ifDeleted() {
         when(inventoryService.deleteInventory(1L)).thenReturn(true);
 
@@ -131,18 +157,18 @@ class InventoryControllerTest {
     }
 
     @Test
+    void deleteInventory_shouldReturn403_ifNotAdmin() {
+        adminUser.setIsAdmin(false);
+        ResponseEntity<?> response = controller.deleteInventory(1L, request);
+        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+    }
+
+    @Test
     void deleteInventory_shouldReturn404_ifNotFound() {
         when(inventoryService.deleteInventory(1L)).thenReturn(false);
 
         ResponseEntity<?> response = controller.deleteInventory(1L, request);
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-    }
-
-    @Test
-    void deleteInventory_shouldReturn403_ifNotAdmin() {
-        adminUser.setIsAdmin(false);
-        ResponseEntity<?> response = controller.deleteInventory(1L, request);
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
     }
 
     @Test

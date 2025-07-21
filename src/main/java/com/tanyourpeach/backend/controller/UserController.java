@@ -1,6 +1,7 @@
 package com.tanyourpeach.backend.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,8 +34,11 @@ public class UserController {
 
     // POST create a new user
     @PostMapping
-    public User createUser(@RequestBody User user) {
-        return userService.createUser(user);
+    public ResponseEntity<User> createUser(@RequestBody User user) {
+        User created = userService.createUser(user);
+        return created != null
+            ? ResponseEntity.status(HttpStatus.CREATED).body(created)
+            : ResponseEntity.badRequest().build();
     }
 
     // PUT update an existing user

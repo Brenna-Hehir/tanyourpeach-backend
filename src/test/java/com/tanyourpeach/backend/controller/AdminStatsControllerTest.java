@@ -69,6 +69,42 @@ class AdminStatsControllerTest {
     }
 
     @Test
+    void getSummary_shouldReturn403_ifTokenMissing() {
+        when(request.getHeader("Authorization")).thenReturn(null); // no token
+
+        ResponseEntity<?> response = controller.getSummary(request);
+        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+    }
+
+    @Test
+    void getSummary_shouldReturn403_ifTokenMalformed() {
+        when(request.getHeader("Authorization")).thenReturn("badformat"); // not "Bearer ..."
+
+        ResponseEntity<?> response = controller.getSummary(request);
+        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+    }
+
+    @Test
+    void getSummary_shouldReturn403_ifNotAdmin() {
+        when(request.getHeader("Authorization")).thenReturn(jwtToken);
+        when(jwtService.extractUsername("mocktoken")).thenReturn(email);
+        when(userRepository.findByEmail(email)).thenReturn(Optional.of(new User())); // not admin
+
+        ResponseEntity<?> response = controller.getSummary(request);
+        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+    }
+
+    @Test
+    void getSummary_shouldReturn403_ifEmailNotFound() {
+        when(request.getHeader("Authorization")).thenReturn(jwtToken);
+        when(jwtService.extractUsername("mocktoken")).thenReturn(email);
+        when(userRepository.findByEmail(email)).thenReturn(Optional.empty());
+
+        ResponseEntity<?> response = controller.getSummary(request);
+        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+    }
+
+    @Test
     void getMonthlyStats_shouldReturn200_ifAdmin() {
         List<MonthlyStats> monthlyMock = List.of(mock(MonthlyStats.class));
 
@@ -80,6 +116,16 @@ class AdminStatsControllerTest {
         ResponseEntity<?> response = controller.getMonthlyStats(request);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(monthlyMock, response.getBody());
+    }
+
+    @Test
+    void getMonthlyStats_shouldReturn403_ifNotAdmin() {
+        when(request.getHeader("Authorization")).thenReturn(jwtToken);
+        when(jwtService.extractUsername("mocktoken")).thenReturn(email);
+        when(userRepository.findByEmail(email)).thenReturn(Optional.of(new User())); // not admin
+
+        ResponseEntity<?> response = controller.getMonthlyStats(request);
+        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
     }
 
     @Test
@@ -97,6 +143,16 @@ class AdminStatsControllerTest {
     }
 
     @Test
+    void getUpcomingAppointments_shouldReturn403_ifNotAdmin() {
+        when(request.getHeader("Authorization")).thenReturn(jwtToken);
+        when(jwtService.extractUsername("mocktoken")).thenReturn(email);
+        when(userRepository.findByEmail(email)).thenReturn(Optional.of(new User())); // not admin
+
+        ResponseEntity<?> response = controller.getUpcomingAppointments(request);
+        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+    }
+
+    @Test
     void getLowStockItems_shouldReturn200_ifAdmin() {
         List<Inventory> lowStockMock = List.of(mock(Inventory.class));
 
@@ -111,38 +167,12 @@ class AdminStatsControllerTest {
     }
 
     @Test
-    void getSummary_shouldReturn403_ifNotAdmin() {
+    void getLowStockItems_shouldReturn403_ifNotAdmin() {
         when(request.getHeader("Authorization")).thenReturn(jwtToken);
         when(jwtService.extractUsername("mocktoken")).thenReturn(email);
         when(userRepository.findByEmail(email)).thenReturn(Optional.of(new User())); // not admin
 
-        ResponseEntity<?> response = controller.getSummary(request);
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
-    }
-
-    @Test
-    void getMonthlyStats_shouldReturn403_ifNotAdmin() {
-        when(request.getHeader("Authorization")).thenReturn(jwtToken);
-        when(jwtService.extractUsername("mocktoken")).thenReturn(email);
-        when(userRepository.findByEmail(email)).thenReturn(Optional.of(new User())); // not admin
-
-        ResponseEntity<?> response = controller.getMonthlyStats(request);
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
-    }
-
-    @Test
-    void getSummary_shouldReturn403_ifTokenMissing() {
-        when(request.getHeader("Authorization")).thenReturn(null); // no token
-
-        ResponseEntity<?> response = controller.getSummary(request);
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
-    }
-
-    @Test
-    void getSummary_shouldReturn403_ifTokenMalformed() {
-        when(request.getHeader("Authorization")).thenReturn("badformat"); // not "Bearer ..."
-
-        ResponseEntity<?> response = controller.getSummary(request);
+        ResponseEntity<?> response = controller.getLowStockItems(request);
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
     }
 }

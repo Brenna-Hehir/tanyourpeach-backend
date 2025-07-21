@@ -84,43 +84,6 @@ class FinancialLogControllerTest {
     }
 
     @Test
-    void getLogById_shouldReturnLog_ifAdmin() {
-        when(request.getHeader("Authorization")).thenReturn(token);
-        when(jwtService.extractUsername("mock-token")).thenReturn(email);
-        when(userRepository.findByEmail(email)).thenReturn(Optional.of(adminUser));
-        when(financialLogService.getLogById(1L)).thenReturn(Optional.of(testLog));
-
-        ResponseEntity<?> response = controller.getLogById(1L, request);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(testLog, response.getBody());
-    }
-
-    @Test
-    void getLogById_shouldReturn404_ifNotFound() {
-        when(request.getHeader("Authorization")).thenReturn(token);
-        when(jwtService.extractUsername("mock-token")).thenReturn(email);
-        when(userRepository.findByEmail(email)).thenReturn(Optional.of(adminUser));
-        when(financialLogService.getLogById(1L)).thenReturn(Optional.empty());
-
-        ResponseEntity<?> response = controller.getLogById(1L, request);
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-    }
-
-    @Test
-    void getLogById_shouldReturn403_ifNotAdmin() {
-        User nonAdmin = new User();
-        nonAdmin.setEmail(email);
-        nonAdmin.setIsAdmin(false);
-
-        when(request.getHeader("Authorization")).thenReturn(token);
-        when(jwtService.extractUsername("mock-token")).thenReturn(email);
-        when(userRepository.findByEmail(email)).thenReturn(Optional.of(nonAdmin));
-
-        ResponseEntity<?> response = controller.getLogById(1L, request);
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
-    }
-
-    @Test
     void getAllLogs_shouldReturn403_whenAuthorizationHeaderMissing() {
         when(request.getHeader("Authorization")).thenReturn(null);
         ResponseEntity<?> response = controller.getAllLogs(request);
@@ -142,5 +105,49 @@ class FinancialLogControllerTest {
         when(userRepository.findByEmail(email)).thenReturn(Optional.empty());
         ResponseEntity<?> response = controller.getAllLogs(request);
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+    }
+
+    @Test
+    void getLogById_shouldReturnLog_ifAdmin() {
+        when(request.getHeader("Authorization")).thenReturn(token);
+        when(jwtService.extractUsername("mock-token")).thenReturn(email);
+        when(userRepository.findByEmail(email)).thenReturn(Optional.of(adminUser));
+        when(financialLogService.getLogById(1L)).thenReturn(Optional.of(testLog));
+
+        ResponseEntity<?> response = controller.getLogById(1L, request);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(testLog, response.getBody());
+    }
+
+    @Test
+    void getLogById_shouldReturn403_ifNotAdmin() {
+        User nonAdmin = new User();
+        nonAdmin.setEmail(email);
+        nonAdmin.setIsAdmin(false);
+
+        when(request.getHeader("Authorization")).thenReturn(token);
+        when(jwtService.extractUsername("mock-token")).thenReturn(email);
+        when(userRepository.findByEmail(email)).thenReturn(Optional.of(nonAdmin));
+
+        ResponseEntity<?> response = controller.getLogById(1L, request);
+        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+    }
+
+    @Test
+    void getLogById_shouldReturn403_whenAuthorizationHeaderMissing() {
+        when(request.getHeader("Authorization")).thenReturn(null);
+        ResponseEntity<?> response = controller.getLogById(1L, request);
+        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+    }
+
+    @Test
+    void getLogById_shouldReturn404_ifNotFound() {
+        when(request.getHeader("Authorization")).thenReturn(token);
+        when(jwtService.extractUsername("mock-token")).thenReturn(email);
+        when(userRepository.findByEmail(email)).thenReturn(Optional.of(adminUser));
+        when(financialLogService.getLogById(1L)).thenReturn(Optional.empty());
+
+        ResponseEntity<?> response = controller.getLogById(1L, request);
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 }

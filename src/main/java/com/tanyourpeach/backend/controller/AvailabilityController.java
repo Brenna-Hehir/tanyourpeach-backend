@@ -26,8 +26,13 @@ public class AvailabilityController {
 
     // GET available by date
     @GetMapping("/available/{date}")
-    public List<Availability> getAvailableSlotsByDate(@PathVariable String date) {
-        return availabilityService.getAvailableSlotsByDate(LocalDate.parse(date));
+    public ResponseEntity<?> getAvailableSlotsByDate(@PathVariable String date) {
+        try {
+            List<Availability> slots = availabilityService.getAvailableSlotsByDate(LocalDate.parse(date));
+            return ResponseEntity.ok(slots);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Invalid date format");
+        }
     }
 
     // POST create new slot

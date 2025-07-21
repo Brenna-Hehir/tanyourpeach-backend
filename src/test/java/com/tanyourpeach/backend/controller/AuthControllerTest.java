@@ -47,25 +47,21 @@ class AuthControllerTest {
     }
 
     @Test
-    void register_shouldReturnTokenResponse() {
-        when(userAuthService.register(registerRequest)).thenReturn(mockResponse);
-
-        ResponseEntity<AuthenticationResponse> response = authController.register(registerRequest);
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals("mockToken", response.getBody().getToken());
-    }
-
-    @Test
-    void register_shouldReturnTokenWithCorrectStructure() {
+    void register_shouldReturn200_withToken() {
         RegisterRequest request = new RegisterRequest();
-        AuthenticationResponse mockResponse = new AuthenticationResponse("fake-jwt");
+        request.setName("Brenna");
+        request.setEmail("brenna@example.com");
+        request.setPassword("secure");
+        request.setAddress("Peach Street");
+
+        AuthenticationResponse mockResponse = new AuthenticationResponse("mockToken");
         when(userAuthService.register(request)).thenReturn(mockResponse);
 
         ResponseEntity<AuthenticationResponse> response = authController.register(request);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals("fake-jwt", response.getBody().getToken());
+        assertNotNull(response.getBody());
+        assertEquals("mockToken", response.getBody().getToken());
     }
 
     @Test

@@ -88,6 +88,20 @@ class ReceiptControllerTest {
     }
 
     @Test
+    void getAllReceipts_shouldReturn403_whenTokenMalformed() {
+        when(request.getHeader("Authorization")).thenReturn("bad");
+        ResponseEntity<?> response = controller.getAllReceipts(request);
+        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+    }
+
+    @Test
+    void getAllReceipts_shouldReturn403_whenUserNotFound() {
+        when(userRepository.findByEmail(email)).thenReturn(Optional.empty());
+        ResponseEntity<?> response = controller.getAllReceipts(request);
+        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+    }
+
+    @Test
     void getReceiptById_shouldReturnReceipt_whenAdminAndExists() {
         when(userRepository.findByEmail(email)).thenReturn(Optional.of(adminUser));
         when(receiptService.getReceiptById(1L)).thenReturn(Optional.of(testReceipt));
@@ -97,20 +111,20 @@ class ReceiptControllerTest {
     }
 
     @Test
+    void getReceiptById_shouldReturn403_whenNotAdmin() {
+        when(userRepository.findByEmail(email)).thenReturn(Optional.of(regularUser));
+
+        ResponseEntity<?> response = controller.getReceiptById(1L, request);
+        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+    }
+
+    @Test
     void getReceiptById_shouldReturn404_whenNotFound() {
         when(userRepository.findByEmail(email)).thenReturn(Optional.of(adminUser));
         when(receiptService.getReceiptById(1L)).thenReturn(Optional.empty());
 
         ResponseEntity<?> response = controller.getReceiptById(1L, request);
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-    }
-
-    @Test
-    void getReceiptById_shouldReturn403_whenNotAdmin() {
-        when(userRepository.findByEmail(email)).thenReturn(Optional.of(regularUser));
-
-        ResponseEntity<?> response = controller.getReceiptById(1L, request);
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
     }
 
     @Test
@@ -135,6 +149,14 @@ class ReceiptControllerTest {
     }
 
     @Test
+    void getReceiptByAppointmentId_shouldReturn401_whenTokenMissing() {
+        when(request.getHeader("Authorization")).thenReturn(null);
+
+        ResponseEntity<?> response = controller.getReceiptByAppointmentId(1L, request);
+        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
+    }
+
+    @Test
     void getReceiptByAppointmentId_shouldReturn403_whenNotOwnerOrAdmin() {
         Appointment otherAppt = new Appointment();
         otherAppt.setClientEmail("other@example.com");
@@ -153,13 +175,5 @@ class ReceiptControllerTest {
 
         ResponseEntity<?> response = controller.getReceiptByAppointmentId(1L, request);
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-    }
-
-    @Test
-    void getReceiptByAppointmentId_shouldReturn401_whenTokenMissing() {
-        when(request.getHeader("Authorization")).thenReturn(null);
-
-        ResponseEntity<?> response = controller.getReceiptByAppointmentId(1L, request);
-        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
     }
 }

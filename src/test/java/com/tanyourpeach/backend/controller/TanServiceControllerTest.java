@@ -14,6 +14,9 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.*;
 
 class TanServiceControllerTest {
@@ -61,15 +64,17 @@ class TanServiceControllerTest {
     @Test
     void createService_shouldReturnCreatedService() {
         when(serviceService.createService(testService)).thenReturn(testService);
-        TanService result = controller.createService(testService);
-        assertEquals(testService, result);
+
+        ResponseEntity<TanService> response = controller.createService(testService);
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        assertEquals(testService, response.getBody());
     }
 
     @Test
-    void createService_shouldHandleNullInput() {
+    void createService_shouldReturn400_whenServiceIsNull() {
         when(serviceService.createService(null)).thenReturn(null);
-        TanService result = controller.createService(null);
-        assertNull(result);
+        ResponseEntity<TanService> response = controller.createService(null);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
 
     @Test
@@ -81,16 +86,16 @@ class TanServiceControllerTest {
     }
 
     @Test
-    void updateService_shouldReturn404_ifNotFound() {
-        when(serviceService.updateService(eq(1L), any())).thenReturn(Optional.empty());
-        ResponseEntity<TanService> response = controller.updateService(1L, testService);
+    void updateService_shouldHandleNullUpdateObject() {
+        when(serviceService.updateService(eq(1L), isNull())).thenReturn(Optional.empty());
+        ResponseEntity<TanService> response = controller.updateService(1L, null);
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
     @Test
-    void updateService_shouldHandleNullUpdateObject() {
-        when(serviceService.updateService(eq(1L), isNull())).thenReturn(Optional.empty());
-        ResponseEntity<TanService> response = controller.updateService(1L, null);
+    void updateService_shouldReturn404_ifNotFound() {
+        when(serviceService.updateService(eq(1L), any())).thenReturn(Optional.empty());
+        ResponseEntity<TanService> response = controller.updateService(1L, testService);
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 

@@ -1,6 +1,7 @@
 package com.tanyourpeach.backend.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,8 +34,11 @@ public class TanServiceController {
 
     // POST create a new service
     @PostMapping
-    public TanService createService(@RequestBody TanService service) {
-        return serviceService.createService(service);
+    public ResponseEntity<TanService> createService(@RequestBody TanService service) {
+        TanService created = serviceService.createService(service);
+        return created != null
+            ? ResponseEntity.status(HttpStatus.CREATED).body(created)
+            : ResponseEntity.badRequest().build();
     }
 
     // PUT update an existing service
