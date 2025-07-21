@@ -57,11 +57,23 @@ class AuthControllerTest {
     }
 
     @Test
+    void register_shouldReturnTokenWithCorrectStructure() {
+        RegisterRequest request = new RegisterRequest();
+        AuthenticationResponse mockResponse = new AuthenticationResponse("fake-jwt");
+        when(userAuthService.register(request)).thenReturn(mockResponse);
+
+        ResponseEntity<AuthenticationResponse> response = authController.register(request);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals("fake-jwt", response.getBody().getToken());
+    }
+
+    @Test
     void register_shouldReturn500_ifServiceThrowsException() {
         RegisterRequest request = new RegisterRequest();
         when(userAuthService.register(request)).thenThrow(new RuntimeException("something failed"));
 
-        ResponseEntity<AuthenticationResponse> response = controller.register(request);
+        ResponseEntity<AuthenticationResponse> response = authController.register(request);
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
     }
@@ -81,7 +93,7 @@ class AuthControllerTest {
         AuthenticationRequest request = new AuthenticationRequest();
         when(userAuthService.authenticate(request)).thenThrow(new RuntimeException("bad login"));
 
-        ResponseEntity<AuthenticationResponse> response = controller.login(request);
+        ResponseEntity<AuthenticationResponse> response = authController.login(request);
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
     }

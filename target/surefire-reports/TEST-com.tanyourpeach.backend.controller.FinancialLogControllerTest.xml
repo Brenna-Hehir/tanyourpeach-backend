@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="com.tanyourpeach.backend.controller.AppointmentControllerTest" time="0.317" tests="22" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="com.tanyourpeach.backend.controller.FinancialLogControllerTest" time="0.106" tests="8" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="17"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -57,26 +57,12 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="61.0"/>
   </properties>
-  <testcase name="deleteAppointment_shouldReturn204_ifAdminAndDeleted" classname="com.tanyourpeach.backend.controller.AppointmentControllerTest" time="0.117"/>
-  <testcase name="getAppointmentById_shouldReturn403_ifNotOwnerOrAdmin" classname="com.tanyourpeach.backend.controller.AppointmentControllerTest" time="0.013"/>
-  <testcase name="getUserAppointments_shouldReturnAppointmentsForUser" classname="com.tanyourpeach.backend.controller.AppointmentControllerTest" time="0.013"/>
-  <testcase name="getUserAppointments_shouldReturn401_ifEmailNull" classname="com.tanyourpeach.backend.controller.AppointmentControllerTest" time="0.008"/>
-  <testcase name="deleteAppointment_shouldReturn403_ifNotAdmin" classname="com.tanyourpeach.backend.controller.AppointmentControllerTest" time="0.009"/>
-  <testcase name="deleteAppointment_shouldReturn404_ifNotFound" classname="com.tanyourpeach.backend.controller.AppointmentControllerTest" time="0.01"/>
-  <testcase name="createAppointment_shouldReturn200_ifSuccess" classname="com.tanyourpeach.backend.controller.AppointmentControllerTest" time="0.013"/>
-  <testcase name="createAppointment_shouldReturn400_ifFailure" classname="com.tanyourpeach.backend.controller.AppointmentControllerTest" time="0.008"/>
-  <testcase name="updateAppointment_shouldReturn403_ifNotOwnerOrAdmin" classname="com.tanyourpeach.backend.controller.AppointmentControllerTest" time="0.008"/>
-  <testcase name="getAllAppointments_shouldReturn403_ifUserIsAdminNull" classname="com.tanyourpeach.backend.controller.AppointmentControllerTest" time="0.009"/>
-  <testcase name="getAppointmentById_shouldReturn403_ifTokenMissing" classname="com.tanyourpeach.backend.controller.AppointmentControllerTest" time="0.007"/>
-  <testcase name="getAppointmentById_shouldReturn200_ifAdmin" classname="com.tanyourpeach.backend.controller.AppointmentControllerTest" time="0.006"/>
-  <testcase name="getAppointmentById_shouldReturn200_ifOwner" classname="com.tanyourpeach.backend.controller.AppointmentControllerTest" time="0.007"/>
-  <testcase name="getAppointmentById_shouldReturn404_ifNotFound" classname="com.tanyourpeach.backend.controller.AppointmentControllerTest" time="0.006"/>
-  <testcase name="updateAppointment_shouldReturn404_ifUpdateFails" classname="com.tanyourpeach.backend.controller.AppointmentControllerTest" time="0.008"/>
-  <testcase name="getAllAppointments_shouldReturn200_ifAdmin" classname="com.tanyourpeach.backend.controller.AppointmentControllerTest" time="0.009"/>
-  <testcase name="updateAppointment_shouldReturn404_ifNotFound" classname="com.tanyourpeach.backend.controller.AppointmentControllerTest" time="0.005"/>
-  <testcase name="createAppointment_shouldPass_ifAnonymous" classname="com.tanyourpeach.backend.controller.AppointmentControllerTest" time="0.007"/>
-  <testcase name="getAllAppointments_shouldReturn403_ifTokenInvalid" classname="com.tanyourpeach.backend.controller.AppointmentControllerTest" time="0.009"/>
-  <testcase name="updateAppointment_shouldReturn200_ifAdmin" classname="com.tanyourpeach.backend.controller.AppointmentControllerTest" time="0.005"/>
-  <testcase name="getAllAppointments_shouldReturn403_ifTokenMalformed" classname="com.tanyourpeach.backend.controller.AppointmentControllerTest" time="0.005"/>
-  <testcase name="getAllAppointments_shouldReturn403_ifNotAdmin" classname="com.tanyourpeach.backend.controller.AppointmentControllerTest" time="0.007"/>
+  <testcase name="getAllLogs_shouldReturn403_whenUserNotFound" classname="com.tanyourpeach.backend.controller.FinancialLogControllerTest" time="0.051"/>
+  <testcase name="getAllLogs_shouldReturn403_whenAuthorizationHeaderMissing" classname="com.tanyourpeach.backend.controller.FinancialLogControllerTest" time="0.005"/>
+  <testcase name="getAllLogs_shouldReturn403_ifNotAdmin" classname="com.tanyourpeach.backend.controller.FinancialLogControllerTest" time="0.004"/>
+  <testcase name="getLogById_shouldReturnLog_ifAdmin" classname="com.tanyourpeach.backend.controller.FinancialLogControllerTest" time="0.008"/>
+  <testcase name="getAllLogs_shouldReturnLogs_ifAdmin" classname="com.tanyourpeach.backend.controller.FinancialLogControllerTest" time="0.009"/>
+  <testcase name="getAllLogs_shouldReturn403_whenJwtThrowsException" classname="com.tanyourpeach.backend.controller.FinancialLogControllerTest" time="0.007"/>
+  <testcase name="getLogById_shouldReturn403_ifNotAdmin" classname="com.tanyourpeach.backend.controller.FinancialLogControllerTest" time="0.008"/>
+  <testcase name="getLogById_shouldReturn404_ifNotFound" classname="com.tanyourpeach.backend.controller.FinancialLogControllerTest" time="0.006"/>
 </testsuite>
