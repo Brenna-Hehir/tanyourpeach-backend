@@ -30,7 +30,7 @@ public class AvailabilityService {
     public Availability createAvailability(Availability availability) {
         // Prevent past dates
         if (availability.getDate() != null && availability.getDate().isBefore(LocalDate.now())) {
-            return null; // Or throw an exception depending on your preference
+            return null; // Or throw an exception dePENDING on your preference
         }
 
         // Prevent end time <= start time

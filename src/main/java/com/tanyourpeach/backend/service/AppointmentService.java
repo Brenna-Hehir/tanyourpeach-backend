@@ -111,14 +111,19 @@ public class AppointmentService {
         if (appointment.getTravelFee() != null && appointment.getTravelFee() < 0) return Optional.empty();
 
         // Validate availability slot
-        Long slotId = appointment.getAvailability() != null ? appointment.getAvailability().getSlotId() : null;
-        if (slotId == null) return Optional.empty();
+        if (appointment.getAvailability() == null || appointment.getAvailability().getSlotId() == null) {
+            return Optional.empty();
+        }
 
+        Long slotId = appointment.getAvailability().getSlotId();
         Optional<Availability> slotOpt = availabilityRepository.findById(slotId);
-        if (slotOpt.isEmpty() || slotOpt.get().getIsBooked()) return Optional.empty();
+        if (slotOpt.isEmpty()) return Optional.empty();
 
         Availability slot = slotOpt.get();
-        slot.setIsBooked(true);
+        if (slot.getIsBooked()) return Optional.empty();
+
+        appointment.setAvailability(slot); // set the fully loaded Availability object
+        slot.setIsBooked(true); // mark as booked
 
         // Set appointment time and default status
         appointment.setAppointmentDateTime(LocalDateTime.of(slot.getDate(), slot.getStartTime()));
@@ -178,6 +183,39 @@ public class AppointmentService {
         if (updated.getClientAddress() == null || updated.getClientAddress().trim().isEmpty()) return Optional.empty();
         if (updated.getTravelFee() != null && updated.getTravelFee() < 0) return Optional.empty();
         if (updated.getService() == null || updated.getService().getServiceId() == null) return Optional.empty();
+
+        // Validate and update availability slot
+        if (updated.getAvailability() != null && updated.getAvailability().getSlotId() != null) {
+            Long newSlotId = updated.getAvailability().getSlotId();
+            Availability currentSlot = existing.getAvailability();
+
+            boolean isChangingSlot = currentSlot == null || !newSlotId.equals(currentSlot.getSlotId());
+
+            if (isChangingSlot) {
+                Optional<Availability> newSlotOpt = availabilityRepository.findById(newSlotId);
+                if (newSlotOpt.isEmpty() || Boolean.TRUE.equals(newSlotOpt.get().getIsBooked())) {
+                    return Optional.empty(); // New slot is invalid or already booked
+                }
+
+                Availability newSlot = newSlotOpt.get();
+
+                // Unbook the old slot if present
+                if (currentSlot != null) {
+                    currentSlot.setIsBooked(false);
+                    availabilityRepository.save(currentSlot);
+                }
+
+                // Book the new slot
+                newSlot.setIsBooked(true);
+                availabilityRepository.save(newSlot);
+
+                // Update availability and appointment time
+                existing.setAvailability(newSlot);
+                existing.setAppointmentDateTime(LocalDateTime.of(newSlot.getDate(), newSlot.getStartTime()));
+            }
+        } else {
+            return Optional.empty(); // If null or slotId missing, reject update
+        }
 
         // Basic field updates
         existing.setClientName(updated.getClientName());
@@ -278,7 +316,16 @@ public class AppointmentService {
 
     // DELETE appointment
     public boolean deleteAppointment(Long id) {
-        if (!appointmentRepository.existsById(id)) return false;
+        Optional<Appointment> appointmentOpt = appointmentRepository.findById(id);
+        if (appointmentOpt.isEmpty()) return false;
+
+        Appointment appointment = appointmentOpt.get();
+        Availability slot = appointment.getAvailability();
+        if (slot != null) {
+            slot.setIsBooked(false);
+            availabilityRepository.save(slot);
+        }
+
         appointmentRepository.deleteById(id);
         return true;
     }

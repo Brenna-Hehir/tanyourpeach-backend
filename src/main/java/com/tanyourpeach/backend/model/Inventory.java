@@ -19,7 +19,7 @@ public class Inventory {
 
     @NotBlank(message = "Item name is required")
     @Size(max = 100, message = "Item name must be under 100 characters")
-    @Column(nullable = false, length = 100)
+    @Column(name = "name", nullable = false, length = 100)
     private String itemName;
 
     @Min(value = 0, message = "Quantity cannot be negative")

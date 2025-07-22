@@ -2,6 +2,7 @@ package com.tanyourpeach.backend.service;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.*;
 
@@ -252,12 +253,20 @@ class AppointmentServiceTest {
     }
 
     @Test
-    void createAppointment_shouldFail_whenSlotBooked() {
-        testSlot.setIsBooked(true);
-        when(availabilityRepository.findById(1L)).thenReturn(Optional.of(testSlot));
+    void createAppointment_shouldFail_whenSlotAlreadyBooked() {
+        Availability slot = new Availability();
+        slot.setSlotId(123L);
+        slot.setIsBooked(true); // Already booked
+
+        testAppointment.setClientName("Brenna");
+        testAppointment.setClientEmail("brenna@example.com");
+        testAppointment.setClientAddress("123 Peach St");
+        testAppointment.setAvailability(slot);
+        testAppointment.setService(testService);
+
+        when(availabilityRepository.findById(123L)).thenReturn(Optional.of(slot));
 
         Optional<Appointment> result = appointmentService.createAppointment(testAppointment, request);
-
         assertTrue(result.isEmpty());
     }
 
@@ -320,17 +329,53 @@ class AppointmentServiceTest {
     }
 
     @Test
+    void createAppointment_shouldFail_whenAvailabilityMissing() {
+        testAppointment.setClientName("Brenna");
+        testAppointment.setClientEmail("brenna@example.com");
+        testAppointment.setClientAddress("123 Peach St");
+        testAppointment.setService(testService);
+
+        testAppointment.setAvailability(null); // Missing
+
+        Optional<Appointment> result = appointmentService.createAppointment(testAppointment, request);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void createAppointment_shouldFail_whenSlotIdNull() {
+        Availability slot = new Availability();
+        slot.setSlotId(null); // Invalid
+
+        testAppointment.setClientName("Brenna");
+        testAppointment.setClientEmail("brenna@example.com");
+        testAppointment.setClientAddress("123 Peach St");
+        testAppointment.setAvailability(slot);
+        testAppointment.setService(testService);
+
+        Optional<Appointment> result = appointmentService.createAppointment(testAppointment, request);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
     void updateAppointment_shouldUpdateFields_andConfirmStatus() {
         testAppointment.setAppointmentId(1L);
         testAppointment.setStatus(Appointment.Status.PENDING);
 
         Appointment updated = new Appointment();
+
+        Availability slot = new Availability();
+        slot.setSlotId(100L);
+        slot.setIsBooked(false);
+
+        testAppointment.setAvailability(slot);
+        
         updated.setService(testService);
         updated.setClientEmail("client@example.com");
         updated.setClientName("Updated Client");
         updated.setClientAddress("456 Peach St");
         updated.setStatus(Appointment.Status.CONFIRMED);
         updated.setAppointmentDateTime(LocalDateTime.now());
+        updated.setAvailability(slot);
 
         when(appointmentRepository.findById(1L)).thenReturn(Optional.of(testAppointment));
         when(tanServiceRepository.findById(1L)).thenReturn(Optional.of(testService));
@@ -351,6 +396,11 @@ class AppointmentServiceTest {
         existing.setStatus(Appointment.Status.PENDING);
         existing.setClientName("Peachy");
 
+        Availability slot = new Availability();
+        slot.setSlotId(100L);
+        slot.setIsBooked(false);
+        existing.setAvailability(slot);
+
         existing.setBasePrice(80.0);
         existing.setTravelFee(10.0);
 
@@ -366,6 +416,7 @@ class AppointmentServiceTest {
         updated.setClientName("Peachy");
         updated.setClientAddress("123 Peach St");
         updated.setTravelFee(10.0);
+        updated.setAvailability(slot);
 
         Inventory item = new Inventory();
         item.setItemId(200L);
@@ -403,12 +454,20 @@ class AppointmentServiceTest {
         testAppointment.setStatus(Appointment.Status.PENDING);
 
         Appointment updated = new Appointment();
+
+        Availability slot = new Availability();
+        slot.setSlotId(100L);
+        slot.setIsBooked(false);
+
+        testAppointment.setAvailability(slot);
+
         updated.setStatus(Appointment.Status.PENDING); // no change
         updated.setService(testService);
         updated.setClientEmail("client@example.com");
         updated.setClientName("Test Client");
         updated.setClientAddress("123 Peach St");
         updated.setTravelFee(0.0);
+        updated.setAvailability(slot);
 
         when(appointmentRepository.findById(1L)).thenReturn(Optional.of(testAppointment));
         when(tanServiceRepository.findById(1L)).thenReturn(Optional.of(testService));
@@ -470,6 +529,11 @@ class AppointmentServiceTest {
         existing.setBasePrice(100.0);
         existing.setTravelFee(20.0);
 
+        Availability slot = new Availability();
+        slot.setSlotId(100L);
+        slot.setIsBooked(false);
+        existing.setAvailability(slot);
+
         TanService service = new TanService();
         service.setServiceId(42L);
         existing.setService(service);
@@ -481,6 +545,7 @@ class AppointmentServiceTest {
         updated.setClientName("Existing Client");
         updated.setClientAddress("123 Peach St");
         updated.setTravelFee(20.0);
+        updated.setAvailability(slot);
 
         when(appointmentRepository.findById(1L)).thenReturn(Optional.of(existing));
         when(tanServiceRepository.findById(42L)).thenReturn(Optional.of(service));
@@ -501,6 +566,12 @@ class AppointmentServiceTest {
 
         // Existing appointment (not confirmed)
         Appointment existing = new Appointment();
+
+        Availability slot = new Availability();
+        slot.setSlotId(100L);
+        slot.setIsBooked(false);
+        existing.setAvailability(slot);
+
         existing.setAppointmentId(appointmentId);
         existing.setClientName("Alice");
         existing.setClientEmail("alice@example.com");
@@ -522,6 +593,7 @@ class AppointmentServiceTest {
         updated.setStatus(Appointment.Status.PENDING); // no status change
         updated.setTravelFee(15.0);
         updated.setService(service);
+        updated.setAvailability(slot);
 
         when(appointmentRepository.findById(appointmentId)).thenReturn(Optional.of(existing));
         when(tanServiceRepository.findById(10L)).thenReturn(Optional.of(service));
@@ -581,6 +653,49 @@ class AppointmentServiceTest {
         assertTrue(result.isEmpty()); // Expect failure due to insufficient inventory
         verify(financialLogRepository, never()).save(any());
         verify(receiptRepository, never()).save(any());
+    }
+
+    @Test
+    void updateAppointment_shouldFail_whenAvailabilityMissing() {
+        testAppointment.setAppointmentId(1L);
+        testAppointment.setStatus(Appointment.Status.PENDING);
+
+        Appointment updated = new Appointment();
+        updated.setClientName("Brenna");
+        updated.setClientEmail("brenna@example.com");
+        updated.setClientAddress("123 Peach St");
+        updated.setStatus(Appointment.Status.CONFIRMED);
+        updated.setAvailability(null); // Missing
+        updated.setService(testService);
+
+        when(appointmentRepository.findById(1L)).thenReturn(Optional.of(testAppointment));
+
+        Optional<Appointment> result = appointmentService.updateAppointment(1L, updated, request);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void updateAppointment_shouldFail_whenNewSlotAlreadyBooked() {
+        testAppointment.setAppointmentId(1L);
+        testAppointment.setStatus(Appointment.Status.PENDING);
+
+        Availability newSlot = new Availability();
+        newSlot.setSlotId(456L);
+        newSlot.setIsBooked(true); // Already booked
+
+        Appointment updated = new Appointment();
+        updated.setClientName("Brenna");
+        updated.setClientEmail("brenna@example.com");
+        updated.setClientAddress("123 Peach St");
+        updated.setStatus(Appointment.Status.CONFIRMED);
+        updated.setService(testService);
+        updated.setAvailability(newSlot);
+
+        when(appointmentRepository.findById(1L)).thenReturn(Optional.of(testAppointment));
+        when(availabilityRepository.findById(456L)).thenReturn(Optional.of(newSlot));
+
+        Optional<Appointment> result = appointmentService.updateAppointment(1L, updated, request);
+        assertTrue(result.isEmpty());
     }
 
     @Test
@@ -664,17 +779,50 @@ class AppointmentServiceTest {
 
     @Test
     void deleteAppointment_shouldSucceed() {
-        when(appointmentRepository.existsById(1L)).thenReturn(true);
+        // Set up mock appointment and availability
+        Availability availability = new Availability();
+        availability.setSlotId(10L);
+        availability.setIsBooked(true); // initially booked
 
+        Appointment appointment = new Appointment();
+        appointment.setAppointmentId(1L);
+        appointment.setAvailability(availability);
+
+        // Mock the repository behavior
+        when(appointmentRepository.findById(1L)).thenReturn(Optional.of(appointment));
+
+        // Call the method
         boolean result = appointmentService.deleteAppointment(1L);
 
+        // Verify behavior
         assertTrue(result);
+        verify(availabilityRepository).save(availability); // slot should be unbooked
         verify(appointmentRepository).deleteById(1L);
     }
 
     @Test
-    void deleteAppointment_shouldReturnFalse_whenAppointmentNotFound() {
-        when(appointmentRepository.existsById(1L)).thenReturn(false);
-        assertFalse(appointmentService.deleteAppointment(1L));
+    void deleteAppointment_shouldSucceed_whenNoAvailability() {
+        Appointment appointment = new Appointment();
+        appointment.setAppointmentId(1L);
+        appointment.setAvailability(null); // no slot linked
+
+        when(appointmentRepository.findById(1L)).thenReturn(Optional.of(appointment));
+
+        boolean result = appointmentService.deleteAppointment(1L);
+
+        assertTrue(result);
+        verify(availabilityRepository, never()).save(any()); // no slot to unbook
+        verify(appointmentRepository).deleteById(1L);
+    }
+
+    @Test
+    void deleteAppointment_shouldFail_whenAppointmentNotFound() {
+        when(appointmentRepository.findById(1L)).thenReturn(Optional.empty());
+
+        boolean result = appointmentService.deleteAppointment(1L);
+
+        assertFalse(result);
+        verify(appointmentRepository, never()).deleteById(anyLong());
+        verify(availabilityRepository, never()).save(any());
     }
 }

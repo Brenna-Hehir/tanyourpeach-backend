@@ -12,9 +12,9 @@ import org.springframework.stereotype.Repository;
 public interface FinancialLogRepository extends JpaRepository<FinancialLog, Long> {
 
     @Query("SELECT SUM(f.amount) FROM FinancialLog f WHERE f.type = :type")
-    BigDecimal sumByType(String type);
+    BigDecimal sumByType(FinancialLog.Type type);
     
     @Query("SELECT SUM(f.amount) FROM FinancialLog f " +
        "WHERE f.type = :type AND FUNCTION('DATE_FORMAT', f.logDate, '%Y-%m') = :month")
-    BigDecimal sumByTypeAndMonth(String type, String month);
+    BigDecimal sumByTypeAndMonth(FinancialLog.Type type, String month);
 }

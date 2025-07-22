@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="com.tanyourpeach.backend.service.FinancialLogServiceTest" time="0.188" tests="16" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="com.tanyourpeach.backend.controller.AdminStatsControllerIntegrationTest" time="13.323" tests="6" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="17"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -16,9 +16,10 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="user.country" value="US"/>
     <property name="sun.boot.library.path" value="C:\Program Files\Java\jdk-17\bin"/>
-    <property name="sun.java.command" value="C:\Users\Koolb\AppData\Local\Temp\surefire5521768586678755556\surefirebooter-20250721211922649_3.jar C:\Users\Koolb\AppData\Local\Temp\surefire5521768586678755556 2025-07-21T21-19-22_362-jvmRun1 surefire-20250721211922649_1tmp surefire_0-20250721211922649_2tmp"/>
+    <property name="sun.java.command" value="C:\Users\Koolb\AppData\Local\Temp\surefire12591714933686940171\surefirebooter-20250721214947300_3.jar C:\Users\Koolb\AppData\Local\Temp\surefire12591714933686940171 2025-07-21T21-49-47_041-jvmRun1 surefire-20250721214947300_1tmp surefire_0-20250721214947300_2tmp"/>
     <property name="jdk.debug" value="release"/>
     <property name="surefire.test.class.path" value="C:\Users\Koolb\OneDrive\Documents\Database Management\tanUrPeach_backend\backend\target\test-classes;C:\Users\Koolb\OneDrive\Documents\Database Management\tanUrPeach_backend\backend\target\classes;C:\Users\Koolb\.m2\repository\org\springframework\boot\spring-boot-starter-data-jpa\3.5.3\spring-boot-starter-data-jpa-3.5.3.jar;C:\Users\Koolb\.m2\repository\org\springframework\boot\spring-boot-starter\3.5.3\spring-boot-starter-3.5.3.jar;C:\Users\Koolb\.m2\repository\org\springframework\boot\spring-boot-starter-logging\3.5.3\spring-boot-starter-logging-3.5.3.jar;C:\Users\Koolb\.m2\repository\ch\qos\logback\logback-classic\1.5.18\logback-classic-1.5.18.jar;C:\Users\Koolb\.m2\repository\ch\qos\logback\logback-core\1.5.18\logback-core-1.5.18.jar;C:\Users\Koolb\.m2\repository\org\apache\logging\log4j\log4j-to-slf4j\2.24.3\log4j-to-slf4j-2.24.3.jar;C:\Users\Koolb\.m2\repository\org\apache\logging\log4j\log4j-api\2.24.3\log4j-api-2.24.3.jar;C:\Users\Koolb\.m2\repository\org\slf4j\jul-to-slf4j\2.0.17\jul-to-slf4j-2.0.17.jar;C:\Users\Koolb\.m2\repository\jakarta\annotation\jakarta.annotation-api\2.1.1\jakarta.annotation-api-2.1.1.jar;C:\Users\Koolb\.m2\repository\org\yaml\snakeyaml\2.4\snakeyaml-2.4.jar;C:\Users\Koolb\.m2\repository\org\springframework\boot\spring-boot-starter-jdbc\3.5.3\spring-boot-starter-jdbc-3.5.3.jar;C:\Users\Koolb\.m2\repository\com\zaxxer\HikariCP\6.3.0\HikariCP-6.3.0.jar;C:\Users\Koolb\.m2\repository\org\springframework\spring-jdbc\6.2.8\spring-jdbc-6.2.8.jar;C:\Users\Koolb\.m2\repository\org\hibernate\orm\hibernate-core\6.6.18.Final\hibernate-core-6.6.18.Final.jar;C:\Users\Koolb\.m2\repository\jakarta\persistence\jakarta.persistence-api\3.1.0\jakarta.persistence-api-3.1.0.jar;C:\Users\Koolb\.m2\repository\jakarta\transaction\jakarta.transaction-api\2.0.1\jakarta.transaction-api-2.0.1.jar;C:\Users\Koolb\.m2\repository\org\hibernate\common\hibernate-commons-annotations\7.0.3.Final\hibernate-commons-annotations-7.0.3.Final.jar;C:\Users\Koolb\.m2\repository\io\smallrye\jandex\3.2.0\jandex-3.2.0.jar;C:\Users\Koolb\.m2\repository\org\glassfish\jaxb\jaxb-runtime\4.0.5\jaxb-runtime-4.0.5.jar;C:\Users\Koolb\.m2\repository\org\glassfish\jaxb\jaxb-core\4.0.5\jaxb-core-4.0.5.jar;C:\Users\Koolb\.m2\repository\org\eclipse\angus\angus-activation\2.0.2\angus-activation-2.0.2.jar;C:\Users\Koolb\.m2\repository\org\glassfish\jaxb\txw2\4.0.5\txw2-4.0.5.jar;C:\Users\Koolb\.m2\repository\com\sun\istack\istack-commons-runtime\4.1.2\istack-commons-runtime-4.1.2.jar;C:\Users\Koolb\.m2\repository\jakarta\inject\jakarta.inject-api\2.0.1\jakarta.inject-api-2.0.1.jar;C:\Users\Koolb\.m2\repository\org\antlr\antlr4-runtime\4.13.0\antlr4-runtime-4.13.0.jar;C:\Users\Koolb\.m2\repository\org\springframework\data\spring-data-jpa\3.5.1\spring-data-jpa-3.5.1.jar;C:\Users\Koolb\.m2\repository\org\springframework\data\spring-data-commons\3.5.1\spring-data-commons-3.5.1.jar;C:\Users\Koolb\.m2\repository\org\springframework\spring-orm\6.2.8\spring-orm-6.2.8.jar;C:\Users\Koolb\.m2\repository\org\springframework\spring-context\6.2.8\spring-context-6.2.8.jar;C:\Users\Koolb\.m2\repository\org\springframework\spring-tx\6.2.8\spring-tx-6.2.8.jar;C:\Users\Koolb\.m2\repository\org\springframework\spring-beans\6.2.8\spring-beans-6.2.8.jar;C:\Users\Koolb\.m2\repository\org\slf4j\slf4j-api\2.0.17\slf4j-api-2.0.17.jar;C:\Users\Koolb\.m2\repository\org\springframework\spring-aspects\6.2.8\spring-aspects-6.2.8.jar;C:\Users\Koolb\.m2\repository\org\aspectj\aspectjweaver\1.9.24\aspectjweaver-1.9.24.jar;C:\Users\Koolb\.m2\repository\org\springframework\boot\spring-boot-starter-web\3.5.3\spring-boot-starter-web-3.5.3.jar;C:\Users\Koolb\.m2\repository\org\springframework\boot\spring-boot-starter-json\3.5.3\spring-boot-starter-json-3.5.3.jar;C:\Users\Koolb\.m2\repository\com\fasterxml\jackson\datatype\jackson-datatype-jdk8\2.19.1\jackson-datatype-jdk8-2.19.1.jar;C:\Users\Koolb\.m2\repository\com\fasterxml\jackson\datatype\jackson-datatype-jsr310\2.19.1\jackson-datatype-jsr310-2.19.1.jar;C:\Users\Koolb\.m2\repository\com\fasterxml\jackson\module\jackson-module-parameter-names\2.19.1\jackson-module-parameter-names-2.19.1.jar;C:\Users\Koolb\.m2\repository\org\springframework\boot\spring-boot-starter-tomcat\3.5.3\spring-boot-starter-tomcat-3.5.3.jar;C:\Users\Koolb\.m2\repository\org\apache\tomcat\embed\tomcat-embed-core\10.1.42\tomcat-embed-core-10.1.42.jar;C:\Users\Koolb\.m2\repository\org\apache\tomcat\embed\tomcat-embed-el\10.1.42\tomcat-embed-el-10.1.42.jar;C:\Users\Koolb\.m2\repository\org\apache\tomcat\embed\tomcat-embed-websocket\10.1.42\tomcat-embed-websocket-10.1.42.jar;C:\Users\Koolb\.m2\repository\org\springframework\spring-web\6.2.8\spring-web-6.2.8.jar;C:\Users\Koolb\.m2\repository\io\micrometer\micrometer-observation\1.15.1\micrometer-observation-1.15.1.jar;C:\Users\Koolb\.m2\repository\io\micrometer\micrometer-commons\1.15.1\micrometer-commons-1.15.1.jar;C:\Users\Koolb\.m2\repository\org\springframework\spring-webmvc\6.2.8\spring-webmvc-6.2.8.jar;C:\Users\Koolb\.m2\repository\org\springframework\spring-expression\6.2.8\spring-expression-6.2.8.jar;C:\Users\Koolb\.m2\repository\org\springframework\boot\spring-boot-devtools\3.5.3\spring-boot-devtools-3.5.3.jar;C:\Users\Koolb\.m2\repository\org\springframework\boot\spring-boot\3.5.3\spring-boot-3.5.3.jar;C:\Users\Koolb\.m2\repository\org\springframework\boot\spring-boot-autoconfigure\3.5.3\spring-boot-autoconfigure-3.5.3.jar;C:\Users\Koolb\.m2\repository\com\mysql\mysql-connector-j\9.2.0\mysql-connector-j-9.2.0.jar;C:\Users\Koolb\.m2\repository\org\springframework\boot\spring-boot-starter-test\3.5.3\spring-boot-starter-test-3.5.3.jar;C:\Users\Koolb\.m2\repository\org\springframework\boot\spring-boot-test\3.5.3\spring-boot-test-3.5.3.jar;C:\Users\Koolb\.m2\repository\org\springframework\boot\spring-boot-test-autoconfigure\3.5.3\spring-boot-test-autoconfigure-3.5.3.jar;C:\Users\Koolb\.m2\repository\com\jayway\jsonpath\json-path\2.9.0\json-path-2.9.0.jar;C:\Users\Koolb\.m2\repository\jakarta\xml\bind\jakarta.xml.bind-api\4.0.2\jakarta.xml.bind-api-4.0.2.jar;C:\Users\Koolb\.m2\repository\jakarta\activation\jakarta.activation-api\2.1.3\jakarta.activation-api-2.1.3.jar;C:\Users\Koolb\.m2\repository\net\minidev\json-smart\2.5.2\json-smart-2.5.2.jar;C:\Users\Koolb\.m2\repository\net\minidev\accessors-smart\2.5.2\accessors-smart-2.5.2.jar;C:\Users\Koolb\.m2\repository\org\ow2\asm\asm\9.7.1\asm-9.7.1.jar;C:\Users\Koolb\.m2\repository\org\assertj\assertj-core\3.27.3\assertj-core-3.27.3.jar;C:\Users\Koolb\.m2\repository\org\awaitility\awaitility\4.2.2\awaitility-4.2.2.jar;C:\Users\Koolb\.m2\repository\org\hamcrest\hamcrest\3.0\hamcrest-3.0.jar;C:\Users\Koolb\.m2\repository\org\mockito\mockito-junit-jupiter\5.17.0\mockito-junit-jupiter-5.17.0.jar;C:\Users\Koolb\.m2\repository\org\skyscreamer\jsonassert\1.5.3\jsonassert-1.5.3.jar;C:\Users\Koolb\.m2\repository\com\vaadin\external\google\android-json\0.0.20131108.vaadin1\android-json-0.0.20131108.vaadin1.jar;C:\Users\Koolb\.m2\repository\org\springframework\spring-core\6.2.8\spring-core-6.2.8.jar;C:\Users\Koolb\.m2\repository\org\springframework\spring-jcl\6.2.8\spring-jcl-6.2.8.jar;C:\Users\Koolb\.m2\repository\org\springframework\spring-test\6.2.8\spring-test-6.2.8.jar;C:\Users\Koolb\.m2\repository\org\xmlunit\xmlunit-core\2.10.2\xmlunit-core-2.10.2.jar;C:\Users\Koolb\.m2\repository\org\springframework\boot\spring-boot-starter-security\3.5.3\spring-boot-starter-security-3.5.3.jar;C:\Users\Koolb\.m2\repository\org\springframework\spring-aop\6.2.8\spring-aop-6.2.8.jar;C:\Users\Koolb\.m2\repository\org\springframework\security\spring-security-config\6.5.1\spring-security-config-6.5.1.jar;C:\Users\Koolb\.m2\repository\org\springframework\security\spring-security-web\6.5.1\spring-security-web-6.5.1.jar;C:\Users\Koolb\.m2\repository\io\jsonwebtoken\jjwt-api\0.11.5\jjwt-api-0.11.5.jar;C:\Users\Koolb\.m2\repository\io\jsonwebtoken\jjwt-impl\0.11.5\jjwt-impl-0.11.5.jar;C:\Users\Koolb\.m2\repository\io\jsonwebtoken\jjwt-jackson\0.11.5\jjwt-jackson-0.11.5.jar;C:\Users\Koolb\.m2\repository\com\fasterxml\jackson\core\jackson-databind\2.19.1\jackson-databind-2.19.1.jar;C:\Users\Koolb\.m2\repository\com\fasterxml\jackson\core\jackson-annotations\2.19.1\jackson-annotations-2.19.1.jar;C:\Users\Koolb\.m2\repository\com\fasterxml\jackson\core\jackson-core\2.19.1\jackson-core-2.19.1.jar;C:\Users\Koolb\.m2\repository\jakarta\validation\jakarta.validation-api\3.0.2\jakarta.validation-api-3.0.2.jar;C:\Users\Koolb\.m2\repository\org\hibernate\validator\hibernate-validator\8.0.1.Final\hibernate-validator-8.0.1.Final.jar;C:\Users\Koolb\.m2\repository\org\jboss\logging\jboss-logging\3.6.1.Final\jboss-logging-3.6.1.Final.jar;C:\Users\Koolb\.m2\repository\com\fasterxml\classmate\1.7.0\classmate-1.7.0.jar;C:\Users\Koolb\.m2\repository\org\junit\jupiter\junit-jupiter\5.10.0\junit-jupiter-5.10.0.jar;C:\Users\Koolb\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.12.2\junit-jupiter-api-5.12.2.jar;C:\Users\Koolb\.m2\repository\org\opentest4j\opentest4j\1.3.0\opentest4j-1.3.0.jar;C:\Users\Koolb\.m2\repository\org\junit\platform\junit-platform-commons\1.12.2\junit-platform-commons-1.12.2.jar;C:\Users\Koolb\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\Koolb\.m2\repository\org\junit\jupiter\junit-jupiter-params\5.12.2\junit-jupiter-params-5.12.2.jar;C:\Users\Koolb\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.12.2\junit-jupiter-engine-5.12.2.jar;C:\Users\Koolb\.m2\repository\org\junit\platform\junit-platform-engine\1.12.2\junit-platform-engine-1.12.2.jar;C:\Users\Koolb\.m2\repository\org\mockito\mockito-core\5.11.0\mockito-core-5.11.0.jar;C:\Users\Koolb\.m2\repository\net\bytebuddy\byte-buddy\1.17.6\byte-buddy-1.17.6.jar;C:\Users\Koolb\.m2\repository\net\bytebuddy\byte-buddy-agent\1.17.6\byte-buddy-agent-1.17.6.jar;C:\Users\Koolb\.m2\repository\org\objenesis\objenesis\3.3\objenesis-3.3.jar;C:\Users\Koolb\.m2\repository\org\springframework\security\spring-security-test\6.5.1\spring-security-test-6.5.1.jar;C:\Users\Koolb\.m2\repository\org\springframework\security\spring-security-core\6.5.1\spring-security-core-6.5.1.jar;C:\Users\Koolb\.m2\repository\org\springframework\security\spring-security-crypto\6.5.1\spring-security-crypto-6.5.1.jar;"/>
+    <property name="test" value="*ControllerIntegrationTest"/>
     <property name="sun.cpu.endian" value="little"/>
     <property name="user.home" value="C:\Users\Koolb"/>
     <property name="user.language" value="en"/>
@@ -33,7 +34,7 @@
     <property name="java.specification.name" value="Java Platform API Specification"/>
     <property name="FILE_LOG_CHARSET" value="windows-1252"/>
     <property name="java.awt.headless" value="true"/>
-    <property name="surefire.real.class.path" value="C:\Users\Koolb\AppData\Local\Temp\surefire5521768586678755556\surefirebooter-20250721211922649_3.jar"/>
+    <property name="surefire.real.class.path" value="C:\Users\Koolb\AppData\Local\Temp\surefire12591714933686940171\surefirebooter-20250721214947300_3.jar"/>
     <property name="user.script" value=""/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="17.0.12+8-LTS-286"/>
@@ -46,12 +47,12 @@
     <property name="localRepository" value="C:\Users\Koolb\.m2\repository"/>
     <property name="java.vendor.url.bug" value="https://bugreport.java.com/bugreport/"/>
     <property name="java.io.tmpdir" value="C:\Users\Koolb\AppData\Local\Temp\"/>
-    <property name="com.zaxxer.hikari.pool_number" value="2"/>
+    <property name="com.zaxxer.hikari.pool_number" value="1"/>
     <property name="java.version" value="17.0.12"/>
     <property name="user.dir" value="C:\Users\Koolb\OneDrive\Documents\Database Management\tanUrPeach_backend\backend"/>
     <property name="os.arch" value="amd64"/>
     <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
-    <property name="PID" value="30392"/>
+    <property name="PID" value="31948"/>
     <property name="sun.os.patch.level" value=""/>
     <property name="CONSOLE_LOG_CHARSET" value="windows-1252"/>
     <property name="native.encoding" value="Cp1252"/>
@@ -62,24 +63,118 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="61.0"/>
   </properties>
-  <testcase name="updateLog_shouldReturnEmpty_whenValidationFails" classname="com.tanyourpeach.backend.service.FinancialLogServiceTest" time="0.009">
-    <system-out><![CDATA[2025-07-21T21:19:54.284-04:00  INFO 30392 --- [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.tanyourpeach.backend.service.FinancialLogServiceTest]: FinancialLogServiceTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2025-07-21T21:19:54.287-04:00  INFO 30392 --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.tanyourpeach.backend.BackendApplication for test class com.tanyourpeach.backend.service.FinancialLogServiceTest
+  <testcase name="getLowStockItems_shouldReturnOkForAdmin" classname="com.tanyourpeach.backend.controller.AdminStatsControllerIntegrationTest" time="1.197">
+    <system-out><![CDATA[21:49:48.544 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.tanyourpeach.backend.controller.AdminStatsControllerIntegrationTest]: AdminStatsControllerIntegrationTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+21:49:48.873 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.tanyourpeach.backend.BackendApplication for test class com.tanyourpeach.backend.controller.AdminStatsControllerIntegrationTest
+21:49:49.126 [main] INFO org.springframework.boot.devtools.restart.RestartApplicationListener -- Restart disabled due to context in which it is running
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.5.3)
+
+2025-07-21T21:49:49.642-04:00  INFO 31948 --- [           main] .b.c.AdminStatsControllerIntegrationTest : Starting AdminStatsControllerIntegrationTest using Java 17.0.12 with PID 31948 (started by Koolb in C:\Users\Koolb\OneDrive\Documents\Database Management\tanUrPeach_backend\backend)
+2025-07-21T21:49:49.642-04:00  INFO 31948 --- [           main] .b.c.AdminStatsControllerIntegrationTest : No active profile set, falling back to 1 default profile: "default"
+2025-07-21T21:49:51.162-04:00  INFO 31948 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-07-21T21:49:51.359-04:00  INFO 31948 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 178 ms. Found 10 JPA repository interfaces.
+2025-07-21T21:49:52.316-04:00  INFO 31948 --- [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-07-21T21:49:52.440-04:00  INFO 31948 --- [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.18.Final
+2025-07-21T21:49:52.527-04:00  INFO 31948 --- [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2025-07-21T21:49:53.125-04:00  INFO 31948 --- [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-07-21T21:49:53.197-04:00  INFO 31948 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-07-21T21:49:53.869-04:00  INFO 31948 --- [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@8aa5ab4
+2025-07-21T21:49:53.874-04:00  INFO 31948 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2025-07-21T21:49:54.046-04:00  WARN 31948 --- [           main] org.hibernate.orm.deprecation            : HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-07-21T21:49:54.105-04:00  INFO 31948 --- [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 8.4.5
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-07-21T21:49:55.712-04:00  INFO 31948 --- [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-07-21T21:49:55.714-04:00  INFO 31948 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-07-21T21:49:56.358-04:00  INFO 31948 --- [           main] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-07-21T21:49:58.154-04:00  WARN 31948 --- [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-07-21T21:49:58.688-04:00  INFO 31948 --- [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-07-21T21:49:59.500-04:00  INFO 31948 --- [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2025-07-21T21:49:59.500-04:00  INFO 31948 --- [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2025-07-21T21:49:59.500-04:00  INFO 31948 --- [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
+2025-07-21T21:49:59.545-04:00  INFO 31948 --- [           main] .b.c.AdminStatsControllerIntegrationTest : Started AdminStatsControllerIntegrationTest in 10.443 seconds (process running for 12.088)
+Hibernate: select u1_0.user_id,u1_0.address,u1_0.created_at,u1_0.email,u1_0.is_admin,u1_0.name,u1_0.password_hash from users u1_0
+Hibernate: delete from users where user_id=?
+Hibernate: delete from users where user_id=?
+Hibernate: insert into users (address,created_at,email,is_admin,name,password_hash) values (?,?,?,?,?,?)
+Hibernate: insert into users (address,created_at,email,is_admin,name,password_hash) values (?,?,?,?,?,?)
+Hibernate: select u1_0.user_id,u1_0.address,u1_0.created_at,u1_0.email,u1_0.is_admin,u1_0.name,u1_0.password_hash from users u1_0 where u1_0.email=?
+Hibernate: select i1_0.item_id,i1_0.name,i1_0.last_updated,i1_0.low_stock_threshold,i1_0.notes,i1_0.quantity,i1_0.total_spent,i1_0.unit_cost from inventory i1_0 where i1_0.quantity<=i1_0.low_stock_threshold
 ]]></system-out>
   </testcase>
-  <testcase name="updateLog_shouldReturnEmpty_whenNotFound" classname="com.tanyourpeach.backend.service.FinancialLogServiceTest" time="0.008"/>
-  <testcase name="createLog_shouldHandleLogWithoutId" classname="com.tanyourpeach.backend.service.FinancialLogServiceTest" time="0.009"/>
-  <testcase name="createLog_shouldReturnNull_whenRequiredFieldsMissing" classname="com.tanyourpeach.backend.service.FinancialLogServiceTest" time="0.005"/>
-  <testcase name="getAllLogs_shouldReturnEmptyList_whenNoLogsExist" classname="com.tanyourpeach.backend.service.FinancialLogServiceTest" time="0.009"/>
-  <testcase name="getAllLogs_shouldReturnList" classname="com.tanyourpeach.backend.service.FinancialLogServiceTest" time="0.007"/>
-  <testcase name="deleteLog_shouldDelete_whenExists" classname="com.tanyourpeach.backend.service.FinancialLogServiceTest" time="0.006"/>
-  <testcase name="updateLog_shouldPreserveLogId_whenUpdating" classname="com.tanyourpeach.backend.service.FinancialLogServiceTest" time="0.011"/>
-  <testcase name="deleteLog_shouldReturnFalse_whenNotFound" classname="com.tanyourpeach.backend.service.FinancialLogServiceTest" time="0.009"/>
-  <testcase name="createLog_shouldAllowNullSource" classname="com.tanyourpeach.backend.service.FinancialLogServiceTest" time="0.008"/>
-  <testcase name="createLog_shouldSaveSuccessfully" classname="com.tanyourpeach.backend.service.FinancialLogServiceTest" time="0.005"/>
-  <testcase name="getLogById_shouldReturnLog_whenExists" classname="com.tanyourpeach.backend.service.FinancialLogServiceTest" time="0.007"/>
-  <testcase name="getLogById_shouldReturnEmpty_whenNotExists" classname="com.tanyourpeach.backend.service.FinancialLogServiceTest" time="0.007"/>
-  <testcase name="updateLog_shouldModifyAndSave" classname="com.tanyourpeach.backend.service.FinancialLogServiceTest" time="0.009"/>
-  <testcase name="updateLog_shouldAllowNullSource" classname="com.tanyourpeach.backend.service.FinancialLogServiceTest" time="0.009"/>
-  <testcase name="createLog_shouldReturnNull_whenAmountIsNegative" classname="com.tanyourpeach.backend.service.FinancialLogServiceTest" time="0.007"/>
+  <testcase name="allEndpoints_shouldReturnForbiddenIfMissingToken" classname="com.tanyourpeach.backend.controller.AdminStatsControllerIntegrationTest" time="0.141">
+    <system-out><![CDATA[Hibernate: select u1_0.user_id,u1_0.address,u1_0.created_at,u1_0.email,u1_0.is_admin,u1_0.name,u1_0.password_hash from users u1_0
+Hibernate: delete from users where user_id=?
+Hibernate: delete from users where user_id=?
+Hibernate: insert into users (address,created_at,email,is_admin,name,password_hash) values (?,?,?,?,?,?)
+Hibernate: insert into users (address,created_at,email,is_admin,name,password_hash) values (?,?,?,?,?,?)
+]]></system-out>
+  </testcase>
+  <testcase name="getUpcomingAppointments_shouldReturnOkForAdmin" classname="com.tanyourpeach.backend.controller.AdminStatsControllerIntegrationTest" time="0.318">
+    <system-out><![CDATA[Hibernate: select u1_0.user_id,u1_0.address,u1_0.created_at,u1_0.email,u1_0.is_admin,u1_0.name,u1_0.password_hash from users u1_0
+Hibernate: delete from users where user_id=?
+Hibernate: delete from users where user_id=?
+Hibernate: insert into users (address,created_at,email,is_admin,name,password_hash) values (?,?,?,?,?,?)
+Hibernate: insert into users (address,created_at,email,is_admin,name,password_hash) values (?,?,?,?,?,?)
+Hibernate: select u1_0.user_id,u1_0.address,u1_0.created_at,u1_0.email,u1_0.is_admin,u1_0.name,u1_0.password_hash from users u1_0 where u1_0.email=?
+Hibernate: select a1_0.appointment_id,a1_0.appointment_date,a1_0.availability_slot_id,a1_0.base_price,a1_0.client_address,a1_0.client_email,a1_0.client_name,a1_0.created_at,a1_0.distance_miles,a1_0.notes,a1_0.service_id,a1_0.status,a1_0.total_price,a1_0.travel_fee,a1_0.user_id from appointments a1_0 where a1_0.appointment_date>? order by a1_0.appointment_date
+Hibernate: select a1_0.slot_id,a2_0.appointment_id,a2_0.appointment_date,a2_0.availability_slot_id,a3_0.slot_id,a3_0.appointment_id,a3_0.created_at,a3_0.date,a3_0.end_time,a3_0.is_booked,a3_0.notes,a3_0.start_time,a2_0.base_price,a2_0.client_address,a2_0.client_email,a2_0.client_name,a2_0.created_at,a2_0.distance_miles,a2_0.notes,a2_0.service_id,s1_0.service_id,s1_0.base_price,s1_0.created_at,s1_0.description,s1_0.duration_minutes,s1_0.is_active,s1_0.name,s1_0.updated_at,a2_0.status,a2_0.total_price,a2_0.travel_fee,u1_0.user_id,u1_0.address,u1_0.created_at,u1_0.email,u1_0.is_admin,u1_0.name,u1_0.password_hash,a1_0.created_at,a1_0.date,a1_0.end_time,a1_0.is_booked,a1_0.notes,a1_0.start_time from availabilities a1_0 left join appointments a2_0 on a2_0.appointment_id=a1_0.appointment_id left join availabilities a3_0 on a3_0.slot_id=a2_0.availability_slot_id left join services s1_0 on s1_0.service_id=a2_0.service_id left join users u1_0 on u1_0.user_id=a2_0.user_id where a1_0.slot_id=?
+Hibernate: select a1_0.slot_id,a2_0.appointment_id,a2_0.appointment_date,a2_0.availability_slot_id,a3_0.slot_id,a3_0.appointment_id,a3_0.created_at,a3_0.date,a3_0.end_time,a3_0.is_booked,a3_0.notes,a3_0.start_time,a2_0.base_price,a2_0.client_address,a2_0.client_email,a2_0.client_name,a2_0.created_at,a2_0.distance_miles,a2_0.notes,a2_0.service_id,s1_0.service_id,s1_0.base_price,s1_0.created_at,s1_0.description,s1_0.duration_minutes,s1_0.is_active,s1_0.name,s1_0.updated_at,a2_0.status,a2_0.total_price,a2_0.travel_fee,u1_0.user_id,u1_0.address,u1_0.created_at,u1_0.email,u1_0.is_admin,u1_0.name,u1_0.password_hash,a1_0.created_at,a1_0.date,a1_0.end_time,a1_0.is_booked,a1_0.notes,a1_0.start_time from availabilities a1_0 left join appointments a2_0 on a2_0.appointment_id=a1_0.appointment_id left join availabilities a3_0 on a3_0.slot_id=a2_0.availability_slot_id left join services s1_0 on s1_0.service_id=a2_0.service_id left join users u1_0 on u1_0.user_id=a2_0.user_id where a1_0.slot_id=?
+2025-07-21T21:50:01.228-04:00  WARN 31948 --- [           main] .w.s.m.s.DefaultHandlerExceptionResolver : Ignoring exception, response committed already: org.springframework.http.converter.HttpMessageNotWritableException: Could not write JSON: Document nesting depth (1001) exceeds the maximum allowed (1000, from `StreamWriteConstraints.getMaxNestingDepth()`)
+2025-07-21T21:50:01.231-04:00  WARN 31948 --- [           main] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.http.converter.HttpMessageNotWritableException: Could not write JSON: Document nesting depth (1001) exceeds the maximum allowed (1000, from `StreamWriteConstraints.getMaxNestingDepth()`)]
+]]></system-out>
+  </testcase>
+  <testcase name="getMonthlyStats_shouldReturnOkForAdmin" classname="com.tanyourpeach.backend.controller.AdminStatsControllerIntegrationTest" time="0.154">
+    <system-out><![CDATA[Hibernate: select u1_0.user_id,u1_0.address,u1_0.created_at,u1_0.email,u1_0.is_admin,u1_0.name,u1_0.password_hash from users u1_0
+Hibernate: delete from users where user_id=?
+Hibernate: delete from users where user_id=?
+Hibernate: insert into users (address,created_at,email,is_admin,name,password_hash) values (?,?,?,?,?,?)
+Hibernate: insert into users (address,created_at,email,is_admin,name,password_hash) values (?,?,?,?,?,?)
+Hibernate: select u1_0.user_id,u1_0.address,u1_0.created_at,u1_0.email,u1_0.is_admin,u1_0.name,u1_0.password_hash from users u1_0 where u1_0.email=?
+Hibernate: select sum(fl1_0.amount) from financial_log fl1_0 where fl1_0.type=? and date_format(fl1_0.log_date,'%Y-%m')=?
+Hibernate: select sum(fl1_0.amount) from financial_log fl1_0 where fl1_0.type=? and date_format(fl1_0.log_date,'%Y-%m')=?
+Hibernate: select sum(fl1_0.amount) from financial_log fl1_0 where fl1_0.type=? and date_format(fl1_0.log_date,'%Y-%m')=?
+Hibernate: select sum(fl1_0.amount) from financial_log fl1_0 where fl1_0.type=? and date_format(fl1_0.log_date,'%Y-%m')=?
+Hibernate: select sum(fl1_0.amount) from financial_log fl1_0 where fl1_0.type=? and date_format(fl1_0.log_date,'%Y-%m')=?
+Hibernate: select sum(fl1_0.amount) from financial_log fl1_0 where fl1_0.type=? and date_format(fl1_0.log_date,'%Y-%m')=?
+Hibernate: select sum(fl1_0.amount) from financial_log fl1_0 where fl1_0.type=? and date_format(fl1_0.log_date,'%Y-%m')=?
+Hibernate: select sum(fl1_0.amount) from financial_log fl1_0 where fl1_0.type=? and date_format(fl1_0.log_date,'%Y-%m')=?
+]]></system-out>
+  </testcase>
+  <testcase name="allEndpoints_shouldReturnForbiddenForNonAdmin" classname="com.tanyourpeach.backend.controller.AdminStatsControllerIntegrationTest" time="0.134">
+    <system-out><![CDATA[Hibernate: select u1_0.user_id,u1_0.address,u1_0.created_at,u1_0.email,u1_0.is_admin,u1_0.name,u1_0.password_hash from users u1_0
+Hibernate: delete from users where user_id=?
+Hibernate: delete from users where user_id=?
+Hibernate: insert into users (address,created_at,email,is_admin,name,password_hash) values (?,?,?,?,?,?)
+Hibernate: insert into users (address,created_at,email,is_admin,name,password_hash) values (?,?,?,?,?,?)
+Hibernate: select u1_0.user_id,u1_0.address,u1_0.created_at,u1_0.email,u1_0.is_admin,u1_0.name,u1_0.password_hash from users u1_0 where u1_0.email=?
+Hibernate: select u1_0.user_id,u1_0.address,u1_0.created_at,u1_0.email,u1_0.is_admin,u1_0.name,u1_0.password_hash from users u1_0 where u1_0.email=?
+Hibernate: select u1_0.user_id,u1_0.address,u1_0.created_at,u1_0.email,u1_0.is_admin,u1_0.name,u1_0.password_hash from users u1_0 where u1_0.email=?
+Hibernate: select u1_0.user_id,u1_0.address,u1_0.created_at,u1_0.email,u1_0.is_admin,u1_0.name,u1_0.password_hash from users u1_0 where u1_0.email=?
+]]></system-out>
+  </testcase>
+  <testcase name="getSummary_shouldReturnOkForAdmin" classname="com.tanyourpeach.backend.controller.AdminStatsControllerIntegrationTest" time="0.109">
+    <system-out><![CDATA[Hibernate: select u1_0.user_id,u1_0.address,u1_0.created_at,u1_0.email,u1_0.is_admin,u1_0.name,u1_0.password_hash from users u1_0
+Hibernate: delete from users where user_id=?
+Hibernate: delete from users where user_id=?
+Hibernate: insert into users (address,created_at,email,is_admin,name,password_hash) values (?,?,?,?,?,?)
+Hibernate: insert into users (address,created_at,email,is_admin,name,password_hash) values (?,?,?,?,?,?)
+Hibernate: select u1_0.user_id,u1_0.address,u1_0.created_at,u1_0.email,u1_0.is_admin,u1_0.name,u1_0.password_hash from users u1_0 where u1_0.email=?
+Hibernate: select sum(fl1_0.amount) from financial_log fl1_0 where fl1_0.type=?
+Hibernate: select sum(fl1_0.amount) from financial_log fl1_0 where fl1_0.type=?
+]]></system-out>
+  </testcase>
 </testsuite>

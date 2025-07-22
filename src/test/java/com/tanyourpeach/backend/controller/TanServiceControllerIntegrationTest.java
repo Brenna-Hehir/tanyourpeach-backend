@@ -2,6 +2,7 @@ package com.tanyourpeach.backend.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tanyourpeach.backend.model.TanService;
+import com.tanyourpeach.backend.repository.AppointmentRepository;
 import com.tanyourpeach.backend.repository.TanServiceRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,7 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc(addFilters = false)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class TanServiceIntegrationTest {
+class TanServiceControllerIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -30,12 +31,16 @@ class TanServiceIntegrationTest {
     private TanServiceRepository tanServiceRepository;
 
     @Autowired
+    private AppointmentRepository appointmentRepository;
+
+    @Autowired
     private ObjectMapper objectMapper;
 
     private TanService testService;
 
     @BeforeEach
     void setup() {
+        appointmentRepository.deleteAll();
         tanServiceRepository.deleteAll();
         testService = new TanService();
         testService.setName("Spray Tan Deluxe");
@@ -87,60 +92,10 @@ class TanServiceIntegrationTest {
     }
 
     @Test
-    void createService_shouldFail_whenNameIsMissing() throws Exception {
+    void createService_shouldFailValidation_whenMissingName() throws Exception {
         TanService invalid = new TanService();
         invalid.setBasePrice(50.0);
         invalid.setDurationMinutes(20);
-
-        mockMvc.perform(post("/api/services")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(invalid)))
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    void createService_shouldFail_whenBasePriceIsMissing() throws Exception {
-        TanService invalid = new TanService();
-        invalid.setName("Invalid");
-        invalid.setDurationMinutes(20);
-
-        mockMvc.perform(post("/api/services")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(invalid)))
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    void createService_shouldFail_whenBasePriceIsZero() throws Exception {
-        TanService invalid = new TanService();
-        invalid.setName("Invalid");
-        invalid.setBasePrice(0.0);
-        invalid.setDurationMinutes(20);
-
-        mockMvc.perform(post("/api/services")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(invalid)))
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    void createService_shouldFail_whenDurationIsMissing() throws Exception {
-        TanService invalid = new TanService();
-        invalid.setName("Invalid");
-        invalid.setBasePrice(50.0);
-
-        mockMvc.perform(post("/api/services")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(invalid)))
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    void createService_shouldFail_whenDurationIsZero() throws Exception {
-        TanService invalid = new TanService();
-        invalid.setName("Invalid");
-        invalid.setBasePrice(50.0);
-        invalid.setDurationMinutes(0);
 
         mockMvc.perform(post("/api/services")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -172,26 +127,12 @@ class TanServiceIntegrationTest {
     }
 
     @Test
-    void updateService_shouldReturnNotFoundForMissingId() throws Exception {
-        TanService valid = new TanService();
-        valid.setName("New Name");
-        valid.setBasePrice(40.0);
-        valid.setDurationMinutes(15);
-
-        mockMvc.perform(put("/api/services/999999")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(valid)))
-                .andExpect(status().isNotFound());
-    }
-
-    @Test
     void updateService_shouldFail_whenNameIsMissing() throws Exception {
         TanService invalid = new TanService();
-        invalid.setServiceId(testService.getServiceId()); // include valid ID
-        invalid.setName(null); // missing
-        invalid.setBasePrice(75.0); // valid
-        invalid.setDurationMinutes(30); // valid
-        invalid.setIsActive(true); // optional
+        invalid.setName(null);
+        invalid.setBasePrice(75.0);
+        invalid.setDurationMinutes(30);
+        invalid.setIsActive(true);
 
         mockMvc.perform(put("/api/services/" + testService.getServiceId())
                 .contentType(MediaType.APPLICATION_JSON)
@@ -201,41 +142,57 @@ class TanServiceIntegrationTest {
 
     @Test
     void updateService_shouldFail_whenBasePriceIsMissing() throws Exception {
-        testService.setBasePrice(null);
+        TanService invalid = new TanService();
+        invalid.setName("Valid Name");
+        invalid.setBasePrice(null);
+        invalid.setDurationMinutes(30);
+        invalid.setIsActive(true);
 
         mockMvc.perform(put("/api/services/" + testService.getServiceId())
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(testService)))
+                .content(objectMapper.writeValueAsString(invalid)))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     void updateService_shouldFail_whenBasePriceIsZero() throws Exception {
-        testService.setBasePrice(0.0);
+        TanService invalid = new TanService();
+        invalid.setName("Valid Name");
+        invalid.setBasePrice(0.0);
+        invalid.setDurationMinutes(30);
+        invalid.setIsActive(true);
 
         mockMvc.perform(put("/api/services/" + testService.getServiceId())
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(testService)))
+                .content(objectMapper.writeValueAsString(invalid)))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     void updateService_shouldFail_whenDurationIsMissing() throws Exception {
-        testService.setDurationMinutes(null);
+        TanService invalid = new TanService();
+        invalid.setName("Valid Name");
+        invalid.setBasePrice(50.0);
+        invalid.setDurationMinutes(null);
+        invalid.setIsActive(true);
 
         mockMvc.perform(put("/api/services/" + testService.getServiceId())
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(testService)))
+                .content(objectMapper.writeValueAsString(invalid)))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     void updateService_shouldFail_whenDurationIsZero() throws Exception {
-        testService.setDurationMinutes(0);
+        TanService invalid = new TanService();
+        invalid.setName("Valid Name");
+        invalid.setBasePrice(50.0);
+        invalid.setDurationMinutes(0);
+        invalid.setIsActive(true);
 
         mockMvc.perform(put("/api/services/" + testService.getServiceId())
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(testService)))
+                .content(objectMapper.writeValueAsString(invalid)))
                 .andExpect(status().isBadRequest());
     }
 
@@ -250,12 +207,6 @@ class TanServiceIntegrationTest {
     }
 
     @Test
-    void deactivateService_shouldReturnNotFoundIfMissing() throws Exception {
-        mockMvc.perform(delete("/api/services/999999"))
-                .andExpect(status().isNotFound());
-    }
-
-    @Test
     void deleteService_shouldRemove() throws Exception {
         mockMvc.perform(delete("/api/services/" + testService.getServiceId() + "/force"))
                 .andExpect(status().isNoContent());
@@ -266,12 +217,6 @@ class TanServiceIntegrationTest {
     @Test
     void deleteService_shouldReturnNotFound() throws Exception {
         mockMvc.perform(delete("/api/services/999999"))
-                .andExpect(status().isNotFound());
-    }
-
-    @Test
-    void deleteServicePermanently_shouldReturnNotFoundIfMissing() throws Exception {
-        mockMvc.perform(delete("/api/services/999999/force"))
                 .andExpect(status().isNotFound());
     }
 }

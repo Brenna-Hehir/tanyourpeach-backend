@@ -3,6 +3,7 @@ package com.tanyourpeach.backend.service;
 import com.tanyourpeach.backend.dto.AdminDashboardSummary;
 import com.tanyourpeach.backend.dto.MonthlyStats;
 import com.tanyourpeach.backend.model.Appointment;
+import com.tanyourpeach.backend.model.FinancialLog;
 import com.tanyourpeach.backend.model.Inventory;
 import com.tanyourpeach.backend.repository.AppointmentRepository;
 import com.tanyourpeach.backend.repository.FinancialLogRepository;
@@ -43,8 +44,8 @@ class AdminStatsServiceTest {
 
     @Test
     void getDashboardSummary_shouldReturnCorrectProfit() {
-        when(financialLogRepository.sumByType("revenue")).thenReturn(BigDecimal.valueOf(500));
-        when(financialLogRepository.sumByType("expense")).thenReturn(BigDecimal.valueOf(200));
+        when(financialLogRepository.sumByType(FinancialLog.Type.revenue)).thenReturn(BigDecimal.valueOf(500));
+        when(financialLogRepository.sumByType(FinancialLog.Type.expense)).thenReturn(BigDecimal.valueOf(200));
 
         AdminDashboardSummary summary = adminStatsService.getDashboardSummary();
 
@@ -55,8 +56,8 @@ class AdminStatsServiceTest {
 
     @Test
     void getDashboardSummary_shouldHandleNullValuesSafely() {
-        when(financialLogRepository.sumByType("revenue")).thenReturn(null);
-        when(financialLogRepository.sumByType("expense")).thenReturn(null);
+        when(financialLogRepository.sumByType(FinancialLog.Type.revenue)).thenReturn(null);
+        when(financialLogRepository.sumByType(FinancialLog.Type.expense)).thenReturn(null);
 
         AdminDashboardSummary summary = adminStatsService.getDashboardSummary();
 
@@ -67,8 +68,8 @@ class AdminStatsServiceTest {
 
     @Test
     void getLastFourMonthsStats_shouldReturnValidStatsList() {
-        when(financialLogRepository.sumByTypeAndMonth(anyString(), anyString())).thenReturn(BigDecimal.valueOf(100));
-
+        when(financialLogRepository.sumByTypeAndMonth(any(FinancialLog.Type.class), anyString()))
+                .thenReturn(BigDecimal.valueOf(100));
         List<MonthlyStats> stats = adminStatsService.getLastFourMonthsStats();
 
         assertEquals(4, stats.size());
@@ -81,13 +82,13 @@ class AdminStatsServiceTest {
 
     @Test
     void getLastFourMonthsStats_shouldCalculateCorrectProfit_withMixedValues() {
-        when(financialLogRepository.sumByTypeAndMonth(eq("revenue"), anyString()))
+        when(financialLogRepository.sumByTypeAndMonth(eq(FinancialLog.Type.revenue), anyString()))
             .thenReturn(BigDecimal.valueOf(150))  // Month 1
             .thenReturn(null)                     // Month 2
             .thenReturn(BigDecimal.ZERO)         // Month 3
             .thenReturn(BigDecimal.valueOf(50)); // Month 4
 
-        when(financialLogRepository.sumByTypeAndMonth(eq("expense"), anyString()))
+        when(financialLogRepository.sumByTypeAndMonth(eq(FinancialLog.Type.expense), anyString()))
             .thenReturn(BigDecimal.valueOf(100))  // Month 1
             .thenReturn(BigDecimal.valueOf(200))  // Month 2
             .thenReturn(null)                     // Month 3
@@ -103,9 +104,9 @@ class AdminStatsServiceTest {
 
     @Test
     void getLastFourMonthsStats_shouldHandleAllNullValues() {
-        when(financialLogRepository.sumByTypeAndMonth(eq("revenue"), anyString()))
+        when(financialLogRepository.sumByTypeAndMonth(eq(FinancialLog.Type.revenue), anyString()))
             .thenReturn(null, null, null, null);
-        when(financialLogRepository.sumByTypeAndMonth(eq("expense"), anyString()))
+        when(financialLogRepository.sumByTypeAndMonth(eq(FinancialLog.Type.expense), anyString()))
             .thenReturn(null, null, null, null);
 
         List<MonthlyStats> stats = adminStatsService.getLastFourMonthsStats();
@@ -120,9 +121,9 @@ class AdminStatsServiceTest {
 
     @Test
     void getLastFourMonthsStats_shouldHandleAllZeroValues() {
-        when(financialLogRepository.sumByTypeAndMonth(eq("revenue"), anyString()))
+        when(financialLogRepository.sumByTypeAndMonth(eq(FinancialLog.Type.revenue), anyString()))
             .thenReturn(BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO);
-        when(financialLogRepository.sumByTypeAndMonth(eq("expense"), anyString()))
+        when(financialLogRepository.sumByTypeAndMonth(eq(FinancialLog.Type.expense), anyString()))
             .thenReturn(BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO);
 
         List<MonthlyStats> stats = adminStatsService.getLastFourMonthsStats();

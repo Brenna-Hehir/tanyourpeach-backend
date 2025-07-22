@@ -239,6 +239,15 @@ class AppointmentControllerTest {
     }
 
     @Test
+    void updateAppointment_shouldReturn403_ifTokenMissing() {
+        when(appointmentService.getAppointmentById(1L)).thenReturn(Optional.of(testAppointment));
+        when(request.getHeader("Authorization")).thenReturn(null);
+
+        ResponseEntity<?> response = controller.updateAppointment(1L, new Appointment(), request);
+        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+    }
+
+    @Test
     void updateAppointment_shouldReturn404_ifNotFound() {
         when(appointmentService.getAppointmentById(1L)).thenReturn(Optional.empty());
 

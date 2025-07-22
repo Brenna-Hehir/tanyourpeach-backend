@@ -3,6 +3,7 @@ package com.tanyourpeach.backend.service;
 import com.tanyourpeach.backend.dto.AdminDashboardSummary;
 import com.tanyourpeach.backend.dto.MonthlyStats;
 import com.tanyourpeach.backend.model.Appointment;
+import com.tanyourpeach.backend.model.FinancialLog;
 import com.tanyourpeach.backend.model.Inventory;
 import com.tanyourpeach.backend.repository.AppointmentRepository;
 import com.tanyourpeach.backend.repository.InventoryRepository;
@@ -32,8 +33,8 @@ public class AdminStatsService {
     public AdminDashboardSummary getDashboardSummary() {
         AdminDashboardSummary summary = new AdminDashboardSummary();
 
-        BigDecimal revenue = financialLogRepository.sumByType("revenue");
-        BigDecimal expenses = financialLogRepository.sumByType("expense");
+        BigDecimal revenue = financialLogRepository.sumByType(FinancialLog.Type.revenue);
+        BigDecimal expenses = financialLogRepository.sumByType(FinancialLog.Type.expense);
         BigDecimal profit = (revenue != null ? revenue : BigDecimal.ZERO)
                 .subtract(expenses != null ? expenses : BigDecimal.ZERO);
 
@@ -57,8 +58,8 @@ public class AdminStatsService {
             // Still pass the original format ("YYYY-MM") to the DB query
             String dbFormat = month.toString(); // "YYYY-MM"
 
-            BigDecimal revenue = financialLogRepository.sumByTypeAndMonth("revenue", dbFormat);
-            BigDecimal expenses = financialLogRepository.sumByTypeAndMonth("expense", dbFormat);
+            BigDecimal revenue = financialLogRepository.sumByTypeAndMonth(FinancialLog.Type.revenue, dbFormat);
+            BigDecimal expenses = financialLogRepository.sumByTypeAndMonth(FinancialLog.Type.expense, dbFormat);
             BigDecimal profit = (revenue != null ? revenue : BigDecimal.ZERO)
                     .subtract(expenses != null ? expenses : BigDecimal.ZERO);
 

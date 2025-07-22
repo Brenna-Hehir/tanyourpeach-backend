@@ -36,7 +36,7 @@ public class Appointment {
     private String clientAddress;
 
     @NotNull(message = "Appointment date is required")
-    @Column(name = "appointment_date_time")
+    @Column(name = "appointment_date")
     private LocalDateTime appointmentDateTime;
 
     private Double distanceMiles;
@@ -55,7 +55,9 @@ public class Appointment {
 
     private LocalDateTime createdAt;
 
+    @NotNull(message = "Availability slot must be selected")
     @OneToOne
+    @JoinColumn(name = "availability_slot_id", nullable = false)
     private Availability availability;
 
     // Default constructor
