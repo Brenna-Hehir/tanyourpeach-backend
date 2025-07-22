@@ -4,6 +4,7 @@ com\tanyourpeach\backend\DbConnectionTest.class
 com\tanyourpeach\backend\service\AppointmentServiceTest.class
 com\tanyourpeach\backend\service\AvailabilityServiceTest.class
 com\tanyourpeach\backend\service\UserServiceTest.class
+com\tanyourpeach\backend\controller\AdminStatsControllerIntegrationTest.class
 com\tanyourpeach\backend\service\FinancialLogServiceTest.class
 com\tanyourpeach\backend\controller\FinancialLogControllerTest.class
 com\tanyourpeach\backend\controller\InventoryControllerTest.class
@@ -14,10 +15,12 @@ com\tanyourpeach\backend\service\UserAuthServiceTest.class
 com\tanyourpeach\backend\controller\AppointmentControllerTest.class
 com\tanyourpeach\backend\controller\AvailabilityControllerTest.class
 com\tanyourpeach\backend\controller\TanServiceControllerTest.class
+com\tanyourpeach\backend\controller\AppointmentControllerIntegrationTest.class
 com\tanyourpeach\backend\service\CustomUserDetailsServiceTest.class
 com\tanyourpeach\backend\controller\UserControllerTest.class
 com\tanyourpeach\backend\service\JwtAuthenticationFilterTest.class
 com\tanyourpeach\backend\service\ServiceInventoryUsageServiceTest.class
+com\tanyourpeach\backend\controller\TanServiceControllerIntegrationTest.class
 com\tanyourpeach\backend\controller\AuthControllerTest.class
 com\tanyourpeach\backend\service\InventoryServiceTest.class
 com\tanyourpeach\backend\service\JwtServiceTest.class

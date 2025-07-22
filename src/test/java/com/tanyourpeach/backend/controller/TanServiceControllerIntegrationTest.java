@@ -3,6 +3,7 @@ package com.tanyourpeach.backend.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tanyourpeach.backend.model.TanService;
 import com.tanyourpeach.backend.repository.AppointmentRepository;
+import com.tanyourpeach.backend.repository.AvailabilityRepository;
 import com.tanyourpeach.backend.repository.TanServiceRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,6 +35,9 @@ class TanServiceControllerIntegrationTest {
     private AppointmentRepository appointmentRepository;
 
     @Autowired
+    private AvailabilityRepository availabilityRepository;
+
+    @Autowired
     private ObjectMapper objectMapper;
 
     private TanService testService;
@@ -41,7 +45,9 @@ class TanServiceControllerIntegrationTest {
     @BeforeEach
     void setup() {
         appointmentRepository.deleteAll();
+        availabilityRepository.deleteAll();
         tanServiceRepository.deleteAll();
+
         testService = new TanService();
         testService.setName("Spray Tan Deluxe");
         testService.setBasePrice(75.0);

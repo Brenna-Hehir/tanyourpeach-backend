@@ -146,29 +146,7 @@ class AppointmentServiceTest {
         assertTrue(result.isPresent());
         verify(statusHistoryRepository).save(argThat(history ->
             history.getStatus().equals("PENDING") &&
-            history.getChangedByClientEmail().equals("guest@example.com")
-        ));
-    }
-
-    @Test
-    void createAppointment_shouldLinkSlotToAppointment() {
-        when(availabilityRepository.findById(1L)).thenReturn(Optional.of(testSlot));
-        when(tanServiceRepository.findById(1L)).thenReturn(Optional.of(testService));
-        when(appointmentRepository.save(any())).thenAnswer(i -> {
-            Appointment a = i.getArgument(0);
-            a.setAppointmentId(123L);
-            return a;
-        });
-
-        when(availabilityRepository.save(any())).thenAnswer(i -> i.getArgument(0));
-
-        Optional<Appointment> result = appointmentService.createAppointment(testAppointment, request);
-
-        assertTrue(result.isPresent());
-        verify(availabilityRepository).save(argThat(slot ->
-            slot.getIsBooked() &&
-            slot.getAppointment() != null &&
-            slot.getAppointment().getAppointmentId().equals(123L)
+            history.getchangedByEmail().equals("guest@example.com")
         ));
     }
 

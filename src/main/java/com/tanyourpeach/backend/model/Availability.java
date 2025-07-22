@@ -3,6 +3,7 @@ package com.tanyourpeach.backend.model;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -20,10 +21,6 @@ public class Availability {
     private LocalTime endTime;
 
     private Boolean isBooked = false;
-
-    @OneToOne
-    @JoinColumn(name = "appointment_id")
-    private Appointment appointment; // nullable
 
     @Column(columnDefinition = "TEXT")
     private String notes;
@@ -76,14 +73,6 @@ public class Availability {
 
     public void setIsBooked(Boolean isBooked) {
         this.isBooked = isBooked;
-    }
-
-    public Appointment getAppointment() {
-        return appointment;
-    }
-
-    public void setAppointment(Appointment appointment) {
-        this.appointment = appointment;
     }
 
     public String getNotes() {

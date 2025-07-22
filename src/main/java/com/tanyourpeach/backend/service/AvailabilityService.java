@@ -3,6 +3,7 @@ package com.tanyourpeach.backend.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.tanyourpeach.backend.model.Appointment;
 import com.tanyourpeach.backend.model.Availability;
 import com.tanyourpeach.backend.repository.AvailabilityRepository;
 
@@ -83,7 +84,6 @@ public class AvailabilityService {
         existing.setEndTime(updated.getEndTime());
         existing.setIsBooked(updated.getIsBooked());
         existing.setNotes(updated.getNotes());
-        existing.setAppointment(updated.getAppointment());
 
         return Optional.of(availabilityRepository.save(existing));
     }

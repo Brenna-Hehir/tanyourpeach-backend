@@ -63,9 +63,6 @@ public class AppointmentService {
     @Autowired
     private UserRepository userRepository;
 
-    @Enumerated(EnumType.STRING)
-    private Status status;
-
     // Enum for appointment status
     public enum Status {
         PENDING,
@@ -147,8 +144,6 @@ public class AppointmentService {
         // Save appointment
         Appointment savedAppointment = appointmentRepository.save(appointment);
 
-        // Link the slot to the appointment
-        slot.setAppointment(savedAppointment);
         availabilityRepository.save(slot);
 
         // Save initial status change (PENDING)
@@ -160,7 +155,7 @@ public class AppointmentService {
         if (appointment.getUser() != null) {
             history.setChangedByUser(appointment.getUser());
         } else {
-            history.setChangedByClientEmail(appointment.getClientEmail());
+            history.setchangedByEmail(appointment.getClientEmail());
         }
 
         statusHistoryRepository.save(history);
@@ -255,7 +250,7 @@ public class AppointmentService {
                 String email = jwtService.extractUsername(token);
                 userRepository.findByEmail(email).ifPresent(history::setChangedByUser);
             } else {
-                history.setChangedByClientEmail(updated.getClientEmail());
+                history.setchangedByEmail(updated.getClientEmail());
             }
 
             statusHistoryRepository.save(history);

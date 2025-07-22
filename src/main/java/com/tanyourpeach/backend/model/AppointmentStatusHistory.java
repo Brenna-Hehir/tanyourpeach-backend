@@ -24,7 +24,8 @@ public class AppointmentStatusHistory {
     @JoinColumn(name = "changed_by_user_id")
     private User changedByUser;
 
-    private String changedByClientEmail;
+    @Column(name = "changed_by_email")
+    private String changedByEmail;
 
     @Column(name = "changed_at", nullable = false)
     private LocalDateTime changedAt = LocalDateTime.now();
@@ -63,12 +64,12 @@ public class AppointmentStatusHistory {
         this.changedByUser = changedByUser;
     }
 
-    public String getChangedByClientEmail() {
-        return changedByClientEmail;
+    public String getchangedByEmail() {
+        return changedByEmail;
     }
 
-    public void setChangedByClientEmail(String changedByClientEmail) {
-        this.changedByClientEmail = changedByClientEmail;
+    public void setchangedByEmail(String changedByEmail) {
+        this.changedByEmail = changedByEmail;
     }
 
     public LocalDateTime getChangedAt() {
