@@ -32,6 +32,7 @@ public class Appointment {
     @Email(message = "Invalid email format")
     private String clientEmail;
 
+    @NotBlank(message = "Client address is required")
     @Column(columnDefinition = "TEXT")
     private String clientAddress;
 

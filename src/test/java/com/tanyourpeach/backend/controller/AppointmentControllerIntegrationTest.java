@@ -268,6 +268,21 @@ class AppointmentControllerIntegrationTest {
                 .andExpect(status().isBadRequest());
     }
 
+    @Test
+    void createAppointment_shouldFailWithMissingAddress() throws Exception {
+        Appointment invalid = new Appointment();
+        invalid.setService(service);
+        invalid.setClientName("Test");
+        invalid.setClientEmail("test@example.com");
+        invalid.setAppointmentDateTime(LocalDateTime.now().plusDays(1));
+        invalid.setAvailability(availability);
+
+        mockMvc.perform(post("/api/appointments")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(invalid)))
+                .andExpect(status().isBadRequest());
+    }
+
 
     // ---------- PUT /api/appointments/{id} ----------
 
