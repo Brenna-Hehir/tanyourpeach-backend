@@ -12,6 +12,7 @@ import com.tanyourpeach.backend.service.InventoryService;
 import com.tanyourpeach.backend.service.JwtService;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -58,7 +59,7 @@ public class InventoryController {
 
     // POST create (admin only)
     @PostMapping
-    public ResponseEntity<?> createInventory(@RequestBody Inventory inventory, HttpServletRequest request) {
+    public ResponseEntity<?> createInventory(@Valid @RequestBody Inventory inventory, HttpServletRequest request) {
         if (!isAdmin(request)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access denied");
         }
@@ -67,7 +68,7 @@ public class InventoryController {
 
     // PUT update (admin only)
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateInventory(@PathVariable Long id, @RequestBody Inventory updated, HttpServletRequest request) {
+    public ResponseEntity<?> updateInventory(@PathVariable Long id, @Valid @RequestBody Inventory updated, HttpServletRequest request) {
         if (!isAdmin(request)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access denied");
         }

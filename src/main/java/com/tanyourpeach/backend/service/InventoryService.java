@@ -106,6 +106,8 @@ public class InventoryService {
 
     // Deduct quantity from inventory item
     public boolean deductQuantity(Long itemId, int amount) {
+        if (amount <= 0) return false;
+        
         Optional<Inventory> optional = inventoryRepository.findById(itemId);
         if (optional.isEmpty()) return false;
 
