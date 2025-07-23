@@ -123,4 +123,40 @@ class AdminStatsControllerIntegrationTest {
                     .andExpect(content().string("Access denied"));
         }
     }
+
+    @Test
+    void allEndpoints_shouldReturnForbiddenForInvalidToken() throws Exception {
+        String[] urls = {
+                "/api/admin/stats/summary",
+                "/api/admin/stats/monthly",
+                "/api/admin/stats/upcoming",
+                "/api/admin/stats/low-stock"
+        };
+
+        for (String url : urls) {
+            mockMvc.perform(get(url)
+                    .header("Authorization", "Bearer invalid.token.here"))
+                    .andExpect(status().isForbidden())
+                    .andExpect(content().string("Access denied"));
+        }
+    }
+
+    @Test
+    void allEndpoints_shouldReturnForbiddenIfTokenMissingBearerPrefix() throws Exception {
+        String rawToken = adminToken.replace("Bearer ", ""); // remove prefix
+
+        String[] urls = {
+                "/api/admin/stats/summary",
+                "/api/admin/stats/monthly",
+                "/api/admin/stats/upcoming",
+                "/api/admin/stats/low-stock"
+        };
+
+        for (String url : urls) {
+            mockMvc.perform(get(url)
+                    .header("Authorization", rawToken)) // no "Bearer "
+                    .andExpect(status().isForbidden())
+                    .andExpect(content().string("Access denied"));
+        }
+    }
 }
