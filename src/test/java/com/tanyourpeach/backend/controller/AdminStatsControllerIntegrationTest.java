@@ -63,28 +63,38 @@ class AdminStatsControllerIntegrationTest {
     void getSummary_shouldReturnOkForAdmin() throws Exception {
         mockMvc.perform(get("/api/admin/stats/summary")
                 .header("Authorization", adminToken))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalRevenue").exists())
+                .andExpect(jsonPath("$.totalExpenses").exists())
+                .andExpect(jsonPath("$.totalProfit").exists());
     }
 
     @Test
     void getMonthlyStats_shouldReturnOkForAdmin() throws Exception {
         mockMvc.perform(get("/api/admin/stats/monthly")
                 .header("Authorization", adminToken))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").isNumber())
+                .andExpect(jsonPath("$[0].month").exists())
+                .andExpect(jsonPath("$[0].revenue").exists())
+                .andExpect(jsonPath("$[0].expenses").exists())
+                .andExpect(jsonPath("$[0].profit").exists());
     }
 
     @Test
     void getUpcomingAppointments_shouldReturnOkForAdmin() throws Exception {
         mockMvc.perform(get("/api/admin/stats/upcoming")
                 .header("Authorization", adminToken))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray());
     }
 
     @Test
     void getLowStockItems_shouldReturnOkForAdmin() throws Exception {
         mockMvc.perform(get("/api/admin/stats/low-stock")
                 .header("Authorization", adminToken))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray());
     }
 
     @Test
