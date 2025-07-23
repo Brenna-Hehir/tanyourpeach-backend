@@ -52,6 +52,7 @@ public class UserAuthService {
         user.setIsAdmin(request.getIsAdmin() != null && request.getIsAdmin()); // default false if null
 
         userRepository.save(user);
+
         String jwtToken = jwtService.generateToken(user);
         return new AuthenticationResponse(jwtToken);
     }
@@ -63,6 +64,7 @@ public class UserAuthService {
         );
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new RuntimeException("User not found"));
+                
         String jwtToken = jwtService.generateToken(user);
         return new AuthenticationResponse(jwtToken);
     }

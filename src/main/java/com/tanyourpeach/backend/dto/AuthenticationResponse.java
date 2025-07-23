@@ -4,6 +4,10 @@ public class AuthenticationResponse {
 
     private String token;
 
+    public AuthenticationResponse() {
+        // Default constructor required for Jackson
+    }
+
     public AuthenticationResponse(String token) {
         this.token = token;
     }

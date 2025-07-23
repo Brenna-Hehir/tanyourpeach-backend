@@ -4,6 +4,7 @@ com\tanyourpeach\backend\DbConnectionTest.class
 com\tanyourpeach\backend\service\AppointmentServiceTest.class
 com\tanyourpeach\backend\service\AvailabilityServiceTest.class
 com\tanyourpeach\backend\service\UserServiceTest.class
+com\tanyourpeach\backend\controller\AuthControllerIntegrationTest.class
 com\tanyourpeach\backend\controller\AdminStatsControllerIntegrationTest.class
 com\tanyourpeach\backend\service\FinancialLogServiceTest.class
 com\tanyourpeach\backend\controller\FinancialLogControllerTest.class
