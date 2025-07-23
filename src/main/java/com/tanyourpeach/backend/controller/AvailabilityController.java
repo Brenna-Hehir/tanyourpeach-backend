@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import com.tanyourpeach.backend.model.Availability;
 import com.tanyourpeach.backend.service.AvailabilityService;
 
+import jakarta.validation.Valid;
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -37,17 +39,20 @@ public class AvailabilityController {
 
     // POST create new slot
     @PostMapping
-    public ResponseEntity<Availability> createAvailability(@RequestBody Availability availability) {
+    public ResponseEntity<Availability> createAvailability(@Valid @RequestBody Availability availability) {
         Availability saved = availabilityService.createAvailability(availability);
+        if (saved == null) {
+            return ResponseEntity.badRequest().build();
+        }
         return ResponseEntity.ok(saved);
     }
 
     // PUT update slot
     @PutMapping("/{id}")
-    public ResponseEntity<Availability> updateAvailability(@PathVariable Long id, @RequestBody Availability updated) {
+    public ResponseEntity<Availability> updateAvailability(@PathVariable Long id, @Valid @RequestBody Availability updated) {
         return availabilityService.updateAvailability(id, updated)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElse(ResponseEntity.badRequest().build());
     }
 
     // DELETE a slot

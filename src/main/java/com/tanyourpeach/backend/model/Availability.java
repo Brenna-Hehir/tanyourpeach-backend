@@ -1,9 +1,10 @@
 package com.tanyourpeach.backend.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
-
 import java.time.LocalDateTime;
 
 @Entity
@@ -14,10 +15,13 @@ public class Availability {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long slotId;
 
+    @NotNull(message = "Date is required")
     private LocalDate date;
 
+    @NotNull(message = "Start time is required")
     private LocalTime startTime;
 
+    @NotNull(message = "End time is required")
     private LocalTime endTime;
 
     private Boolean isBooked = false;

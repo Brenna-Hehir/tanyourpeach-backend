@@ -1,5 +1,6 @@
 com\tanyourpeach\backend\controller\ServiceInventoryUsageControllerTest.class
 com\tanyourpeach\backend\controller\AdminStatsControllerTest.class
+com\tanyourpeach\backend\controller\AvailabilityControllerIntegrationTest.class
 com\tanyourpeach\backend\DbConnectionTest.class
 com\tanyourpeach\backend\service\AppointmentServiceTest.class
 com\tanyourpeach\backend\service\AvailabilityServiceTest.class

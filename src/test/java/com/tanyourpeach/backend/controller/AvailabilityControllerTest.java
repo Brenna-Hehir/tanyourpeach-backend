@@ -100,11 +100,11 @@ class AvailabilityControllerTest {
     }
 
     @Test
-    void updateAvailability_shouldReturn404_ifNotFound() {
+    void updateAvailability_shouldReturn400_ifInvalidOrNotFound() {
         when(availabilityService.updateAvailability(eq(1L), any())).thenReturn(Optional.empty());
 
         ResponseEntity<Availability> response = availabilityController.updateAvailability(1L, testAvailability);
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
 
     @Test
