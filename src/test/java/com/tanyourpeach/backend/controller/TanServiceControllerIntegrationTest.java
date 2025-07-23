@@ -98,6 +98,21 @@ class TanServiceControllerIntegrationTest {
     }
 
     @Test
+    void createService_shouldDefaultToActive_ifNotProvided() throws Exception {
+        TanService newService = new TanService();
+        newService.setName("Golden Glow");
+        newService.setBasePrice(65.0);
+        newService.setDurationMinutes(25);
+        // isActive not set, should default to true
+
+        mockMvc.perform(post("/api/services")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(newService)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.isActive").value(true));
+    }
+
+    @Test
     void createService_shouldFailValidation_whenMissingName() throws Exception {
         TanService invalid = new TanService();
         invalid.setBasePrice(50.0);
@@ -120,6 +135,17 @@ class TanServiceControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Updated Tan"))
                 .andExpect(jsonPath("$.basePrice").value(99.0));
+    }
+
+    @Test
+    void updateService_shouldAllowSettingInactiveDirectly() throws Exception {
+        testService.setIsActive(false);
+
+        mockMvc.perform(put("/api/services/" + testService.getServiceId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(testService)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.isActive").value(false));
     }
 
     @Test

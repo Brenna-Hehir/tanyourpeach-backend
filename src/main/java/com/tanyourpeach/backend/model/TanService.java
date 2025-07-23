@@ -33,10 +33,13 @@ public class TanService {
     @Min(value = 1, message = "Duration must be at least 1 minute")
     private Integer durationMinutes;
 
-    private Boolean isActive;
+    @Column(name = "is_active")
+    private Boolean isActive = true;
 
+    @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
     
+    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
     // Default constructor
