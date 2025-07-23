@@ -28,7 +28,6 @@ class AuthControllerTest {
     private AuthenticationRequest loginRequest;
     private AuthenticationResponse mockResponse;
 
-
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);

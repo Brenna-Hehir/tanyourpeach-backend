@@ -4,6 +4,9 @@ import com.tanyourpeach.backend.dto.AuthenticationRequest;
 import com.tanyourpeach.backend.dto.AuthenticationResponse;
 import com.tanyourpeach.backend.dto.RegisterRequest;
 import com.tanyourpeach.backend.service.UserAuthService;
+
+import jakarta.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +22,7 @@ public class AuthController {
 
     // Endpoint for user registration
     @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest request) {
+    public ResponseEntity<AuthenticationResponse> register(@Valid @RequestBody RegisterRequest request) {
         try {
             return ResponseEntity.ok(userAuthService.register(request));
         } catch (Exception e) {
@@ -29,7 +32,7 @@ public class AuthController {
 
     // Endpoint for user login
     @PostMapping("/login")
-    public ResponseEntity<AuthenticationResponse> login(@RequestBody AuthenticationRequest request) {
+    public ResponseEntity<AuthenticationResponse> login(@Valid @RequestBody AuthenticationRequest request) {
         try {
             return ResponseEntity.ok(userAuthService.authenticate(request));
         } catch (Exception e) {

@@ -79,13 +79,39 @@ class AuthControllerIntegrationTest {
     }
 
     @Test
-    void register_shouldFailWithMissingFields() throws Exception {
-        RegisterRequest badRequest = new RegisterRequest(); // all fields null
+    void register_shouldFailWhenNameMissing() throws Exception {
+        RegisterRequest request = new RegisterRequest();
+        request.setEmail("test@example.com");
+        request.setPassword("password");
 
         mockMvc.perform(post("/api/auth/register")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(badRequest)))
-                .andExpect(status().isInternalServerError());
+                .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void register_shouldFailWhenEmailMissing() throws Exception {
+        RegisterRequest request = new RegisterRequest();
+        request.setName("Test User");
+        request.setPassword("password");
+
+        mockMvc.perform(post("/api/auth/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void register_shouldFailWhenPasswordMissing() throws Exception {
+        RegisterRequest request = new RegisterRequest();
+        request.setName("Test User");
+        request.setEmail("test@example.com");
+
+        mockMvc.perform(post("/api/auth/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -149,12 +175,24 @@ class AuthControllerIntegrationTest {
     }
 
     @Test
-    void login_shouldFailWithMissingFields() throws Exception {
-        AuthenticationRequest badLogin = new AuthenticationRequest(); // all fields null
+    void login_shouldFailWhenEmailMissing() throws Exception {
+        AuthenticationRequest request = new AuthenticationRequest();
+        request.setPassword("password");
 
         mockMvc.perform(post("/api/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(badLogin)))
-                .andExpect(status().isInternalServerError());
+                .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void login_shouldFailWhenPasswordMissing() throws Exception {
+        AuthenticationRequest request = new AuthenticationRequest();
+        request.setEmail("test@example.com");
+
+        mockMvc.perform(post("/api/auth/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest());
     }
 }

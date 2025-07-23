@@ -1,6 +1,10 @@
 package com.tanyourpeach.backend.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -19,10 +23,12 @@ public class FinancialLog {
     @Column(name = "log_id")
     private Long logId;
 
+    @NotNull(message = "Type is required")
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Type type;
 
+    @Size(max = 100, message = "Source must be at most 100 characters")
     private String source;
 
     @Column(name = "reference_id")
@@ -31,6 +37,8 @@ public class FinancialLog {
     @Column(columnDefinition = "TEXT")
     private String description;
 
+    @NotNull(message = "Amount is required")
+    @DecimalMin(value = "0.01", message = "Amount must be greater than zero")
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal amount;
 

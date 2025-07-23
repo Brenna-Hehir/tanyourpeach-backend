@@ -1,6 +1,5 @@
 package com.tanyourpeach.backend.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tanyourpeach.backend.model.User;
 import com.tanyourpeach.backend.repository.UserRepository;
 import com.tanyourpeach.backend.service.JwtService;
@@ -10,10 +9,7 @@ import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-
-import java.util.Optional;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -32,10 +28,8 @@ class AdminStatsControllerIntegrationTest {
     @Autowired
     private JwtService jwtService;
 
-    @Autowired
-    private ObjectMapper objectMapper;
-
     private String adminToken;
+    
     private String userToken;
 
     @BeforeEach
