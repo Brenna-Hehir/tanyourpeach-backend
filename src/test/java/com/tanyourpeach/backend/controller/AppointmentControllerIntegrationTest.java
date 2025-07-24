@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tanyourpeach.backend.model.*;
 import com.tanyourpeach.backend.repository.*;
 import com.tanyourpeach.backend.service.JwtService;
+import com.tanyourpeach.backend.util.TestDataCleaner;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -13,9 +15,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -36,6 +40,9 @@ class AppointmentControllerIntegrationTest {
     private AppointmentRepository appointmentRepository;
 
     @Autowired
+    private TestDataCleaner testDataCleaner;
+
+    @Autowired
     private AppointmentStatusHistoryRepository appointmentStatusHistoryRepository;
 
     @Autowired
@@ -46,6 +53,21 @@ class AppointmentControllerIntegrationTest {
 
     @Autowired
     private TanServiceRepository tanServiceRepository;
+
+    @Autowired
+    private ReceiptRepository receiptRepository;
+
+    @Autowired
+    private InventoryRepository inventoryRepository;
+
+    @Autowired
+    private ServiceInventoryUsageRepository serviceInventoryUsageRepository;
+
+    @Autowired
+    private FinancialLogRepository financialLogRepository;
+
+    @Autowired
+    private AppointmentStatusHistoryRepository statusHistoryRepository;
 
     @Autowired
     private JwtService jwtService;
@@ -66,11 +88,7 @@ class AppointmentControllerIntegrationTest {
 
     @BeforeEach
     void setup() {
-        appointmentStatusHistoryRepository.deleteAll();
-        appointmentRepository.deleteAll();
-        availabilityRepository.deleteAll();
-        tanServiceRepository.deleteAll();
-        userRepository.deleteAll();
+        testDataCleaner.cleanAll();
 
         admin = new User();
         admin.setName("Admin");
@@ -111,11 +129,27 @@ class AppointmentControllerIntegrationTest {
         appointment.setAvailability(availability);
         appointment = appointmentRepository.save(appointment);
 
+        AppointmentStatusHistory initialHistory = new AppointmentStatusHistory();
+        initialHistory.setAppointment(appointment);
+        initialHistory.setStatus("PENDING");
+        initialHistory.setChangedAt(LocalDateTime.now());
+        initialHistory.setChangedByUser(user);
+        statusHistoryRepository.save(initialHistory);
+
         // Save appointment first, without linking the availability
         appointment.setAvailability(availability);
         appointment = appointmentRepository.save(appointment);
 
         availabilityRepository.save(availability);
+    }
+
+    private String generateTokenFor(String email) {
+        User user = new User();
+        user.setEmail(email);
+        user.setIsAdmin(false);
+        user.setPasswordHash("dummy-password");
+        userRepository.save(user);
+        return "Bearer " + jwtService.generateToken(user);
     }
 
     // ---------- GET /api/appointments (admin only) ----------
@@ -270,6 +304,88 @@ class AppointmentControllerIntegrationTest {
     // ---------- PUT /api/appointments/{id} ----------
 
     @Test
+    void confirmAppointment_shouldCreateReceiptAndFinancialLogAndDeductInventory() throws Exception {
+        // Create inventory item
+        Inventory item = new Inventory();
+        item.setItemName("Gloves");
+        item.setQuantity(5);
+        item.setUnitCost(BigDecimal.valueOf(1.50));
+        inventoryRepository.save(item);
+
+        // Link usage to service
+        ServiceInventoryUsage usage = new ServiceInventoryUsage();
+
+        ServiceInventoryUsageKey key = new ServiceInventoryUsageKey();
+        key.setItemId(item.getItemId());
+        key.setServiceId(service.getServiceId());
+
+        usage.setId(key);
+        usage.setService(service);
+        usage.setItem(item);
+        usage.setQuantityUsed(2);
+        serviceInventoryUsageRepository.save(usage);
+
+        // Set status to CONFIRMED
+        appointment.setStatus(Appointment.Status.CONFIRMED);
+
+        mockMvc.perform(put("/api/appointments/" + appointment.getAppointmentId())
+                .header("Authorization", adminToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(appointment)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value("CONFIRMED"));
+
+        // Receipt should be created
+        Receipt receipt = receiptRepository.findByAppointment_AppointmentId(appointment.getAppointmentId());
+        assertThat(receipt).isNotNull();
+        assertThat(receipt.getPaymentMethod()).isEqualTo("Unpaid");
+
+        // Financial log should be created
+        List<FinancialLog> logs = financialLogRepository.findAll();
+        assertThat(logs).hasSize(1);
+        assertThat(logs.get(0).getType()).isEqualTo(FinancialLog.Type.revenue);
+
+        // Inventory should be deducted
+        Inventory updatedItem = inventoryRepository.findById(item.getItemId()).orElseThrow();
+        assertThat(updatedItem.getQuantity()).isEqualTo(3);
+    }
+
+    @Test
+    void confirmAppointment_shouldFail_whenInventoryInsufficient() throws Exception {
+        // Create inventory with not enough quantity
+        Inventory item = new Inventory();
+        item.setItemName("Cap");
+        item.setQuantity(1);
+        item.setUnitCost(BigDecimal.valueOf(1.00));
+        inventoryRepository.save(item);
+
+        ServiceInventoryUsageKey key = new ServiceInventoryUsageKey();
+        key.setServiceId(service.getServiceId());
+        key.setItemId(item.getItemId());
+
+        ServiceInventoryUsage usage = new ServiceInventoryUsage();
+        usage.setId(key);
+        usage.setService(service);
+        usage.setItem(item);
+        usage.setQuantityUsed(5);
+        serviceInventoryUsageRepository.save(usage);
+
+        appointment.setStatus(Appointment.Status.PENDING);
+        appointment = appointmentRepository.save(appointment);
+        appointment.setStatus(Appointment.Status.CONFIRMED);
+
+        mockMvc.perform(put("/api/appointments/" + appointment.getAppointmentId())
+                .header("Authorization", adminToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(appointment)))
+                .andExpect(status().isBadRequest());
+
+        // Verify no receipt or financial log created
+        assertThat(receiptRepository.findByAppointment_AppointmentId(appointment.getAppointmentId())).isNull();
+        assertThat(financialLogRepository.findAll()).isEmpty();
+    }
+
+    @Test
     void updateAppointment_shouldSucceedForAdmin() throws Exception {
         appointment.setClientName("Updated Admin");
 
@@ -294,6 +410,109 @@ class AppointmentControllerIntegrationTest {
     }
 
     @Test
+    void updateAppointment_shouldCreateStatusHistoryEntry_whenStatusChanges() throws Exception {
+        appointment.setStatus(Appointment.Status.CANCELLED);
+
+        mockMvc.perform(put("/api/appointments/" + appointment.getAppointmentId())
+                .header("Authorization", adminToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(appointment)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value("CANCELLED"));
+
+        List<AppointmentStatusHistory> history = statusHistoryRepository.findAll();
+        assertThat(history).hasSize(2); // 1 from setup (PENDING), 1 from this change
+        assertThat(history.get(1).getStatus()).isEqualTo("CANCELLED");
+        assertThat(history.get(1).getChangedByUser()).isNotNull();
+    }
+
+    @Test
+    void updateAppointment_toConfirmed_shouldCreateReceipt() throws Exception {
+        appointment.setStatus(Appointment.Status.CONFIRMED);
+        appointment.setTravelFee(50.0);
+        appointment.setTotalPrice(100.0);
+
+        mockMvc.perform(put("/api/appointments/" + appointment.getAppointmentId())
+                .header("Authorization", adminToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(appointment)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value("CONFIRMED"));
+
+        Receipt receipt = receiptRepository.findByAppointment_AppointmentId(appointment.getAppointmentId());
+        assertThat(receipt).isNotNull();
+        assertThat(receipt.getPaymentMethod()).isEqualTo("Unpaid");
+        assertThat(receipt.getTotalAmount()).isEqualByComparingTo(BigDecimal.valueOf(100.0));
+    }
+
+    @Test
+    void updateAppointment_shouldNotCreateReceipt_whenStatusNotConfirmed() throws Exception {
+        appointment.setStatus(Appointment.Status.CANCELLED);
+
+        mockMvc.perform(put("/api/appointments/" + appointment.getAppointmentId())
+                .header("Authorization", adminToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(appointment)))
+                .andExpect(status().isOk());
+
+        assertThat(receiptRepository.findByAppointment_AppointmentId(appointment.getAppointmentId())).isNull();
+    }
+
+    @Test
+    void updateAppointment_shouldReturnNotFoundForInvalidId() throws Exception {
+        appointment.setClientName("New Name");
+
+        mockMvc.perform(put("/api/appointments/999999")
+                .header("Authorization", adminToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(appointment)))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void updateAppointment_shouldReturnForbidden_whenNoAuth() throws Exception {
+        appointment.setStatus(Appointment.Status.CONFIRMED);
+
+        mockMvc.perform(put("/api/appointments/" + appointment.getAppointmentId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(appointment)))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void updateAppointment_shouldReturn400_whenUpdateFails() throws Exception {
+        appointment.setClientAddress(null);
+
+        mockMvc.perform(put("/api/appointments/" + appointment.getAppointmentId())
+                .header("Authorization", userToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(appointment)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void updateAppointment_shouldReturn403_whenUnauthorizedUserTriesToUpdate() throws Exception {
+        String otherUserToken = generateTokenFor("notowner@example.com");
+
+        mockMvc.perform(put("/api/appointments/" + appointment.getAppointmentId())
+                .header("Authorization", otherUserToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(appointment)))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void updateNonExistentAppointment_shouldReturn404() throws Exception {
+        appointment.setStatus(Appointment.Status.CONFIRMED);
+
+        mockMvc.perform(put("/api/appointments/99999")
+                .header("Authorization", adminToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(appointment)))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
     void updateAppointment_shouldFailForNonOwner() throws Exception {
         User other = new User();
         other.setName("Other");
@@ -311,14 +530,25 @@ class AppointmentControllerIntegrationTest {
     }
 
     @Test
-    void updateAppointment_shouldReturnNotFoundForInvalidId() throws Exception {
-        appointment.setClientName("New Name");
+    void updateAppointment_shouldFail_whenMissingClientName() throws Exception {
+        appointment.setClientName(null);
 
-        mockMvc.perform(put("/api/appointments/999999")
+        mockMvc.perform(put("/api/appointments/" + appointment.getAppointmentId())
                 .header("Authorization", adminToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(appointment)))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void updateAppointment_shouldFail_whenMissingClientAddress() throws Exception {
+        appointment.setClientAddress(null);
+
+        mockMvc.perform(put("/api/appointments/" + appointment.getAppointmentId())
+                .header("Authorization", adminToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(appointment)))
+                .andExpect(status().isBadRequest());
     }
 
     // ---------- DELETE /api/appointments/{id} ----------

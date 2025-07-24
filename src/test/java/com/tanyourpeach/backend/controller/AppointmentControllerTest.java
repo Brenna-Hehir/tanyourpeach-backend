@@ -256,7 +256,7 @@ class AppointmentControllerTest {
     }
 
     @Test
-    void updateAppointment_shouldReturn404_ifUpdateFails() {
+    void updateAppointment_shouldReturn400_ifUpdateFails() {
         when(appointmentService.getAppointmentById(1L)).thenReturn(Optional.of(testAppointment));
         when(request.getHeader("Authorization")).thenReturn(jwtToken);
         when(jwtService.extractUsername("mocktoken")).thenReturn(email);
@@ -264,6 +264,28 @@ class AppointmentControllerTest {
         when(appointmentService.updateAppointment(eq(1L), any(), eq(request))).thenReturn(Optional.empty());
 
         ResponseEntity<?> response = controller.updateAppointment(1L, new Appointment(), request);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    }
+
+    @Test
+    void updateAppointment_shouldReturn403_ifUserNotAuthorized() {
+        when(appointmentService.getAppointmentById(1L)).thenReturn(Optional.of(testAppointment));
+        when(request.getHeader("Authorization")).thenReturn("Bearer mocktoken");
+        when(jwtService.extractUsername("mocktoken")).thenReturn("unauthorized@example.com");
+        when(userRepository.findByEmail("unauthorized@example.com")).thenReturn(Optional.of(normalUser));
+
+        ResponseEntity<?> response = controller.updateAppointment(1L, new Appointment(), request);
+
+        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+    }
+
+    @Test
+    void updateAppointment_shouldReturn404_whenAppointmentNotFound() {
+        when(appointmentService.getAppointmentById(1L)).thenReturn(Optional.empty());
+        when(request.getHeader("Authorization")).thenReturn("Bearer mocktoken");
+
+        ResponseEntity<?> response = controller.updateAppointment(1L, new Appointment(), request);
+
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 

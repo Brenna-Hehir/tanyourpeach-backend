@@ -17,7 +17,6 @@ com\tanyourpeach\backend\controller\InventoryController.class
 com\tanyourpeach\backend\repository\ServiceInventoryUsageRepository.class
 com\tanyourpeach\backend\dto\AdminDashboardSummary.class
 com\tanyourpeach\backend\BackendApplication.class
-com\tanyourpeach\backend\repository\StatusHistoryRepository.class
 com\tanyourpeach\backend\service\AvailabilityService.class
 com\tanyourpeach\backend\service\UserService.class
 com\tanyourpeach\backend\service\InventoryService.class

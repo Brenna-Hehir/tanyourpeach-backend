@@ -4,6 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tanyourpeach.backend.model.Availability;
 import com.tanyourpeach.backend.repository.AppointmentRepository;
 import com.tanyourpeach.backend.repository.AvailabilityRepository;
+import com.tanyourpeach.backend.repository.ReceiptRepository;
+import com.tanyourpeach.backend.util.TestDataCleaner;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -35,14 +38,19 @@ class AvailabilityControllerIntegrationTest {
     private AvailabilityRepository availabilityRepository;
 
     @Autowired
+    private TestDataCleaner testDataCleaner;
+
+    @Autowired
     private AppointmentRepository appointmentRepository;
+
+    @Autowired
+    private ReceiptRepository receiptRepository;
 
     private Availability testSlot;
 
     @BeforeEach
     void setup() {
-        appointmentRepository.deleteAll();
-        availabilityRepository.deleteAll();
+        testDataCleaner.cleanAll();
 
         testSlot = new Availability();
         testSlot.setDate(LocalDate.now().plusDays(1));
@@ -134,6 +142,20 @@ class AvailabilityControllerIntegrationTest {
     }
 
     @Test
+    void createAvailability_shouldFailWithPastDate() throws Exception {
+        Availability invalid = new Availability();
+        invalid.setDate(LocalDate.now().minusDays(1));
+        invalid.setStartTime(LocalTime.of(10, 0));
+        invalid.setEndTime(LocalTime.of(11, 0));
+        invalid.setIsBooked(false);
+
+        mockMvc.perform(post("/api/availabilities")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(invalid)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     void createAvailability_shouldFailWhenStartTimeMissing() throws Exception {
         Availability invalid = new Availability();
         invalid.setDate(LocalDate.now().plusDays(1));
@@ -209,6 +231,20 @@ class AvailabilityControllerIntegrationTest {
     @Test
     void updateAvailability_shouldFailWhenDateMissing() throws Exception {
         Availability invalid = new Availability();
+        invalid.setStartTime(LocalTime.of(10, 0));
+        invalid.setEndTime(LocalTime.of(11, 0));
+        invalid.setIsBooked(false);
+
+        mockMvc.perform(put("/api/availabilities/" + testSlot.getSlotId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(invalid)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void updateAvailability_shouldFailWithPastDate() throws Exception {
+        Availability invalid = new Availability();
+        invalid.setDate(LocalDate.now().minusDays(1));
         invalid.setStartTime(LocalTime.of(10, 0));
         invalid.setEndTime(LocalTime.of(11, 0));
         invalid.setIsBooked(false);

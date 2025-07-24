@@ -4,6 +4,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.EnumType;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
 import com.tanyourpeach.backend.model.Appointment;
@@ -12,6 +13,7 @@ import com.tanyourpeach.backend.model.Availability;
 import com.tanyourpeach.backend.model.FinancialLog;
 import com.tanyourpeach.backend.model.Receipt;
 import com.tanyourpeach.backend.model.ServiceInventoryUsage;
+import com.tanyourpeach.backend.model.TanService;
 import com.tanyourpeach.backend.repository.AppointmentRepository;
 import com.tanyourpeach.backend.repository.AppointmentStatusHistoryRepository;
 import com.tanyourpeach.backend.repository.AvailabilityRepository;
@@ -165,54 +167,76 @@ public class AppointmentService {
 
     // PUT update appointment
     public Optional<Appointment> updateAppointment(Long id, Appointment updated, HttpServletRequest request) {
-        // Fetch existing appointment
         Optional<Appointment> existingOpt = appointmentRepository.findById(id);
         if (existingOpt.isEmpty()) return Optional.empty();
         Appointment existing = existingOpt.get();
 
         Appointment.Status oldStatus = existing.getStatus();
 
-        // Validate fields before applying update
+        // Validate input fields
         if (updated.getClientName() == null || updated.getClientName().trim().isEmpty()) return Optional.empty();
         if (updated.getClientEmail() == null || updated.getClientEmail().trim().isEmpty()) return Optional.empty();
         if (updated.getClientAddress() == null || updated.getClientAddress().trim().isEmpty()) return Optional.empty();
         if (updated.getTravelFee() != null && updated.getTravelFee() < 0) return Optional.empty();
         if (updated.getService() == null || updated.getService().getServiceId() == null) return Optional.empty();
 
-        // Validate and update availability slot
+        // Load new service
+        TanService newService = null;
+        if (updated.getService() != null && updated.getService().getServiceId() != null) {
+            Optional<TanService> serviceOpt = tanServiceRepository.findById(updated.getService().getServiceId());
+            if (serviceOpt.isEmpty()) return Optional.empty();
+            newService = serviceOpt.get();
+        }
+
+        // Check inventory early if status is changing to CONFIRMED
+        if (oldStatus != Appointment.Status.CONFIRMED && updated.getStatus() == Appointment.Status.CONFIRMED) {
+            Long serviceId = newService != null
+                ? newService.getServiceId()
+                : (existing.getService() != null ? existing.getService().getServiceId() : null);
+
+            List<ServiceInventoryUsage> usages = usageRepository.findByService_ServiceId(serviceId);
+
+            boolean hasInsufficientInventory = usages.stream().anyMatch(usage -> {
+                Long itemId = usage.getItem().getItemId();
+                int quantityToDeduct = usage.getQuantityUsed();
+                return inventoryRepository.findById(itemId)
+                    .map(item -> item.getQuantity() < quantityToDeduct)
+                    .orElse(true);
+            });
+
+            if (hasInsufficientInventory) return Optional.empty();
+        }
+
+        // Handle availability change
         if (updated.getAvailability() != null && updated.getAvailability().getSlotId() != null) {
             Long newSlotId = updated.getAvailability().getSlotId();
             Availability currentSlot = existing.getAvailability();
-
             boolean isChangingSlot = currentSlot == null || !newSlotId.equals(currentSlot.getSlotId());
 
             if (isChangingSlot) {
                 Optional<Availability> newSlotOpt = availabilityRepository.findById(newSlotId);
                 if (newSlotOpt.isEmpty() || Boolean.TRUE.equals(newSlotOpt.get().getIsBooked())) {
-                    return Optional.empty(); // New slot is invalid or already booked
+                    return Optional.empty();
                 }
 
                 Availability newSlot = newSlotOpt.get();
 
-                // Unbook the old slot if present
                 if (currentSlot != null) {
                     currentSlot.setIsBooked(false);
                     availabilityRepository.save(currentSlot);
                 }
 
-                // Book the new slot
                 newSlot.setIsBooked(true);
                 availabilityRepository.save(newSlot);
 
-                // Update availability and appointment time
                 existing.setAvailability(newSlot);
                 existing.setAppointmentDateTime(LocalDateTime.of(newSlot.getDate(), newSlot.getStartTime()));
             }
         } else {
-            return Optional.empty(); // If null or slotId missing, reject update
+            return Optional.empty(); // invalid slot
         }
 
-        // Basic field updates
+        // Apply field updates
         existing.setClientName(updated.getClientName());
         existing.setClientEmail(updated.getClientEmail());
         existing.setClientAddress(updated.getClientAddress());
@@ -220,30 +244,23 @@ public class AppointmentService {
         existing.setDistanceMiles(updated.getDistanceMiles());
         existing.setTravelFee(updated.getTravelFee());
         existing.setNotes(updated.getNotes());
-        existing.setStatus(updated.getStatus());
 
-        // Update service and base price
-        if (updated.getService() != null && updated.getService().getServiceId() != null) {
-            tanServiceRepository.findById(updated.getService().getServiceId()).ifPresent(service -> {
-                existing.setService(service);
-                existing.setBasePrice(service.getBasePrice());
-            });
+        if (newService != null) {
+            existing.setService(newService);
+            existing.setBasePrice(newService.getBasePrice());
+
+            // Recalculate total price
+            double base = existing.getBasePrice() != null ? existing.getBasePrice() : 0.0;
+            double travel = existing.getTravelFee() != null ? existing.getTravelFee() : 0.0;
+            existing.setTotalPrice(base + travel);
         }
 
-        // Recalculate total price
-        double base = existing.getBasePrice() != null ? existing.getBasePrice() : 0.0;
-        double travel = existing.getTravelFee() != null ? existing.getTravelFee() : 0.0;
-        double total = base + travel;
-        existing.setTotalPrice(total);
-
-        // Update availability slot if provided
+        // Status change history
         if (!oldStatus.equals(updated.getStatus())) {
-            // Save status change to history if status changed
             AppointmentStatusHistory history = new AppointmentStatusHistory();
             history.setAppointment(existing);
             history.setStatus(updated.getStatus().name());
 
-            // Set who made the change
             String authHeader = request.getHeader("Authorization");
             if (authHeader != null && authHeader.startsWith("Bearer ")) {
                 String token = authHeader.substring(7);
@@ -256,23 +273,9 @@ public class AppointmentService {
             statusHistoryRepository.save(history);
         }
 
-        // Deduct inventory if status changed to CONFIRMED
+        // Deduct inventory after confirming sufficient inventory
         if (oldStatus != Appointment.Status.CONFIRMED && updated.getStatus() == Appointment.Status.CONFIRMED) {
-            Long serviceId = existing.getService().getServiceId();
-            List<ServiceInventoryUsage> usages = usageRepository.findByService_ServiceId(serviceId);
-
-            // Check for sufficient inventory
-            boolean hasInsufficientInventory = usages.stream().anyMatch(usage -> {
-                Long itemId = usage.getItem().getItemId();
-                int quantityToDeduct = usage.getQuantityUsed();
-                return inventoryRepository.findById(itemId)
-                    .map(item -> item.getQuantity() < quantityToDeduct)
-                    .orElse(true); // Fail if item missing
-            });
-
-            if (hasInsufficientInventory) return Optional.empty();
-
-            // Deduct inventory items
+            List<ServiceInventoryUsage> usages = usageRepository.findByService_ServiceId(existing.getService().getServiceId());
             for (ServiceInventoryUsage usage : usages) {
                 Long itemId = usage.getItem().getItemId();
                 int quantityToDeduct = usage.getQuantityUsed();
@@ -292,7 +295,7 @@ public class AppointmentService {
             financialLogRepository.save(log);
         }
 
-        // Auto-generate receipt if confirming for the first time
+        // Generate receipt if confirming for first time
         if (updated.getStatus() == Appointment.Status.CONFIRMED) {
             Receipt existingReceipt = receiptRepository.findByAppointment_AppointmentId(existing.getAppointmentId());
             if (existingReceipt == null) {
@@ -304,12 +307,14 @@ public class AppointmentService {
             }
         }
 
-        // Save updated appointment
+        existing.setStatus(updated.getStatus());
+
         Appointment saved = appointmentRepository.save(existing);
         return Optional.of(saved);
     }
 
     // DELETE appointment
+    @Transactional
     public boolean deleteAppointment(Long id) {
         Optional<Appointment> appointmentOpt = appointmentRepository.findById(id);
         if (appointmentOpt.isEmpty()) return false;
@@ -320,6 +325,8 @@ public class AppointmentService {
             slot.setIsBooked(false);
             availabilityRepository.save(slot);
         }
+
+        statusHistoryRepository.deleteAllByAppointment_AppointmentId(id);
 
         appointmentRepository.deleteById(id);
         return true;

@@ -17,7 +17,6 @@ com\tanyourpeach\backend\service\UserAuthServiceTest.class
 com\tanyourpeach\backend\controller\AppointmentControllerTest.class
 com\tanyourpeach\backend\controller\AvailabilityControllerTest.class
 com\tanyourpeach\backend\controller\TanServiceControllerTest.class
-com\tanyourpeach\backend\controller\AppointmentControllerIntegrationTest.class
 com\tanyourpeach\backend\service\CustomUserDetailsServiceTest.class
 com\tanyourpeach\backend\controller\UserControllerTest.class
 com\tanyourpeach\backend\service\JwtAuthenticationFilterTest.class

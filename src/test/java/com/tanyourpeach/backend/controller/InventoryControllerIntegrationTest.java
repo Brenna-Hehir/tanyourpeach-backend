@@ -6,6 +6,8 @@ import com.tanyourpeach.backend.model.User;
 import com.tanyourpeach.backend.repository.InventoryRepository;
 import com.tanyourpeach.backend.repository.UserRepository;
 import com.tanyourpeach.backend.service.JwtService;
+import com.tanyourpeach.backend.util.TestDataCleaner;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -16,6 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -40,6 +43,9 @@ class InventoryControllerIntegrationTest {
     private UserRepository userRepository;
 
     @Autowired
+    private TestDataCleaner testDataCleaner;
+
+    @Autowired
     private JwtService jwtService;
 
     private String adminToken;
@@ -52,8 +58,7 @@ class InventoryControllerIntegrationTest {
 
     @BeforeEach
     void setup() {
-        inventoryRepository.deleteAll();
-        userRepository.deleteAll();
+        testDataCleaner.cleanAll();
 
         User admin = new User();
         admin.setName("Admin");
@@ -132,6 +137,20 @@ class InventoryControllerIntegrationTest {
     }
 
     @Test
+    void createInventory_shouldFailWithOverlyLongName() throws Exception {
+        Inventory invalid = new Inventory();
+        invalid.setItemName("A".repeat(101));
+        invalid.setQuantity(5);
+        invalid.setUnitCost(BigDecimal.valueOf(2.00));
+
+        mockMvc.perform(post("/api/inventory")
+                .header("Authorization", adminToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(invalid)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     void createInventory_shouldFailWithMissingItemName() throws Exception {
         Inventory invalid = new Inventory(); // missing itemName
         invalid.setQuantity(5);
@@ -196,6 +215,37 @@ class InventoryControllerIntegrationTest {
                 .content(objectMapper.writeValueAsString(testItem)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.quantity").value(20));
+    }
+
+    @Test
+    void updateInventory_shouldChangeLastUpdated() throws Exception {
+        Inventory original = new Inventory();
+        original.setItemName("Test Item");
+        original.setQuantity(10);
+        original.setUnitCost(BigDecimal.valueOf(5.00));
+        original.setTotalSpent(BigDecimal.valueOf(50.00));
+        original.setNotes("For timestamp test");
+        original = inventoryRepository.save(original);
+
+        LocalDateTime beforeUpdate = original.getLastUpdated();
+
+        Thread.sleep(1000); // ensure timestamp difference
+
+        Inventory updated = new Inventory();
+        updated.setItemName("Test Item");
+        updated.setQuantity(15); // change quantity
+        updated.setUnitCost(BigDecimal.valueOf(5.00));
+        updated.setNotes("Updated quantity");
+
+        mockMvc.perform(put("/api/inventory/" + original.getItemId())
+                .header("Authorization", adminToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(updated)))
+                .andExpect(status().isOk());
+
+        Inventory afterUpdate = inventoryRepository.findById(original.getItemId()).orElseThrow();
+
+        assertThat(afterUpdate.getLastUpdated()).isAfter(beforeUpdate);
     }
 
     @Test

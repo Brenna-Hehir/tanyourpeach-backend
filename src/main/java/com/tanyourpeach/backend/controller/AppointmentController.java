@@ -7,6 +7,7 @@ import com.tanyourpeach.backend.service.AppointmentService;
 import com.tanyourpeach.backend.service.JwtService;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -101,14 +102,14 @@ public class AppointmentController {
 
     // POST create appointment (open to anonymous or logged-in)
     @PostMapping
-    public ResponseEntity<Appointment> createAppointment(@RequestBody Appointment appointment, HttpServletRequest request) {
+    public ResponseEntity<Appointment> createAppointment(@Valid @RequestBody Appointment appointment, HttpServletRequest request) {
         Optional<Appointment> created = appointmentService.createAppointment(appointment, request);
         return created.map(ResponseEntity::ok).orElse(ResponseEntity.badRequest().build());
     }
 
     // PUT update appointment (admins or user that owns it)
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateAppointment(@PathVariable Long id, @RequestBody Appointment updated, HttpServletRequest request) {
+    public ResponseEntity<?> updateAppointment(@PathVariable Long id, @Valid @RequestBody Appointment updated, HttpServletRequest request) {
         Optional<Appointment> existing = appointmentService.getAppointmentById(id);
         if (existing.isEmpty()) {
             return ResponseEntity.notFound().build();
@@ -120,7 +121,7 @@ public class AppointmentController {
         if (isAdmin(request) || (ownerEmail != null && ownerEmail.equals(email))) {
             return appointmentService.updateAppointment(id, updated, request)
                     .map(ResponseEntity::ok)
-                    .orElse(ResponseEntity.notFound().build());
+                    .orElse(ResponseEntity.badRequest().build());
         }
 
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access denied");

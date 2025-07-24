@@ -6,6 +6,8 @@ import com.tanyourpeach.backend.model.User;
 import com.tanyourpeach.backend.repository.FinancialLogRepository;
 import com.tanyourpeach.backend.repository.UserRepository;
 import com.tanyourpeach.backend.service.JwtService;
+import com.tanyourpeach.backend.util.TestDataCleaner;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -34,6 +36,9 @@ class FinancialLogControllerIntegrationTest {
     private UserRepository userRepository;
 
     @Autowired
+    private TestDataCleaner testDataCleaner;
+
+    @Autowired
     private JwtService jwtService;
 
     private String adminToken;
@@ -44,8 +49,7 @@ class FinancialLogControllerIntegrationTest {
 
     @BeforeEach
     void setUp() {
-        financialLogRepository.deleteAll();
-        userRepository.deleteAll();
+        testDataCleaner.cleanAll();
 
         // Create test admin user
         User admin = new User();
