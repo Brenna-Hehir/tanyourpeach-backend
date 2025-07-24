@@ -7,15 +7,32 @@ import org.springframework.stereotype.Component;
 @Component
 public class TestDataCleaner {
 
-    @Autowired private AppointmentStatusHistoryRepository appointmentStatusHistoryRepository;
-    @Autowired private ReceiptRepository receiptRepository;
-    @Autowired private FinancialLogRepository financialLogRepository;
-    @Autowired private ServiceInventoryUsageRepository serviceInventoryUsageRepository;
-    @Autowired private InventoryRepository inventoryRepository;
-    @Autowired private AppointmentRepository appointmentRepository;
-    @Autowired private AvailabilityRepository availabilityRepository;
-    @Autowired private TanServiceRepository tanServiceRepository;
-    @Autowired private UserRepository userRepository;
+    @Autowired
+    private AppointmentStatusHistoryRepository appointmentStatusHistoryRepository;
+
+    @Autowired
+    private ReceiptRepository receiptRepository;
+
+    @Autowired
+    private FinancialLogRepository financialLogRepository;
+
+    @Autowired
+    private ServiceInventoryUsageRepository serviceInventoryUsageRepository;
+
+    @Autowired
+    private InventoryRepository inventoryRepository;
+
+    @Autowired
+    private AppointmentRepository appointmentRepository;
+
+    @Autowired
+    private AvailabilityRepository availabilityRepository;
+
+    @Autowired
+    private TanServiceRepository tanServiceRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     public void cleanAll() {
         appointmentStatusHistoryRepository.deleteAll();

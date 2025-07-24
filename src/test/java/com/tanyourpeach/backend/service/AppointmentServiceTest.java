@@ -43,7 +43,7 @@ class AppointmentServiceTest {
     @Mock
     private ReceiptRepository receiptRepository;
     @Mock
-    private AppointmentStatusHistoryRepository statusHistoryRepository;
+    private AppointmentStatusHistoryRepository appointmentStatusHistoryRepository;
     @Mock
     private JwtService jwtService;
     @Mock
@@ -144,7 +144,7 @@ class AppointmentServiceTest {
         Optional<Appointment> result = appointmentService.createAppointment(testAppointment, request);
 
         assertTrue(result.isPresent());
-        verify(statusHistoryRepository).save(argThat(history ->
+        verify(appointmentStatusHistoryRepository).save(argThat(history ->
             history.getStatus().equals("PENDING") &&
             history.getchangedByEmail().equals("guest@example.com")
         ));
@@ -214,7 +214,7 @@ class AppointmentServiceTest {
         // Mock repository behavior
         when(availabilityRepository.findById(1L)).thenReturn(Optional.of(slot));
         when(appointmentRepository.save(any(Appointment.class))).thenAnswer(invocation -> invocation.getArgument(0));
-        when(statusHistoryRepository.save(any())).thenReturn(null); // ignore result
+        when(appointmentStatusHistoryRepository.save(any())).thenReturn(null); // ignore result
 
         HttpServletRequest mockRequest = mock(HttpServletRequest.class);
         when(mockRequest.getHeader("Authorization")).thenReturn(null); // No auth token
@@ -454,7 +454,7 @@ class AppointmentServiceTest {
         Optional<Appointment> result = appointmentService.updateAppointment(1L, updated, request);
 
         assertTrue(result.isPresent());
-        verify(statusHistoryRepository, never()).save(any());
+        verify(appointmentStatusHistoryRepository, never()).save(any());
         verify(financialLogRepository, never()).save(any());
         verify(receiptRepository, never()).save(any());
     }

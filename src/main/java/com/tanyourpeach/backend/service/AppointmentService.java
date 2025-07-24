@@ -1,8 +1,5 @@
 package com.tanyourpeach.backend.service;
 
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.EnumType;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
@@ -57,7 +54,7 @@ public class AppointmentService {
     private ReceiptRepository receiptRepository;
 
     @Autowired
-    private AppointmentStatusHistoryRepository statusHistoryRepository;
+    private AppointmentStatusHistoryRepository appointmentStatusHistoryRepository;
 
     @Autowired
     private JwtService jwtService;
@@ -160,7 +157,7 @@ public class AppointmentService {
             history.setchangedByEmail(appointment.getClientEmail());
         }
 
-        statusHistoryRepository.save(history);
+        appointmentStatusHistoryRepository.save(history);
 
         return Optional.of(savedAppointment);
     }
@@ -270,7 +267,7 @@ public class AppointmentService {
                 history.setchangedByEmail(updated.getClientEmail());
             }
 
-            statusHistoryRepository.save(history);
+            appointmentStatusHistoryRepository.save(history);
         }
 
         // Deduct inventory after confirming sufficient inventory
@@ -326,7 +323,7 @@ public class AppointmentService {
             availabilityRepository.save(slot);
         }
 
-        statusHistoryRepository.deleteAllByAppointment_AppointmentId(id);
+        appointmentStatusHistoryRepository.deleteAllByAppointment_AppointmentId(id);
 
         appointmentRepository.deleteById(id);
         return true;

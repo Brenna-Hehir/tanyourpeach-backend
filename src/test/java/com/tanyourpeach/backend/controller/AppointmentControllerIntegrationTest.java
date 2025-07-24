@@ -67,9 +67,6 @@ class AppointmentControllerIntegrationTest {
     private FinancialLogRepository financialLogRepository;
 
     @Autowired
-    private AppointmentStatusHistoryRepository statusHistoryRepository;
-
-    @Autowired
     private JwtService jwtService;
 
     private String adminToken;
@@ -134,7 +131,7 @@ class AppointmentControllerIntegrationTest {
         initialHistory.setStatus("PENDING");
         initialHistory.setChangedAt(LocalDateTime.now());
         initialHistory.setChangedByUser(user);
-        statusHistoryRepository.save(initialHistory);
+        appointmentStatusHistoryRepository.save(initialHistory);
 
         // Save appointment first, without linking the availability
         appointment.setAvailability(availability);
@@ -420,7 +417,7 @@ class AppointmentControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value("CANCELLED"));
 
-        List<AppointmentStatusHistory> history = statusHistoryRepository.findAll();
+        List<AppointmentStatusHistory> history = appointmentStatusHistoryRepository.findAll();
         assertThat(history).hasSize(2); // 1 from setup (PENDING), 1 from this change
         assertThat(history.get(1).getStatus()).isEqualTo("CANCELLED");
         assertThat(history.get(1).getChangedByUser()).isNotNull();
