@@ -9,6 +9,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
@@ -110,6 +112,7 @@ public class User implements UserDetails {
 
     // This method returns the authorities granted to the user
     @Override
+    @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
         String role = Boolean.TRUE.equals(isAdmin) ? "ROLE_ADMIN" : "ROLE_USER";
         return Collections.singletonList(new SimpleGrantedAuthority(role));
@@ -118,12 +121,14 @@ public class User implements UserDetails {
     // This method returns the username used for login
     // In this case, we use the email as the username
     @Override
+    @JsonIgnore
     public String getUsername() {
         return email;
     }
 
     // This method returns the password hash stored in the database
     @Override
+    @JsonIgnore
     public String getPassword() {
         return passwordHash;
     }
@@ -131,6 +136,7 @@ public class User implements UserDetails {
     // This method determines if the user's account is expired
     // Modify if you implement expiration logic
     @Override
+    @JsonIgnore
     public boolean isAccountNonExpired() {
         return true;
     }
@@ -138,6 +144,7 @@ public class User implements UserDetails {
     // This method determines if the user's account is locked
     // Modify if you implement locking logic
     @Override
+    @JsonIgnore
     public boolean isAccountNonLocked() {
         return true;
     }
@@ -145,6 +152,7 @@ public class User implements UserDetails {
     // This method determines if the user's credentials (password) are expired
     // Modify if you implement password expiration
     @Override
+    @JsonIgnore
     public boolean isCredentialsNonExpired() {
         return true;
     }
@@ -152,6 +160,7 @@ public class User implements UserDetails {
     // This method determines if the user is enabled or disabled
     // Modify for disabled users if needed
     @Override
+    @JsonIgnore
     public boolean isEnabled() {
         return true;
     }

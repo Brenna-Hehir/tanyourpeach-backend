@@ -43,7 +43,11 @@ class UserControllerTest {
     void getAllUsers_shouldReturnList() {
         when(userService.getAllUsers()).thenReturn(List.of(testUser));
 
-        List<User> result = controller.getAllUsers();
+        ResponseEntity<?> response = controller.getAllUsers();
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        @SuppressWarnings("unchecked")
+        List<User> result = (List<User>) response.getBody();
 
         assertEquals(1, result.size());
         assertEquals("Brenna", result.get(0).getName());

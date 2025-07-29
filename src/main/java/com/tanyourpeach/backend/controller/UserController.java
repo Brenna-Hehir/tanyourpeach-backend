@@ -3,9 +3,12 @@ package com.tanyourpeach.backend.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.tanyourpeach.backend.model.User;
+import com.tanyourpeach.backend.repository.UserRepository;
+import com.tanyourpeach.backend.service.JwtService;
 import com.tanyourpeach.backend.service.UserService;
 
 import java.util.List;
@@ -16,12 +19,19 @@ import java.util.List;
 public class UserController {
 
     @Autowired
+    private JwtService jwtService;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private UserService userService;
 
     // GET all users
     @GetMapping
-    public List<User> getAllUsers() {
-        return userService.getAllUsers();
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> getAllUsers() {
+        return ResponseEntity.ok(userService.getAllUsers());
     }
 
     // GET user by ID
