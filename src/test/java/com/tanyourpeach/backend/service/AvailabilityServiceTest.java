@@ -33,7 +33,7 @@ class AvailabilityServiceTest {
 
         availability = new Availability();
         availability.setSlotId(1L);
-        availability.setDate(LocalDate.of(2025, 8, 1));
+        availability.setDate(LocalDate.now().plusDays(10));
         availability.setStartTime(LocalTime.of(10, 0));
         availability.setEndTime(LocalTime.of(11, 0));
         availability.setIsBooked(false);
@@ -83,16 +83,16 @@ class AvailabilityServiceTest {
     void createAvailability_shouldReturnNull_ifTimeOverlaps() {
         Availability existingSlot = new Availability();
         existingSlot.setSlotId(1L);
-        existingSlot.setDate(LocalDate.of(2025, 8, 1));
+        existingSlot.setDate(LocalDate.now().plusDays(10));
         existingSlot.setStartTime(LocalTime.of(10, 0));
         existingSlot.setEndTime(LocalTime.of(11, 0));
 
         Availability newSlot = new Availability();
-        newSlot.setDate(LocalDate.of(2025, 8, 1));
+        newSlot.setDate(LocalDate.now().plusDays(10));
         newSlot.setStartTime(LocalTime.of(10, 30)); // overlaps
         newSlot.setEndTime(LocalTime.of(11, 30));
 
-        when(availabilityRepository.findByDate(LocalDate.of(2025, 8, 1))).thenReturn(List.of(existingSlot));
+        when(availabilityRepository.findByDate(LocalDate.now().plusDays(10))).thenReturn(List.of(existingSlot));
 
         Availability result = availabilityService.createAvailability(newSlot);
         assertNull(result);
@@ -102,7 +102,7 @@ class AvailabilityServiceTest {
     @Test
     void createAvailability_shouldReturnNull_ifEndTimeNotAfterStartTime() {
         Availability invalidSlot = new Availability();
-        invalidSlot.setDate(LocalDate.of(2025, 8, 2));
+        invalidSlot.setDate(LocalDate.now().plusDays(11));
         invalidSlot.setStartTime(LocalTime.of(15, 0));
         invalidSlot.setEndTime(LocalTime.of(15, 0)); // not after
 
@@ -114,10 +114,10 @@ class AvailabilityServiceTest {
     @Test
     void updateAvailability_shouldUpdateFields() {
         when(availabilityRepository.findById(1L)).thenReturn(Optional.of(availability));
-        when(availabilityRepository.save(any())).thenReturn(availability);
+        when(availabilityRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
 
         Availability updated = new Availability();
-        updated.setDate(LocalDate.of(2025, 8, 2));
+        updated.setDate(LocalDate.now().plusDays(11));
         updated.setStartTime(LocalTime.of(12, 0));
         updated.setEndTime(LocalTime.of(13, 0));
         updated.setIsBooked(true);
@@ -126,7 +126,7 @@ class AvailabilityServiceTest {
         Optional<Availability> result = availabilityService.updateAvailability(1L, updated);
 
         assertTrue(result.isPresent());
-        assertEquals(LocalDate.of(2025, 8, 2), result.get().getDate());
+        assertEquals(updated.getDate(), result.get().getDate());
         assertTrue(result.get().getIsBooked());
     }
 
@@ -136,7 +136,7 @@ class AvailabilityServiceTest {
         when(availabilityRepository.save(any())).thenAnswer(i -> i.getArgument(0));
 
         Availability updated = new Availability();
-        updated.setDate(LocalDate.of(2025, 8, 3));
+        updated.setDate(LocalDate.now().plusDays(12));
         updated.setStartTime(LocalTime.of(13, 0));
         updated.setEndTime(LocalTime.of(14, 0));
         updated.setIsBooked(true);
@@ -146,7 +146,7 @@ class AvailabilityServiceTest {
 
         assertTrue(result.isPresent());
         Availability resultSlot = result.get();
-        assertEquals(LocalDate.of(2025, 8, 3), resultSlot.getDate());
+        assertEquals(LocalDate.now().plusDays(12), resultSlot.getDate());
         assertEquals(LocalTime.of(13, 0), resultSlot.getStartTime());
         assertEquals(LocalTime.of(14, 0), resultSlot.getEndTime());
         assertTrue(resultSlot.getIsBooked());
@@ -179,15 +179,15 @@ class AvailabilityServiceTest {
     void updateAvailability_shouldReturnEmpty_ifTimeOverlaps() {
         Availability existingSlot = new Availability();
         existingSlot.setSlotId(2L); // another slot on same day
-        existingSlot.setDate(LocalDate.of(2025, 8, 1));
+        existingSlot.setDate(LocalDate.now().plusDays(10));
         existingSlot.setStartTime(LocalTime.of(12, 0));
         existingSlot.setEndTime(LocalTime.of(13, 0));
 
         when(availabilityRepository.findById(1L)).thenReturn(Optional.of(availability));
-        when(availabilityRepository.findByDate(availability.getDate())).thenReturn(List.of(availability, existingSlot));
+        when(availabilityRepository.findByDate(LocalDate.now().plusDays(10))).thenReturn(List.of(availability, existingSlot));
 
         Availability updated = new Availability();
-        updated.setDate(LocalDate.of(2025, 8, 1));
+        updated.setDate(LocalDate.now().plusDays(10));
         updated.setStartTime(LocalTime.of(12, 30)); // overlaps with slotId 2
         updated.setEndTime(LocalTime.of(13, 30));
         updated.setIsBooked(false);
@@ -202,7 +202,7 @@ class AvailabilityServiceTest {
         when(availabilityRepository.findById(1L)).thenReturn(Optional.of(availability));
 
         Availability updated = new Availability();
-        updated.setDate(LocalDate.of(2025, 8, 1));
+        updated.setDate(LocalDate.now().plusDays(10));
         updated.setStartTime(LocalTime.of(14, 0));
         updated.setEndTime(LocalTime.of(14, 0)); // invalid
         updated.setIsBooked(false);
