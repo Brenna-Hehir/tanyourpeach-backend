@@ -19,6 +19,9 @@ C:\Users\Koolb\OneDrive\Documents\Database Management\tanUrPeach_backend\backend
 C:\Users\Koolb\OneDrive\Documents\Database Management\tanUrPeach_backend\backend\src\test\java\com\tanyourpeach\backend\controller\UserControllerIntegrationTest.java
 C:\Users\Koolb\OneDrive\Documents\Database Management\tanUrPeach_backend\backend\src\test\java\com\tanyourpeach\backend\controller\UserControllerTest.java
 C:\Users\Koolb\OneDrive\Documents\Database Management\tanUrPeach_backend\backend\src\test\java\com\tanyourpeach\backend\DbConnectionTest.java
+C:\Users\Koolb\OneDrive\Documents\Database Management\tanUrPeach_backend\backend\src\test\java\com\tanyourpeach\backend\repository\FinancialLogRepositoryTest.java
+C:\Users\Koolb\OneDrive\Documents\Database Management\tanUrPeach_backend\backend\src\test\java\com\tanyourpeach\backend\repository\InventoryRepositoryTest.java
+C:\Users\Koolb\OneDrive\Documents\Database Management\tanUrPeach_backend\backend\src\test\java\com\tanyourpeach\backend\repository\ReceiptRepositoryTest.java
 C:\Users\Koolb\OneDrive\Documents\Database Management\tanUrPeach_backend\backend\src\test\java\com\tanyourpeach\backend\service\AdminStatsServiceTest.java
 C:\Users\Koolb\OneDrive\Documents\Database Management\tanUrPeach_backend\backend\src\test\java\com\tanyourpeach\backend\service\AppointmentServiceTest.java
 C:\Users\Koolb\OneDrive\Documents\Database Management\tanUrPeach_backend\backend\src\test\java\com\tanyourpeach\backend\service\AvailabilityServiceTest.java
@@ -32,5 +35,6 @@ C:\Users\Koolb\OneDrive\Documents\Database Management\tanUrPeach_backend\backend
 C:\Users\Koolb\OneDrive\Documents\Database Management\tanUrPeach_backend\backend\src\test\java\com\tanyourpeach\backend\service\TanServiceServiceTest.java
 C:\Users\Koolb\OneDrive\Documents\Database Management\tanUrPeach_backend\backend\src\test\java\com\tanyourpeach\backend\service\UserAuthServiceTest.java
 C:\Users\Koolb\OneDrive\Documents\Database Management\tanUrPeach_backend\backend\src\test\java\com\tanyourpeach\backend\service\UserServiceTest.java
+C:\Users\Koolb\OneDrive\Documents\Database Management\tanUrPeach_backend\backend\src\test\java\com\tanyourpeach\backend\util\H2MysqlCompat.java
 C:\Users\Koolb\OneDrive\Documents\Database Management\tanUrPeach_backend\backend\src\test\java\com\tanyourpeach\backend\util\TestAuthHelper.java
 C:\Users\Koolb\OneDrive\Documents\Database Management\tanUrPeach_backend\backend\src\test\java\com\tanyourpeach\backend\util\TestDataCleaner.java
