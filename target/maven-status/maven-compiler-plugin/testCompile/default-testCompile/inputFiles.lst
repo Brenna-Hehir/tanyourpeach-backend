@@ -8,7 +8,6 @@ C:\Users\Koolb\OneDrive\Documents\Database Management\tanUrPeach_backend\backend
 C:\Users\Koolb\OneDrive\Documents\Database Management\tanUrPeach_backend\backend\src\test\java\com\tanyourpeach\backend\controller\AvailabilityControllerTest.java
 C:\Users\Koolb\OneDrive\Documents\Database Management\tanUrPeach_backend\backend\src\test\java\com\tanyourpeach\backend\controller\FinancialLogControllerIntegrationTest.java
 C:\Users\Koolb\OneDrive\Documents\Database Management\tanUrPeach_backend\backend\src\test\java\com\tanyourpeach\backend\controller\FinancialLogControllerTest.java
-C:\Users\Koolb\OneDrive\Documents\Database Management\tanUrPeach_backend\backend\src\test\java\com\tanyourpeach\backend\controller\GlobalExceptionHandlerStandaloneTest.java
 C:\Users\Koolb\OneDrive\Documents\Database Management\tanUrPeach_backend\backend\src\test\java\com\tanyourpeach\backend\controller\InventoryControllerIntegrationTest.java
 C:\Users\Koolb\OneDrive\Documents\Database Management\tanUrPeach_backend\backend\src\test\java\com\tanyourpeach\backend\controller\InventoryControllerTest.java
 C:\Users\Koolb\OneDrive\Documents\Database Management\tanUrPeach_backend\backend\src\test\java\com\tanyourpeach\backend\controller\ReceiptControllerIntegrationTest.java
@@ -20,6 +19,7 @@ C:\Users\Koolb\OneDrive\Documents\Database Management\tanUrPeach_backend\backend
 C:\Users\Koolb\OneDrive\Documents\Database Management\tanUrPeach_backend\backend\src\test\java\com\tanyourpeach\backend\controller\UserControllerIntegrationTest.java
 C:\Users\Koolb\OneDrive\Documents\Database Management\tanUrPeach_backend\backend\src\test\java\com\tanyourpeach\backend\controller\UserControllerTest.java
 C:\Users\Koolb\OneDrive\Documents\Database Management\tanUrPeach_backend\backend\src\test\java\com\tanyourpeach\backend\DbConnectionTest.java
+C:\Users\Koolb\OneDrive\Documents\Database Management\tanUrPeach_backend\backend\src\test\java\com\tanyourpeach\backend\exception\GlobalExceptionHandlerStandaloneTest.java
 C:\Users\Koolb\OneDrive\Documents\Database Management\tanUrPeach_backend\backend\src\test\java\com\tanyourpeach\backend\model\AppointmentStatusHistoryValidationTest.java
 C:\Users\Koolb\OneDrive\Documents\Database Management\tanUrPeach_backend\backend\src\test\java\com\tanyourpeach\backend\model\AppointmentValidationTest.java
 C:\Users\Koolb\OneDrive\Documents\Database Management\tanUrPeach_backend\backend\src\test\java\com\tanyourpeach\backend\model\AvailabilityValidationTest.java

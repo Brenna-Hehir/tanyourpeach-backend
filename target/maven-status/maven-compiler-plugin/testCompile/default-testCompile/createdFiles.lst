@@ -20,6 +20,7 @@ com\tanyourpeach\backend\service\FinancialLogServiceTest.class
 com\tanyourpeach\backend\controller\ReceiptControllerTest.class
 com\tanyourpeach\backend\service\ReceiptServiceTest.class
 com\tanyourpeach\backend\controller\AvailabilityControllerTest.class
+com\tanyourpeach\backend\exception\GlobalExceptionHandlerStandaloneTest.class
 com\tanyourpeach\backend\controller\UserControllerTest.class
 com\tanyourpeach\backend\service\JwtAuthenticationFilterTest.class
 com\tanyourpeach\backend\controller\TanServiceControllerIntegrationTest.class
