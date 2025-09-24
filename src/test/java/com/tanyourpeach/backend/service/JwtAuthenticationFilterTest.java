@@ -18,6 +18,7 @@ import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 class JwtAuthenticationFilterTest {
@@ -85,8 +86,13 @@ class JwtAuthenticationFilterTest {
 
         jwtFilter.doFilterInternal(request, response, filterChain);
 
-        assert SecurityContextHolder.getContext().getAuthentication() == null;
-        verify(filterChain).doFilter(request, response);
+        assertNull(SecurityContextHolder.getContext().getAuthentication());
+        assertEquals(401, response.getStatus());
+        // optional: basic JSON contract checks
+        String body = response.getContentAsString();
+        org.junit.jupiter.api.Assertions.assertTrue(body.contains("\"status\":401"));
+        org.junit.jupiter.api.Assertions.assertTrue(body.contains("\"error\":\"Unauthorized\""));
+        verify(filterChain, never()).doFilter(any(), any());
     }
 
     @Test
@@ -112,7 +118,10 @@ class JwtAuthenticationFilterTest {
         jwtFilter.doFilterInternal(request, response, filterChain);
 
         assertNull(SecurityContextHolder.getContext().getAuthentication());
-        verify(filterChain).doFilter(request, response);
+        assertEquals(401, response.getStatus());
+        String body = response.getContentAsString();
+        org.junit.jupiter.api.Assertions.assertTrue(body.contains("\"status\":401"));
+        verify(filterChain, never()).doFilter(any(), any());
     }
 
     @Test
@@ -143,6 +152,9 @@ class JwtAuthenticationFilterTest {
         jwtFilter.doFilterInternal(request, response, filterChain);
 
         assertNull(SecurityContextHolder.getContext().getAuthentication());
-        verify(filterChain).doFilter(request, response);
+        assertEquals(401, response.getStatus());
+        String body = response.getContentAsString();
+        org.junit.jupiter.api.Assertions.assertTrue(body.contains("\"status\":401"));
+        verify(filterChain, never()).doFilter(any(), any());
     }
 }

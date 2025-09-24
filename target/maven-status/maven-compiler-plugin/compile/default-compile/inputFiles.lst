@@ -1,5 +1,7 @@
 C:\Users\Koolb\OneDrive\Documents\Database Management\tanUrPeach_backend\backend\src\main\java\com\tanyourpeach\backend\BackendApplication.java
+C:\Users\Koolb\OneDrive\Documents\Database Management\tanUrPeach_backend\backend\src\main\java\com\tanyourpeach\backend\config\CorsConfig.java
 C:\Users\Koolb\OneDrive\Documents\Database Management\tanUrPeach_backend\backend\src\main\java\com\tanyourpeach\backend\config\SecurityConfig.java
+C:\Users\Koolb\OneDrive\Documents\Database Management\tanUrPeach_backend\backend\src\main\java\com\tanyourpeach\backend\config\WebConfig.java
 C:\Users\Koolb\OneDrive\Documents\Database Management\tanUrPeach_backend\backend\src\main\java\com\tanyourpeach\backend\controller\AdminStatsController.java
 C:\Users\Koolb\OneDrive\Documents\Database Management\tanUrPeach_backend\backend\src\main\java\com\tanyourpeach\backend\controller\AppointmentController.java
 C:\Users\Koolb\OneDrive\Documents\Database Management\tanUrPeach_backend\backend\src\main\java\com\tanyourpeach\backend\controller\AuthController.java
@@ -15,6 +17,7 @@ C:\Users\Koolb\OneDrive\Documents\Database Management\tanUrPeach_backend\backend
 C:\Users\Koolb\OneDrive\Documents\Database Management\tanUrPeach_backend\backend\src\main\java\com\tanyourpeach\backend\dto\AuthenticationResponse.java
 C:\Users\Koolb\OneDrive\Documents\Database Management\tanUrPeach_backend\backend\src\main\java\com\tanyourpeach\backend\dto\MonthlyStats.java
 C:\Users\Koolb\OneDrive\Documents\Database Management\tanUrPeach_backend\backend\src\main\java\com\tanyourpeach\backend\dto\RegisterRequest.java
+C:\Users\Koolb\OneDrive\Documents\Database Management\tanUrPeach_backend\backend\src\main\java\com\tanyourpeach\backend\exception\ErrorResponse.java
 C:\Users\Koolb\OneDrive\Documents\Database Management\tanUrPeach_backend\backend\src\main\java\com\tanyourpeach\backend\exception\GlobalExceptionHandler.java
 C:\Users\Koolb\OneDrive\Documents\Database Management\tanUrPeach_backend\backend\src\main\java\com\tanyourpeach\backend\model\Appointment.java
 C:\Users\Koolb\OneDrive\Documents\Database Management\tanUrPeach_backend\backend\src\main\java\com\tanyourpeach\backend\model\AppointmentStatusHistory.java
@@ -35,6 +38,7 @@ C:\Users\Koolb\OneDrive\Documents\Database Management\tanUrPeach_backend\backend
 C:\Users\Koolb\OneDrive\Documents\Database Management\tanUrPeach_backend\backend\src\main\java\com\tanyourpeach\backend\repository\ServiceInventoryUsageRepository.java
 C:\Users\Koolb\OneDrive\Documents\Database Management\tanUrPeach_backend\backend\src\main\java\com\tanyourpeach\backend\repository\TanServiceRepository.java
 C:\Users\Koolb\OneDrive\Documents\Database Management\tanUrPeach_backend\backend\src\main\java\com\tanyourpeach\backend\repository\UserRepository.java
+C:\Users\Koolb\OneDrive\Documents\Database Management\tanUrPeach_backend\backend\src\main\java\com\tanyourpeach\backend\security\JsonAuthHandlers.java
 C:\Users\Koolb\OneDrive\Documents\Database Management\tanUrPeach_backend\backend\src\main\java\com\tanyourpeach\backend\service\AdminStatsService.java
 C:\Users\Koolb\OneDrive\Documents\Database Management\tanUrPeach_backend\backend\src\main\java\com\tanyourpeach\backend\service\AppointmentService.java
 C:\Users\Koolb\OneDrive\Documents\Database Management\tanUrPeach_backend\backend\src\main\java\com\tanyourpeach\backend\service\AvailabilityService.java
@@ -48,3 +52,4 @@ C:\Users\Koolb\OneDrive\Documents\Database Management\tanUrPeach_backend\backend
 C:\Users\Koolb\OneDrive\Documents\Database Management\tanUrPeach_backend\backend\src\main\java\com\tanyourpeach\backend\service\TanServiceService.java
 C:\Users\Koolb\OneDrive\Documents\Database Management\tanUrPeach_backend\backend\src\main\java\com\tanyourpeach\backend\service\UserAuthService.java
 C:\Users\Koolb\OneDrive\Documents\Database Management\tanUrPeach_backend\backend\src\main\java\com\tanyourpeach\backend\service\UserService.java
+C:\Users\Koolb\OneDrive\Documents\Database Management\tanUrPeach_backend\backend\src\main\java\com\tanyourpeach\backend\web\CorrelationIdFilter.java

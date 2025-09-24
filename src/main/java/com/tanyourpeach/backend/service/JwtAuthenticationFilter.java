@@ -1,18 +1,23 @@
 package com.tanyourpeach.backend.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+
+import static com.tanyourpeach.backend.security.JsonAuthHandlers.authenticationEntryPoint;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -23,16 +28,37 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
 
-    /**
-     * This method is called for every request to check if the JWT token is valid
-     * and to set the authentication in the security context.
-     *
-     * @param request  the HTTP request
-     * @param response the HTTP response
-     * @param filterChain the filter chain
-     * @throws ServletException if an error occurs during filtering
-     * @throws IOException if an I/O error occurs
-     */
+    @Autowired(required = false)
+    private ObjectMapper objectMapper;
+
+    // provide a safe fallback for unit tests that don't wire Spring beans
+    private ObjectMapper om() {
+        if (objectMapper == null) {
+            objectMapper = new ObjectMapper().findAndRegisterModules();
+        }
+        return objectMapper;
+    }
+
+    private static final AntPathMatcher PATHS = new AntPathMatcher();
+    private static final String[] WHITELIST = {
+        "/api/auth/**",
+        "/actuator/health",
+        "/error"
+        // add swagger later if you enable it:
+        // "/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**"
+    };
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        // Skip CORS preflight and public endpoints
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) return true;
+        String path = request.getRequestURI();
+        for (String p : WHITELIST) {
+            if (PATHS.match(p, path)) return true;
+        }
+        return false;
+    }
+
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
@@ -40,37 +66,50 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     throws ServletException, IOException {
 
         final String authHeader = request.getHeader("Authorization");
-        final String jwt;
-        final String userEmail;
 
-        // Check if the Authorization header is present and starts with "Bearer "
+        // No bearer token → let the entry point handle it later if endpoint requires auth
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        jwt = authHeader.substring(7); // remove "Bearer "
-        userEmail = jwtService.extractUsername(jwt);
+        final String jwt = authHeader.substring(7).trim();
 
-        // If the userEmail is not null and the authentication is not already set
-        if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+        // If already authenticated, skip re-auth
+        if (SecurityContextHolder.getContext().getAuthentication() != null) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        try {
+            final String userEmail = jwtService.extractUsername(jwt);
+            if (userEmail == null || userEmail.isBlank()) {
+                // invalid token: emit 401 JSON and stop
+                authenticationEntryPoint(om())
+                    .commence(request, response,
+                        new InsufficientAuthenticationException("Invalid token"));
+                return;
+            }
+
             UserDetails userDetails = customUserDetailsService.loadUserByUsername(userEmail);
 
-            // Check if the JWT is valid and set the authentication in the context
             if (jwtService.isTokenValid(jwt, userDetails)) {
                 UsernamePasswordAuthenticationToken authToken =
                         new UsernamePasswordAuthenticationToken(
-                                userDetails,
-                                null,
-                                userDetails.getAuthorities()
-                        );
-                authToken.setDetails(
-                        new WebAuthenticationDetailsSource().buildDetails(request)
-                );
+                                userDetails, null, userDetails.getAuthorities());
+                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authToken);
+                filterChain.doFilter(request, response);
+            } else {
+                authenticationEntryPoint(om())
+                    .commence(request, response,
+                        new InsufficientAuthenticationException("Invalid or expired token"));
             }
+        } catch (Exception ex) {
+            // Covers parsing errors, expired tokens, malformed JWT, etc.
+            authenticationEntryPoint(om())
+                .commence(request, response,
+                    new InsufficientAuthenticationException("Invalid or expired token", ex));
         }
-
-        filterChain.doFilter(request, response);
     }
 }
