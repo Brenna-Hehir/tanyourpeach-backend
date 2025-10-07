@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="com.tanyourpeach.backend.controller.AdminStatsControllerIntegrationTest" time="14.78" tests="8" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.2" name="com.tanyourpeach.backend.controller.AdminStatsControllerIntegrationTest" time="33.727" tests="8" errors="8" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="17"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -16,7 +16,7 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="user.country" value="US"/>
     <property name="sun.boot.library.path" value="C:\Program Files\Java\jdk-17\bin"/>
-    <property name="sun.java.command" value="C:\Users\Koolb\AppData\Local\Temp\surefire11976615416277079535\surefirebooter-20250923223420469_3.jar C:\Users\Koolb\AppData\Local\Temp\surefire11976615416277079535 2025-09-23T22-34-20_079-jvmRun1 surefire-20250923223420469_1tmp surefire_0-20250923223420469_2tmp"/>
+    <property name="sun.java.command" value="C:\Users\Koolb\AppData\Local\Temp\surefire7775904541138763431\surefirebooter-20251007000258274_3.jar C:\Users\Koolb\AppData\Local\Temp\surefire7775904541138763431 2025-10-07T00-02-57_933-jvmRun1 surefire-20251007000258274_1tmp surefire_0-20251007000258274_2tmp"/>
     <property name="jdk.debug" value="release"/>
     <property name="surefire.test.class.path" value="C:\Users\Koolb\OneDrive\Documents\Database Management\tanUrPeach_backend\backend\target\test-classes;C:\Users\Koolb\OneDrive\Documents\Database Management\tanUrPeach_backend\backend\target\classes;C:\Users\Koolb\.m2\repository\org\springframework\boot\spring-boot-starter-data-jpa\3.5.3\spring-boot-starter-data-jpa-3.5.3.jar;C:\Users\Koolb\.m2\repository\org\springframework\boot\spring-boot-starter\3.5.3\spring-boot-starter-3.5.3.jar;C:\Users\Koolb\.m2\repository\org\springframework\boot\spring-boot-starter-logging\3.5.3\spring-boot-starter-logging-3.5.3.jar;C:\Users\Koolb\.m2\repository\ch\qos\logback\logback-classic\1.5.18\logback-classic-1.5.18.jar;C:\Users\Koolb\.m2\repository\ch\qos\logback\logback-core\1.5.18\logback-core-1.5.18.jar;C:\Users\Koolb\.m2\repository\org\apache\logging\log4j\log4j-to-slf4j\2.24.3\log4j-to-slf4j-2.24.3.jar;C:\Users\Koolb\.m2\repository\org\apache\logging\log4j\log4j-api\2.24.3\log4j-api-2.24.3.jar;C:\Users\Koolb\.m2\repository\org\slf4j\jul-to-slf4j\2.0.17\jul-to-slf4j-2.0.17.jar;C:\Users\Koolb\.m2\repository\jakarta\annotation\jakarta.annotation-api\2.1.1\jakarta.annotation-api-2.1.1.jar;C:\Users\Koolb\.m2\repository\org\yaml\snakeyaml\2.4\snakeyaml-2.4.jar;C:\Users\Koolb\.m2\repository\org\springframework\boot\spring-boot-starter-jdbc\3.5.3\spring-boot-starter-jdbc-3.5.3.jar;C:\Users\Koolb\.m2\repository\com\zaxxer\HikariCP\6.3.0\HikariCP-6.3.0.jar;C:\Users\Koolb\.m2\repository\org\springframework\spring-jdbc\6.2.8\spring-jdbc-6.2.8.jar;C:\Users\Koolb\.m2\repository\org\hibernate\orm\hibernate-core\6.6.18.Final\hibernate-core-6.6.18.Final.jar;C:\Users\Koolb\.m2\repository\jakarta\persistence\jakarta.persistence-api\3.1.0\jakarta.persistence-api-3.1.0.jar;C:\Users\Koolb\.m2\repository\jakarta\transaction\jakarta.transaction-api\2.0.1\jakarta.transaction-api-2.0.1.jar;C:\Users\Koolb\.m2\repository\org\hibernate\common\hibernate-commons-annotations\7.0.3.Final\hibernate-commons-annotations-7.0.3.Final.jar;C:\Users\Koolb\.m2\repository\io\smallrye\jandex\3.2.0\jandex-3.2.0.jar;C:\Users\Koolb\.m2\repository\org\glassfish\jaxb\jaxb-runtime\4.0.5\jaxb-runtime-4.0.5.jar;C:\Users\Koolb\.m2\repository\org\glassfish\jaxb\jaxb-core\4.0.5\jaxb-core-4.0.5.jar;C:\Users\Koolb\.m2\repository\org\eclipse\angus\angus-activation\2.0.2\angus-activation-2.0.2.jar;C:\Users\Koolb\.m2\repository\org\glassfish\jaxb\txw2\4.0.5\txw2-4.0.5.jar;C:\Users\Koolb\.m2\repository\com\sun\istack\istack-commons-runtime\4.1.2\istack-commons-runtime-4.1.2.jar;C:\Users\Koolb\.m2\repository\jakarta\inject\jakarta.inject-api\2.0.1\jakarta.inject-api-2.0.1.jar;C:\Users\Koolb\.m2\repository\org\antlr\antlr4-runtime\4.13.0\antlr4-runtime-4.13.0.jar;C:\Users\Koolb\.m2\repository\org\springframework\data\spring-data-jpa\3.5.1\spring-data-jpa-3.5.1.jar;C:\Users\Koolb\.m2\repository\org\springframework\data\spring-data-commons\3.5.1\spring-data-commons-3.5.1.jar;C:\Users\Koolb\.m2\repository\org\springframework\spring-orm\6.2.8\spring-orm-6.2.8.jar;C:\Users\Koolb\.m2\repository\org\springframework\spring-context\6.2.8\spring-context-6.2.8.jar;C:\Users\Koolb\.m2\repository\org\springframework\spring-tx\6.2.8\spring-tx-6.2.8.jar;C:\Users\Koolb\.m2\repository\org\springframework\spring-beans\6.2.8\spring-beans-6.2.8.jar;C:\Users\Koolb\.m2\repository\org\slf4j\slf4j-api\2.0.17\slf4j-api-2.0.17.jar;C:\Users\Koolb\.m2\repository\org\springframework\spring-aspects\6.2.8\spring-aspects-6.2.8.jar;C:\Users\Koolb\.m2\repository\org\aspectj\aspectjweaver\1.9.24\aspectjweaver-1.9.24.jar;C:\Users\Koolb\.m2\repository\org\springframework\boot\spring-boot-starter-web\3.5.3\spring-boot-starter-web-3.5.3.jar;C:\Users\Koolb\.m2\repository\org\springframework\boot\spring-boot-starter-json\3.5.3\spring-boot-starter-json-3.5.3.jar;C:\Users\Koolb\.m2\repository\com\fasterxml\jackson\datatype\jackson-datatype-jdk8\2.19.1\jackson-datatype-jdk8-2.19.1.jar;C:\Users\Koolb\.m2\repository\com\fasterxml\jackson\datatype\jackson-datatype-jsr310\2.19.1\jackson-datatype-jsr310-2.19.1.jar;C:\Users\Koolb\.m2\repository\com\fasterxml\jackson\module\jackson-module-parameter-names\2.19.1\jackson-module-parameter-names-2.19.1.jar;C:\Users\Koolb\.m2\repository\org\springframework\boot\spring-boot-starter-tomcat\3.5.3\spring-boot-starter-tomcat-3.5.3.jar;C:\Users\Koolb\.m2\repository\org\apache\tomcat\embed\tomcat-embed-core\10.1.42\tomcat-embed-core-10.1.42.jar;C:\Users\Koolb\.m2\repository\org\apache\tomcat\embed\tomcat-embed-el\10.1.42\tomcat-embed-el-10.1.42.jar;C:\Users\Koolb\.m2\repository\org\apache\tomcat\embed\tomcat-embed-websocket\10.1.42\tomcat-embed-websocket-10.1.42.jar;C:\Users\Koolb\.m2\repository\org\springframework\spring-web\6.2.8\spring-web-6.2.8.jar;C:\Users\Koolb\.m2\repository\io\micrometer\micrometer-observation\1.15.1\micrometer-observation-1.15.1.jar;C:\Users\Koolb\.m2\repository\io\micrometer\micrometer-commons\1.15.1\micrometer-commons-1.15.1.jar;C:\Users\Koolb\.m2\repository\org\springframework\spring-webmvc\6.2.8\spring-webmvc-6.2.8.jar;C:\Users\Koolb\.m2\repository\org\springframework\spring-expression\6.2.8\spring-expression-6.2.8.jar;C:\Users\Koolb\.m2\repository\org\springframework\boot\spring-boot-devtools\3.5.3\spring-boot-devtools-3.5.3.jar;C:\Users\Koolb\.m2\repository\org\springframework\boot\spring-boot\3.5.3\spring-boot-3.5.3.jar;C:\Users\Koolb\.m2\repository\org\springframework\boot\spring-boot-autoconfigure\3.5.3\spring-boot-autoconfigure-3.5.3.jar;C:\Users\Koolb\.m2\repository\com\mysql\mysql-connector-j\9.2.0\mysql-connector-j-9.2.0.jar;C:\Users\Koolb\.m2\repository\org\springframework\boot\spring-boot-starter-test\3.5.3\spring-boot-starter-test-3.5.3.jar;C:\Users\Koolb\.m2\repository\org\springframework\boot\spring-boot-test\3.5.3\spring-boot-test-3.5.3.jar;C:\Users\Koolb\.m2\repository\org\springframework\boot\spring-boot-test-autoconfigure\3.5.3\spring-boot-test-autoconfigure-3.5.3.jar;C:\Users\Koolb\.m2\repository\com\jayway\jsonpath\json-path\2.9.0\json-path-2.9.0.jar;C:\Users\Koolb\.m2\repository\jakarta\xml\bind\jakarta.xml.bind-api\4.0.2\jakarta.xml.bind-api-4.0.2.jar;C:\Users\Koolb\.m2\repository\jakarta\activation\jakarta.activation-api\2.1.3\jakarta.activation-api-2.1.3.jar;C:\Users\Koolb\.m2\repository\net\minidev\json-smart\2.5.2\json-smart-2.5.2.jar;C:\Users\Koolb\.m2\repository\net\minidev\accessors-smart\2.5.2\accessors-smart-2.5.2.jar;C:\Users\Koolb\.m2\repository\org\ow2\asm\asm\9.7.1\asm-9.7.1.jar;C:\Users\Koolb\.m2\repository\org\assertj\assertj-core\3.27.3\assertj-core-3.27.3.jar;C:\Users\Koolb\.m2\repository\org\awaitility\awaitility\4.2.2\awaitility-4.2.2.jar;C:\Users\Koolb\.m2\repository\org\hamcrest\hamcrest\3.0\hamcrest-3.0.jar;C:\Users\Koolb\.m2\repository\org\mockito\mockito-junit-jupiter\5.17.0\mockito-junit-jupiter-5.17.0.jar;C:\Users\Koolb\.m2\repository\org\skyscreamer\jsonassert\1.5.3\jsonassert-1.5.3.jar;C:\Users\Koolb\.m2\repository\com\vaadin\external\google\android-json\0.0.20131108.vaadin1\android-json-0.0.20131108.vaadin1.jar;C:\Users\Koolb\.m2\repository\org\springframework\spring-core\6.2.8\spring-core-6.2.8.jar;C:\Users\Koolb\.m2\repository\org\springframework\spring-jcl\6.2.8\spring-jcl-6.2.8.jar;C:\Users\Koolb\.m2\repository\org\springframework\spring-test\6.2.8\spring-test-6.2.8.jar;C:\Users\Koolb\.m2\repository\org\xmlunit\xmlunit-core\2.10.2\xmlunit-core-2.10.2.jar;C:\Users\Koolb\.m2\repository\org\springframework\boot\spring-boot-starter-security\3.5.3\spring-boot-starter-security-3.5.3.jar;C:\Users\Koolb\.m2\repository\org\springframework\spring-aop\6.2.8\spring-aop-6.2.8.jar;C:\Users\Koolb\.m2\repository\org\springframework\security\spring-security-config\6.5.1\spring-security-config-6.5.1.jar;C:\Users\Koolb\.m2\repository\org\springframework\security\spring-security-web\6.5.1\spring-security-web-6.5.1.jar;C:\Users\Koolb\.m2\repository\io\jsonwebtoken\jjwt-api\0.11.5\jjwt-api-0.11.5.jar;C:\Users\Koolb\.m2\repository\io\jsonwebtoken\jjwt-impl\0.11.5\jjwt-impl-0.11.5.jar;C:\Users\Koolb\.m2\repository\io\jsonwebtoken\jjwt-jackson\0.11.5\jjwt-jackson-0.11.5.jar;C:\Users\Koolb\.m2\repository\com\fasterxml\jackson\core\jackson-databind\2.19.1\jackson-databind-2.19.1.jar;C:\Users\Koolb\.m2\repository\com\fasterxml\jackson\core\jackson-annotations\2.19.1\jackson-annotations-2.19.1.jar;C:\Users\Koolb\.m2\repository\com\fasterxml\jackson\core\jackson-core\2.19.1\jackson-core-2.19.1.jar;C:\Users\Koolb\.m2\repository\jakarta\validation\jakarta.validation-api\3.0.2\jakarta.validation-api-3.0.2.jar;C:\Users\Koolb\.m2\repository\org\hibernate\validator\hibernate-validator\8.0.1.Final\hibernate-validator-8.0.1.Final.jar;C:\Users\Koolb\.m2\repository\org\jboss\logging\jboss-logging\3.6.1.Final\jboss-logging-3.6.1.Final.jar;C:\Users\Koolb\.m2\repository\com\fasterxml\classmate\1.7.0\classmate-1.7.0.jar;C:\Users\Koolb\.m2\repository\org\junit\jupiter\junit-jupiter\5.10.0\junit-jupiter-5.10.0.jar;C:\Users\Koolb\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.12.2\junit-jupiter-api-5.12.2.jar;C:\Users\Koolb\.m2\repository\org\opentest4j\opentest4j\1.3.0\opentest4j-1.3.0.jar;C:\Users\Koolb\.m2\repository\org\junit\platform\junit-platform-commons\1.12.2\junit-platform-commons-1.12.2.jar;C:\Users\Koolb\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\Koolb\.m2\repository\org\junit\jupiter\junit-jupiter-params\5.12.2\junit-jupiter-params-5.12.2.jar;C:\Users\Koolb\.m2\repository\org\junit\jupiter\junit-jupiter-engine\5.12.2\junit-jupiter-engine-5.12.2.jar;C:\Users\Koolb\.m2\repository\org\junit\platform\junit-platform-engine\1.12.2\junit-platform-engine-1.12.2.jar;C:\Users\Koolb\.m2\repository\org\mockito\mockito-core\5.11.0\mockito-core-5.11.0.jar;C:\Users\Koolb\.m2\repository\net\bytebuddy\byte-buddy\1.17.6\byte-buddy-1.17.6.jar;C:\Users\Koolb\.m2\repository\net\bytebuddy\byte-buddy-agent\1.17.6\byte-buddy-agent-1.17.6.jar;C:\Users\Koolb\.m2\repository\org\objenesis\objenesis\3.3\objenesis-3.3.jar;C:\Users\Koolb\.m2\repository\org\springframework\security\spring-security-test\6.5.1\spring-security-test-6.5.1.jar;C:\Users\Koolb\.m2\repository\org\springframework\security\spring-security-core\6.5.1\spring-security-core-6.5.1.jar;C:\Users\Koolb\.m2\repository\org\springframework\security\spring-security-crypto\6.5.1\spring-security-crypto-6.5.1.jar;C:\Users\Koolb\.m2\repository\com\h2database\h2\2.3.232\h2-2.3.232.jar;"/>
     <property name="sun.cpu.endian" value="little"/>
@@ -33,7 +33,7 @@
     <property name="java.specification.name" value="Java Platform API Specification"/>
     <property name="FILE_LOG_CHARSET" value="windows-1252"/>
     <property name="java.awt.headless" value="true"/>
-    <property name="surefire.real.class.path" value="C:\Users\Koolb\AppData\Local\Temp\surefire11976615416277079535\surefirebooter-20250923223420469_3.jar"/>
+    <property name="surefire.real.class.path" value="C:\Users\Koolb\AppData\Local\Temp\surefire7775904541138763431\surefirebooter-20251007000258274_3.jar"/>
     <property name="user.script" value=""/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="17.0.12+8-LTS-286"/>
@@ -51,7 +51,7 @@
     <property name="user.dir" value="C:\Users\Koolb\OneDrive\Documents\Database Management\tanUrPeach_backend\backend"/>
     <property name="os.arch" value="amd64"/>
     <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
-    <property name="PID" value="18180"/>
+    <property name="PID" value="11508"/>
     <property name="sun.os.patch.level" value=""/>
     <property name="CONSOLE_LOG_CHARSET" value="windows-1252"/>
     <property name="native.encoding" value="Cp1252"/>
@@ -62,10 +62,93 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="61.0"/>
   </properties>
-  <testcase name="getLowStockItems_shouldReturnOkForAdmin" classname="com.tanyourpeach.backend.controller.AdminStatsControllerIntegrationTest" time="1.414">
-    <system-out><![CDATA[22:34:22.764 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.tanyourpeach.backend.controller.AdminStatsControllerIntegrationTest]: AdminStatsControllerIntegrationTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-22:34:23.046 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.tanyourpeach.backend.BackendApplication for test class com.tanyourpeach.backend.controller.AdminStatsControllerIntegrationTest
-22:34:23.402 [main] INFO org.springframework.boot.devtools.restart.RestartApplicationListener -- Restart disabled due to context in which it is running
+  <testcase name="getLowStockItems_shouldReturnOkForAdmin" classname="com.tanyourpeach.backend.controller.AdminStatsControllerIntegrationTest" time="2.41">
+    <error message="Could not open JPA EntityManager for transaction" type="org.springframework.transaction.CannotCreateTransactionException"><![CDATA[org.springframework.transaction.CannotCreateTransactionException: Could not open JPA EntityManager for transaction
+	at org.springframework.orm.jpa.JpaTransactionManager.doBegin(JpaTransactionManager.java:466)
+	at org.springframework.transaction.support.AbstractPlatformTransactionManager.startTransaction(AbstractPlatformTransactionManager.java:532)
+	at org.springframework.transaction.support.AbstractPlatformTransactionManager.getTransaction(AbstractPlatformTransactionManager.java:405)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.createTransactionIfNecessary(TransactionAspectSupport.java:639)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:374)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:138)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.data.jpa.repository.support.CrudMethodMetadataPostProcessor$CrudMethodMetadataPopulatingMethodInterceptor.invoke(CrudMethodMetadataPostProcessor.java:165)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:223)
+	at jdk.proxy2/jdk.proxy2.$Proxy161.deleteAll(Unknown Source)
+	at com.tanyourpeach.backend.util.TestDataCleaner.cleanAll(TestDataCleaner.java:38)
+	at com.tanyourpeach.backend.controller.AdminStatsControllerIntegrationTest.setUp(AdminStatsControllerIntegrationTest.java:42)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+Caused by: org.hibernate.exception.JDBCConnectionException: Unable to acquire JDBC Connection [Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.] [n/a]
+	at org.hibernate.exception.internal.SQLStateConversionDelegate.convert(SQLStateConversionDelegate.java:100)
+	at org.hibernate.exception.internal.StandardSQLExceptionConverter.convert(StandardSQLExceptionConverter.java:58)
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:108)
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:94)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.acquireConnectionIfNeeded(LogicalConnectionManagedImpl.java:129)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.getPhysicalConnection(LogicalConnectionManagedImpl.java:156)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.getConnectionForTransactionManagement(LogicalConnectionManagedImpl.java:286)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.begin(LogicalConnectionManagedImpl.java:294)
+	at org.hibernate.resource.transaction.backend.jdbc.internal.JdbcResourceLocalTransactionCoordinatorImpl$TransactionDriverControlImpl.begin(JdbcResourceLocalTransactionCoordinatorImpl.java:232)
+	at org.hibernate.engine.transaction.internal.TransactionImpl.begin(TransactionImpl.java:83)
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.beginTransaction(HibernateJpaDialect.java:176)
+	at org.springframework.orm.jpa.JpaTransactionManager.doBegin(JpaTransactionManager.java:420)
+	... 17 more
+Caused by: com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at com.mysql.cj.jdbc.exceptions.SQLError.createCommunicationsException(SQLError.java:165)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:55)
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:837)
+	at com.mysql.cj.jdbc.ConnectionImpl.<init>(ConnectionImpl.java:420)
+	at com.mysql.cj.jdbc.ConnectionImpl.getInstance(ConnectionImpl.java:238)
+	at com.mysql.cj.jdbc.NonRegisteringDriver.connect(NonRegisteringDriver.java:180)
+	at com.zaxxer.hikari.util.DriverDataSource.getConnection(DriverDataSource.java:139)
+	at com.zaxxer.hikari.pool.PoolBase.newConnection(PoolBase.java:368)
+	at com.zaxxer.hikari.pool.PoolBase.newPoolEntry(PoolBase.java:205)
+	at com.zaxxer.hikari.pool.HikariPool.createPoolEntry(HikariPool.java:483)
+	at com.zaxxer.hikari.pool.HikariPool.checkFailFast(HikariPool.java:571)
+	at com.zaxxer.hikari.pool.HikariPool.<init>(HikariPool.java:101)
+	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:111)
+	at org.hibernate.engine.jdbc.connections.internal.DatasourceConnectionProviderImpl.getConnection(DatasourceConnectionProviderImpl.java:126)
+	at org.hibernate.internal.NonContextualJdbcConnectionAccess.obtainConnection(NonContextualJdbcConnectionAccess.java:46)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.acquireConnectionIfNeeded(LogicalConnectionManagedImpl.java:126)
+	... 24 more
+Caused by: com.mysql.cj.exceptions.CJCommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:499)
+	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:480)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:52)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:95)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:140)
+	at com.mysql.cj.exceptions.ExceptionFactory.createCommunicationsException(ExceptionFactory.java:156)
+	at com.mysql.cj.protocol.a.NativeSocketConnection.connect(NativeSocketConnection.java:79)
+	at com.mysql.cj.NativeSession.connect(NativeSession.java:142)
+	at com.mysql.cj.jdbc.ConnectionImpl.connectOneTryOnly(ConnectionImpl.java:961)
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:825)
+	... 37 more
+Caused by: java.net.ConnectException: Connection refused: no further information
+	at java.base/sun.nio.ch.Net.pollConnect(Native Method)
+	at java.base/sun.nio.ch.Net.pollConnectNow(Net.java:672)
+	at java.base/sun.nio.ch.NioSocketImpl.timedFinishConnect(NioSocketImpl.java:547)
+	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:602)
+	at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:327)
+	at java.base/java.net.Socket.connect(Socket.java:633)
+	at com.mysql.cj.protocol.StandardSocketFactory.connect(StandardSocketFactory.java:144)
+	at com.mysql.cj.protocol.a.NativeSocketConnection.connect(NativeSocketConnection.java:53)
+	... 40 more
+]]></error>
+    <system-out><![CDATA[00:03:00.993 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.tanyourpeach.backend.controller.AdminStatsControllerIntegrationTest]: AdminStatsControllerIntegrationTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+00:03:01.474 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.tanyourpeach.backend.BackendApplication for test class com.tanyourpeach.backend.controller.AdminStatsControllerIntegrationTest
+00:03:01.794 [main] INFO org.springframework.boot.devtools.restart.RestartApplicationListener -- Restart disabled due to context in which it is running
 
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -76,188 +159,850 @@
 
  :: Spring Boot ::                (v3.5.3)
 
-2025-09-23T22:34:24.209-04:00  INFO 18180 --- [           main] .b.c.AdminStatsControllerIntegrationTest : Starting AdminStatsControllerIntegrationTest using Java 17.0.12 with PID 18180 (started by Koolb in C:\Users\Koolb\OneDrive\Documents\Database Management\tanUrPeach_backend\backend)
-2025-09-23T22:34:24.212-04:00  INFO 18180 --- [           main] .b.c.AdminStatsControllerIntegrationTest : No active profile set, falling back to 1 default profile: "default"
-2025-09-23T22:34:25.725-04:00  INFO 18180 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2025-09-23T22:34:25.967-04:00  INFO 18180 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 214 ms. Found 9 JPA repository interfaces.
-2025-09-23T22:34:27.033-04:00  INFO 18180 --- [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
-2025-09-23T22:34:27.146-04:00  INFO 18180 --- [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.18.Final
-2025-09-23T22:34:27.245-04:00  INFO 18180 --- [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
-2025-09-23T22:34:27.963-04:00  INFO 18180 --- [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
-2025-09-23T22:34:28.011-04:00  INFO 18180 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2025-09-23T22:34:28.475-04:00  INFO 18180 --- [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@57b3d869
-2025-09-23T22:34:28.478-04:00  INFO 18180 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2025-09-23T22:34:28.572-04:00  WARN 18180 --- [           main] org.hibernate.orm.deprecation            : HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
-2025-09-23T22:34:28.648-04:00  INFO 18180 --- [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
-	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+2025-10-07T00:03:02.535-04:00  INFO 11508 --- [           main] .b.c.AdminStatsControllerIntegrationTest : Starting AdminStatsControllerIntegrationTest using Java 17.0.12 with PID 11508 (started by Koolb in C:\Users\Koolb\OneDrive\Documents\Database Management\tanUrPeach_backend\backend)
+2025-10-07T00:03:02.538-04:00  INFO 11508 --- [           main] .b.c.AdminStatsControllerIntegrationTest : No active profile set, falling back to 1 default profile: "default"
+2025-10-07T00:03:05.357-04:00  INFO 11508 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-10-07T00:03:05.626-04:00  INFO 11508 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 239 ms. Found 9 JPA repository interfaces.
+2025-10-07T00:03:07.632-04:00  INFO 11508 --- [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-10-07T00:03:07.981-04:00  INFO 11508 --- [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.18.Final
+2025-10-07T00:03:08.119-04:00  INFO 11508 --- [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2025-10-07T00:03:09.720-04:00  INFO 11508 --- [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-10-07T00:03:09.867-04:00  INFO 11508 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-10-07T00:03:11.304-04:00  WARN 11508 --- [           main] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 08S01
+2025-10-07T00:03:11.305-04:00 ERROR 11508 --- [           main] o.h.engine.jdbc.spi.SqlExceptionHelper   : Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+2025-10-07T00:03:11.307-04:00  WARN 11508 --- [           main] o.h.e.j.e.i.JdbcEnvironmentInitiator     : HHH000342: Could not obtain connection to query metadata
+
+org.hibernate.exception.JDBCConnectionException: unable to obtain isolated JDBC connection [Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.] [n/a]
+	at org.hibernate.exception.internal.SQLStateConversionDelegate.convert(SQLStateConversionDelegate.java:100) ~[hibernate-core-6.6.18.Final.jar:6.6.18.Final]
+	at org.hibernate.exception.internal.StandardSQLExceptionConverter.convert(StandardSQLExceptionConverter.java:58) ~[hibernate-core-6.6.18.Final.jar:6.6.18.Final]
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:108) ~[hibernate-core-6.6.18.Final.jar:6.6.18.Final]
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:94) ~[hibernate-core-6.6.18.Final.jar:6.6.18.Final]
+	at org.hibernate.resource.transaction.backend.jdbc.internal.JdbcIsolationDelegate.delegateWork(JdbcIsolationDelegate.java:116) ~[hibernate-core-6.6.18.Final.jar:6.6.18.Final]
+	at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.getJdbcEnvironmentUsingJdbcMetadata(JdbcEnvironmentInitiator.java:336) ~[hibernate-core-6.6.18.Final.jar:6.6.18.Final]
+	at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.initiateService(JdbcEnvironmentInitiator.java:129) ~[hibernate-core-6.6.18.Final.jar:6.6.18.Final]
+	at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator.initiateService(JdbcEnvironmentInitiator.java:81) ~[hibernate-core-6.6.18.Final.jar:6.6.18.Final]
+	at org.hibernate.boot.registry.internal.StandardServiceRegistryImpl.initiateService(StandardServiceRegistryImpl.java:130) ~[hibernate-core-6.6.18.Final.jar:6.6.18.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.createService(AbstractServiceRegistryImpl.java:263) ~[hibernate-core-6.6.18.Final.jar:6.6.18.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.initializeService(AbstractServiceRegistryImpl.java:238) ~[hibernate-core-6.6.18.Final.jar:6.6.18.Final]
+	at org.hibernate.service.internal.AbstractServiceRegistryImpl.getService(AbstractServiceRegistryImpl.java:215) ~[hibernate-core-6.6.18.Final.jar:6.6.18.Final]
+	at org.hibernate.boot.model.relational.Database.<init>(Database.java:45) ~[hibernate-core-6.6.18.Final.jar:6.6.18.Final]
+	at org.hibernate.boot.internal.InFlightMetadataCollectorImpl.getDatabase(InFlightMetadataCollectorImpl.java:226) ~[hibernate-core-6.6.18.Final.jar:6.6.18.Final]
+	at org.hibernate.boot.internal.InFlightMetadataCollectorImpl.<init>(InFlightMetadataCollectorImpl.java:194) ~[hibernate-core-6.6.18.Final.jar:6.6.18.Final]
+	at org.hibernate.boot.model.process.spi.MetadataBuildingProcess.complete(MetadataBuildingProcess.java:171) ~[hibernate-core-6.6.18.Final.jar:6.6.18.Final]
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.metadata(EntityManagerFactoryBuilderImpl.java:1442) ~[hibernate-core-6.6.18.Final.jar:6.6.18.Final]
+	at org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl.build(EntityManagerFactoryBuilderImpl.java:1513) ~[hibernate-core-6.6.18.Final.jar:6.6.18.Final]
+	at org.springframework.orm.jpa.vendor.SpringHibernateJpaPersistenceProvider.createContainerEntityManagerFactory(SpringHibernateJpaPersistenceProvider.java:66) ~[spring-orm-6.2.8.jar:6.2.8]
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:390) ~[spring-orm-6.2.8.jar:6.2.8]
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:419) ~[spring-orm-6.2.8.jar:6.2.8]
+	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.afterPropertiesSet(AbstractEntityManagerFactoryBean.java:400) ~[spring-orm-6.2.8.jar:6.2.8]
+	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.afterPropertiesSet(LocalContainerEntityManagerFactoryBean.java:366) ~[spring-orm-6.2.8.jar:6.2.8]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1873) ~[spring-beans-6.2.8.jar:6.2.8]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1822) ~[spring-beans-6.2.8.jar:6.2.8]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:607) ~[spring-beans-6.2.8.jar:6.2.8]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529) ~[spring-beans-6.2.8.jar:6.2.8]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339) ~[spring-beans-6.2.8.jar:6.2.8]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373) ~[spring-beans-6.2.8.jar:6.2.8]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337) ~[spring-beans-6.2.8.jar:6.2.8]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:207) ~[spring-beans-6.2.8.jar:6.2.8]
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:970) ~[spring-context-6.2.8.jar:6.2.8]
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:627) ~[spring-context-6.2.8.jar:6.2.8]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:752) ~[spring-boot-3.5.3.jar:3.5.3]
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:439) ~[spring-boot-3.5.3.jar:3.5.3]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:318) ~[spring-boot-3.5.3.jar:3.5.3]
+	at org.springframework.boot.test.context.SpringBootContextLoader.lambda$loadContext$3(SpringBootContextLoader.java:144) ~[spring-boot-test-3.5.3.jar:3.5.3]
+	at org.springframework.util.function.ThrowingSupplier.get(ThrowingSupplier.java:58) ~[spring-core-6.2.8.jar:6.2.8]
+	at org.springframework.util.function.ThrowingSupplier.get(ThrowingSupplier.java:46) ~[spring-core-6.2.8.jar:6.2.8]
+	at org.springframework.boot.SpringApplication.withHook(SpringApplication.java:1461) ~[spring-boot-3.5.3.jar:3.5.3]
+	at org.springframework.boot.test.context.SpringBootContextLoader$ContextLoaderHook.run(SpringBootContextLoader.java:563) ~[spring-boot-test-3.5.3.jar:3.5.3]
+	at org.springframework.boot.test.context.SpringBootContextLoader.loadContext(SpringBootContextLoader.java:144) ~[spring-boot-test-3.5.3.jar:3.5.3]
+	at org.springframework.boot.test.context.SpringBootContextLoader.loadContext(SpringBootContextLoader.java:110) ~[spring-boot-test-3.5.3.jar:3.5.3]
+	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContextInternal(DefaultCacheAwareContextLoaderDelegate.java:225) ~[spring-test-6.2.8.jar:6.2.8]
+	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContext(DefaultCacheAwareContextLoaderDelegate.java:152) ~[spring-test-6.2.8.jar:6.2.8]
+	at org.springframework.test.context.support.DefaultTestContext.getApplicationContext(DefaultTestContext.java:130) ~[spring-test-6.2.8.jar:6.2.8]
+	at org.springframework.test.context.web.ServletTestExecutionListener.setUpRequestContextIfNecessary(ServletTestExecutionListener.java:200) ~[spring-test-6.2.8.jar:6.2.8]
+	at org.springframework.test.context.web.ServletTestExecutionListener.prepareTestInstance(ServletTestExecutionListener.java:139) ~[spring-test-6.2.8.jar:6.2.8]
+	at org.springframework.test.context.TestContextManager.prepareTestInstance(TestContextManager.java:260) ~[spring-test-6.2.8.jar:6.2.8]
+	at org.springframework.test.context.junit.jupiter.SpringExtension.postProcessTestInstance(SpringExtension.java:159) ~[spring-test-6.2.8.jar:6.2.8]
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$invokeTestInstancePostProcessors$10(ClassBasedTestDescriptor.java:383) ~[junit-jupiter-engine-5.12.2.jar:5.12.2]
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.executeAndMaskThrowable(ClassBasedTestDescriptor.java:388) ~[junit-jupiter-engine-5.12.2.jar:5.12.2]
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$invokeTestInstancePostProcessors$11(ClassBasedTestDescriptor.java:382) ~[junit-jupiter-engine-5.12.2.jar:5.12.2]
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:183) ~[na:na]
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197) ~[na:na]
+	at java.base/java.util.stream.ReferencePipeline$2$1.accept(ReferencePipeline.java:179) ~[na:na]
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:197) ~[na:na]
+	at java.base/java.util.ArrayList$ArrayListSpliterator.forEachRemaining(ArrayList.java:1625) ~[na:na]
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:509) ~[na:na]
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499) ~[na:na]
+	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:150) ~[na:na]
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:173) ~[na:na]
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234) ~[na:na]
+	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:596) ~[na:na]
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.invokeTestInstancePostProcessors(ClassBasedTestDescriptor.java:382) ~[junit-jupiter-engine-5.12.2.jar:5.12.2]
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$instantiateAndPostProcessTestInstance$6(ClassBasedTestDescriptor.java:293) ~[junit-jupiter-engine-5.12.2.jar:5.12.2]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73) ~[junit-platform-engine-1.12.2.jar:1.12.2]
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.instantiateAndPostProcessTestInstance(ClassBasedTestDescriptor.java:292) ~[junit-jupiter-engine-5.12.2.jar:5.12.2]
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$testInstancesProvider$4(ClassBasedTestDescriptor.java:281) ~[junit-jupiter-engine-5.12.2.jar:5.12.2]
+	at java.base/java.util.Optional.orElseGet(Optional.java:364) ~[na:na]
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$testInstancesProvider$5(ClassBasedTestDescriptor.java:280) ~[junit-jupiter-engine-5.12.2.jar:5.12.2]
+	at org.junit.jupiter.engine.execution.TestInstancesProvider.getTestInstances(TestInstancesProvider.java:27) ~[junit-jupiter-engine-5.12.2.jar:5.12.2]
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$before$2(ClassBasedTestDescriptor.java:205) ~[junit-jupiter-engine-5.12.2.jar:5.12.2]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73) ~[junit-platform-engine-1.12.2.jar:1.12.2]
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.before(ClassBasedTestDescriptor.java:204) ~[junit-jupiter-engine-5.12.2.jar:5.12.2]
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.before(ClassBasedTestDescriptor.java:84) ~[junit-jupiter-engine-5.12.2.jar:5.12.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:153) ~[junit-platform-engine-1.12.2.jar:1.12.2]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73) ~[junit-platform-engine-1.12.2.jar:1.12.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:146) ~[junit-platform-engine-1.12.2.jar:1.12.2]
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137) ~[junit-platform-engine-1.12.2.jar:1.12.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:144) ~[junit-platform-engine-1.12.2.jar:1.12.2]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73) ~[junit-platform-engine-1.12.2.jar:1.12.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:143) ~[junit-platform-engine-1.12.2.jar:1.12.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:100) ~[junit-platform-engine-1.12.2.jar:1.12.2]
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511) ~[na:na]
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41) ~[junit-platform-engine-1.12.2.jar:1.12.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:160) ~[junit-platform-engine-1.12.2.jar:1.12.2]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73) ~[junit-platform-engine-1.12.2.jar:1.12.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:146) ~[junit-platform-engine-1.12.2.jar:1.12.2]
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137) ~[junit-platform-engine-1.12.2.jar:1.12.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:144) ~[junit-platform-engine-1.12.2.jar:1.12.2]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73) ~[junit-platform-engine-1.12.2.jar:1.12.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:143) ~[junit-platform-engine-1.12.2.jar:1.12.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:100) ~[junit-platform-engine-1.12.2.jar:1.12.2]
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:35) ~[junit-platform-engine-1.12.2.jar:1.12.2]
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57) ~[junit-platform-engine-1.12.2.jar:1.12.2]
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:54) ~[junit-platform-engine-1.12.2.jar:1.12.2]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:201) ~[junit-platform-launcher-1.12.2.jar:1.12.2]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:170) ~[junit-platform-launcher-1.12.2.jar:1.12.2]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:94) ~[junit-platform-launcher-1.12.2.jar:1.12.2]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:59) ~[junit-platform-launcher-1.12.2.jar:1.12.2]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:142) ~[junit-platform-launcher-1.12.2.jar:1.12.2]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:58) ~[junit-platform-launcher-1.12.2.jar:1.12.2]
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:103) ~[junit-platform-launcher-1.12.2.jar:1.12.2]
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:85) ~[junit-platform-launcher-1.12.2.jar:1.12.2]
+	at org.junit.platform.launcher.core.DelegatingLauncher.execute(DelegatingLauncher.java:47) ~[junit-platform-launcher-1.12.2.jar:1.12.2]
+	at org.junit.platform.launcher.core.InterceptingLauncher.lambda$execute$1(InterceptingLauncher.java:39) ~[junit-platform-launcher-1.12.2.jar:1.12.2]
+	at org.junit.platform.launcher.core.ClasspathAlignmentCheckingLauncherInterceptor.intercept(ClasspathAlignmentCheckingLauncherInterceptor.java:25) ~[junit-platform-launcher-1.12.2.jar:1.12.2]
+	at org.junit.platform.launcher.core.InterceptingLauncher.execute(InterceptingLauncher.java:38) ~[junit-platform-launcher-1.12.2.jar:1.12.2]
+	at org.junit.platform.launcher.core.DelegatingLauncher.execute(DelegatingLauncher.java:47) ~[junit-platform-launcher-1.12.2.jar:1.12.2]
+	at org.apache.maven.surefire.junitplatform.LazyLauncher.execute(LazyLauncher.java:56) ~[surefire-junit-platform-3.5.3.jar:3.5.3]
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.execute(JUnitPlatformProvider.java:194) ~[surefire-junit-platform-3.5.3.jar:3.5.3]
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invokeAllTests(JUnitPlatformProvider.java:150) ~[surefire-junit-platform-3.5.3.jar:3.5.3]
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invoke(JUnitPlatformProvider.java:124) ~[surefire-junit-platform-3.5.3.jar:3.5.3]
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385) ~[surefire-booter-3.5.3.jar:3.5.3]
+	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162) ~[surefire-booter-3.5.3.jar:3.5.3]
+	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507) ~[surefire-booter-3.5.3.jar:3.5.3]
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495) ~[surefire-booter-3.5.3.jar:3.5.3]
+Caused by: com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at com.mysql.cj.jdbc.exceptions.SQLError.createCommunicationsException(SQLError.java:165) ~[mysql-connector-j-9.2.0.jar:9.2.0]
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:55) ~[mysql-connector-j-9.2.0.jar:9.2.0]
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:837) ~[mysql-connector-j-9.2.0.jar:9.2.0]
+	at com.mysql.cj.jdbc.ConnectionImpl.<init>(ConnectionImpl.java:420) ~[mysql-connector-j-9.2.0.jar:9.2.0]
+	at com.mysql.cj.jdbc.ConnectionImpl.getInstance(ConnectionImpl.java:238) ~[mysql-connector-j-9.2.0.jar:9.2.0]
+	at com.mysql.cj.jdbc.NonRegisteringDriver.connect(NonRegisteringDriver.java:180) ~[mysql-connector-j-9.2.0.jar:9.2.0]
+	at com.zaxxer.hikari.util.DriverDataSource.getConnection(DriverDataSource.java:139) ~[HikariCP-6.3.0.jar:na]
+	at com.zaxxer.hikari.pool.PoolBase.newConnection(PoolBase.java:368) ~[HikariCP-6.3.0.jar:na]
+	at com.zaxxer.hikari.pool.PoolBase.newPoolEntry(PoolBase.java:205) ~[HikariCP-6.3.0.jar:na]
+	at com.zaxxer.hikari.pool.HikariPool.createPoolEntry(HikariPool.java:483) ~[HikariCP-6.3.0.jar:na]
+	at com.zaxxer.hikari.pool.HikariPool.checkFailFast(HikariPool.java:571) ~[HikariCP-6.3.0.jar:na]
+	at com.zaxxer.hikari.pool.HikariPool.<init>(HikariPool.java:101) ~[HikariCP-6.3.0.jar:na]
+	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:111) ~[HikariCP-6.3.0.jar:na]
+	at org.hibernate.engine.jdbc.connections.internal.DatasourceConnectionProviderImpl.getConnection(DatasourceConnectionProviderImpl.java:126) ~[hibernate-core-6.6.18.Final.jar:6.6.18.Final]
+	at org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess.obtainConnection(JdbcEnvironmentInitiator.java:483) ~[hibernate-core-6.6.18.Final.jar:6.6.18.Final]
+	at org.hibernate.resource.transaction.backend.jdbc.internal.JdbcIsolationDelegate.delegateWork(JdbcIsolationDelegate.java:61) ~[hibernate-core-6.6.18.Final.jar:6.6.18.Final]
+	... 113 common frames omitted
+Caused by: com.mysql.cj.exceptions.CJCommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method) ~[na:na]
+	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:77) ~[na:na]
+	at java.base/jdk.internal.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45) ~[na:na]
+	at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:499) ~[na:na]
+	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:480) ~[na:na]
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:52) ~[mysql-connector-j-9.2.0.jar:9.2.0]
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:95) ~[mysql-connector-j-9.2.0.jar:9.2.0]
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:140) ~[mysql-connector-j-9.2.0.jar:9.2.0]
+	at com.mysql.cj.exceptions.ExceptionFactory.createCommunicationsException(ExceptionFactory.java:156) ~[mysql-connector-j-9.2.0.jar:9.2.0]
+	at com.mysql.cj.protocol.a.NativeSocketConnection.connect(NativeSocketConnection.java:79) ~[mysql-connector-j-9.2.0.jar:9.2.0]
+	at com.mysql.cj.NativeSession.connect(NativeSession.java:142) ~[mysql-connector-j-9.2.0.jar:9.2.0]
+	at com.mysql.cj.jdbc.ConnectionImpl.connectOneTryOnly(ConnectionImpl.java:961) ~[mysql-connector-j-9.2.0.jar:9.2.0]
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:825) ~[mysql-connector-j-9.2.0.jar:9.2.0]
+	... 126 common frames omitted
+Caused by: java.net.ConnectException: Connection refused: no further information
+	at java.base/sun.nio.ch.Net.pollConnect(Native Method) ~[na:na]
+	at java.base/sun.nio.ch.Net.pollConnectNow(Net.java:672) ~[na:na]
+	at java.base/sun.nio.ch.NioSocketImpl.timedFinishConnect(NioSocketImpl.java:547) ~[na:na]
+	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:602) ~[na:na]
+	at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:327) ~[na:na]
+	at java.base/java.net.Socket.connect(Socket.java:633) ~[na:na]
+	at com.mysql.cj.protocol.StandardSocketFactory.connect(StandardSocketFactory.java:144) ~[mysql-connector-j-9.2.0.jar:9.2.0]
+	at com.mysql.cj.protocol.a.NativeSocketConnection.connect(NativeSocketConnection.java:53) ~[mysql-connector-j-9.2.0.jar:9.2.0]
+	... 129 common frames omitted
+
+2025-10-07T00:03:11.429-04:00  WARN 11508 --- [           main] org.hibernate.orm.deprecation            : HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-10-07T00:03:11.506-04:00  INFO 11508 --- [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (null)']
 	Database driver: undefined/unknown
-	Database version: 8.4.5
+	Database version: 8.0
 	Autocommit mode: undefined/unknown
 	Isolation level: undefined/unknown
 	Minimum pool size: undefined/unknown
 	Maximum pool size: undefined/unknown
-2025-09-23T22:34:30.464-04:00  INFO 18180 --- [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-2025-09-23T22:34:30.467-04:00  INFO 18180 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-2025-09-23T22:34:31.112-04:00  INFO 18180 --- [           main] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
-2025-09-23T22:34:32.871-04:00  WARN 18180 --- [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2025-09-23T22:34:33.188-04:00  INFO 18180 --- [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
-2025-09-23T22:34:33.896-04:00  INFO 18180 --- [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
-2025-09-23T22:34:33.897-04:00  INFO 18180 --- [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
-2025-09-23T22:34:33.899-04:00  INFO 18180 --- [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 2 ms
-2025-09-23T22:34:33.960-04:00  INFO 18180 --- [           main] .b.c.AdminStatsControllerIntegrationTest : Started AdminStatsControllerIntegrationTest in 10.586 seconds (process running for 13.25)
-Hibernate: select ash1_0.status_history_id,ash1_0.appointment_id,ash1_0.changed_at,ash1_0.changed_by_email,ash1_0.changed_by_user_id,ash1_0.status from appointment_status_history ash1_0
-Hibernate: select r1_0.receipt_id,r1_0.appointment_id,r1_0.date_issued,r1_0.notes,r1_0.payment_method,r1_0.total_amount from receipts r1_0
-Hibernate: select fl1_0.log_id,fl1_0.amount,fl1_0.description,fl1_0.log_date,fl1_0.reference_id,fl1_0.source,fl1_0.type from financial_log fl1_0
-Hibernate: select siu1_0.item_id,siu1_0.service_id,siu1_0.quantity_used from service_inventory_usage siu1_0
-Hibernate: select a1_0.appointment_id,a1_0.appointment_date,a1_0.availability_slot_id,a1_0.base_price,a1_0.client_address,a1_0.client_email,a1_0.client_name,a1_0.created_at,a1_0.distance_miles,a1_0.notes,a1_0.service_id,a1_0.status,a1_0.total_price,a1_0.travel_fee,a1_0.user_id from appointments a1_0
-Hibernate: select a1_0.slot_id,a1_0.created_at,a1_0.date,a1_0.end_time,a1_0.is_booked,a1_0.notes,a1_0.start_time from availabilities a1_0
-Hibernate: select i1_0.item_id,i1_0.name,i1_0.last_updated,i1_0.low_stock_threshold,i1_0.notes,i1_0.quantity,i1_0.total_spent,i1_0.unit_cost from inventory i1_0
-Hibernate: select ts1_0.service_id,ts1_0.base_price,ts1_0.created_at,ts1_0.description,ts1_0.duration_minutes,ts1_0.is_active,ts1_0.name,ts1_0.updated_at from services ts1_0
-Hibernate: select u1_0.user_id,u1_0.address,u1_0.created_at,u1_0.email,u1_0.is_admin,u1_0.name,u1_0.password_hash from users u1_0
-Hibernate: delete from users where user_id=?
-Hibernate: delete from users where user_id=?
-Hibernate: insert into users (address,created_at,email,is_admin,name,password_hash) values (?,?,?,?,?,?)
-Hibernate: insert into users (address,created_at,email,is_admin,name,password_hash) values (?,?,?,?,?,?)
-Hibernate: select u1_0.user_id,u1_0.address,u1_0.created_at,u1_0.email,u1_0.is_admin,u1_0.name,u1_0.password_hash from users u1_0 where u1_0.email=?
-Hibernate: select i1_0.item_id,i1_0.name,i1_0.last_updated,i1_0.low_stock_threshold,i1_0.notes,i1_0.quantity,i1_0.total_spent,i1_0.unit_cost from inventory i1_0 where i1_0.quantity<=i1_0.low_stock_threshold
+2025-10-07T00:03:15.529-04:00  INFO 11508 --- [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-10-07T00:03:15.540-04:00  INFO 11508 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-10-07T00:03:16.720-04:00  INFO 11508 --- [           main] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-10-07T00:03:21.084-04:00  WARN 11508 --- [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-10-07T00:03:22.325-04:00  INFO 11508 --- [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-10-07T00:03:24.472-04:00  INFO 11508 --- [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2025-10-07T00:03:24.473-04:00  INFO 11508 --- [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2025-10-07T00:03:24.478-04:00  INFO 11508 --- [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 3 ms
+2025-10-07T00:03:24.551-04:00  INFO 11508 --- [           main] .b.c.AdminStatsControllerIntegrationTest : Started AdminStatsControllerIntegrationTest in 22.788 seconds (process running for 26.02)
+2025-10-07T00:03:25.944-04:00  INFO 11508 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-10-07T00:03:26.964-04:00  WARN 11508 --- [           main] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 08S01
+2025-10-07T00:03:26.965-04:00 ERROR 11508 --- [           main] o.h.engine.jdbc.spi.SqlExceptionHelper   : Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
 ]]></system-out>
   </testcase>
-  <testcase name="allEndpoints_shouldReturnForbiddenIfMissingToken" classname="com.tanyourpeach.backend.controller.AdminStatsControllerIntegrationTest" time="0.188">
-    <system-out><![CDATA[Hibernate: select ash1_0.status_history_id,ash1_0.appointment_id,ash1_0.changed_at,ash1_0.changed_by_email,ash1_0.changed_by_user_id,ash1_0.status from appointment_status_history ash1_0
-Hibernate: select r1_0.receipt_id,r1_0.appointment_id,r1_0.date_issued,r1_0.notes,r1_0.payment_method,r1_0.total_amount from receipts r1_0
-Hibernate: select fl1_0.log_id,fl1_0.amount,fl1_0.description,fl1_0.log_date,fl1_0.reference_id,fl1_0.source,fl1_0.type from financial_log fl1_0
-Hibernate: select siu1_0.item_id,siu1_0.service_id,siu1_0.quantity_used from service_inventory_usage siu1_0
-Hibernate: select a1_0.appointment_id,a1_0.appointment_date,a1_0.availability_slot_id,a1_0.base_price,a1_0.client_address,a1_0.client_email,a1_0.client_name,a1_0.created_at,a1_0.distance_miles,a1_0.notes,a1_0.service_id,a1_0.status,a1_0.total_price,a1_0.travel_fee,a1_0.user_id from appointments a1_0
-Hibernate: select a1_0.slot_id,a1_0.created_at,a1_0.date,a1_0.end_time,a1_0.is_booked,a1_0.notes,a1_0.start_time from availabilities a1_0
-Hibernate: select i1_0.item_id,i1_0.name,i1_0.last_updated,i1_0.low_stock_threshold,i1_0.notes,i1_0.quantity,i1_0.total_spent,i1_0.unit_cost from inventory i1_0
-Hibernate: select ts1_0.service_id,ts1_0.base_price,ts1_0.created_at,ts1_0.description,ts1_0.duration_minutes,ts1_0.is_active,ts1_0.name,ts1_0.updated_at from services ts1_0
-Hibernate: select u1_0.user_id,u1_0.address,u1_0.created_at,u1_0.email,u1_0.is_admin,u1_0.name,u1_0.password_hash from users u1_0
-Hibernate: delete from users where user_id=?
-Hibernate: delete from users where user_id=?
-Hibernate: insert into users (address,created_at,email,is_admin,name,password_hash) values (?,?,?,?,?,?)
-Hibernate: insert into users (address,created_at,email,is_admin,name,password_hash) values (?,?,?,?,?,?)
+  <testcase name="allEndpoints_shouldReturnForbiddenIfMissingToken" classname="com.tanyourpeach.backend.controller.AdminStatsControllerIntegrationTest" time="1.044">
+    <error message="Could not open JPA EntityManager for transaction" type="org.springframework.transaction.CannotCreateTransactionException"><![CDATA[org.springframework.transaction.CannotCreateTransactionException: Could not open JPA EntityManager for transaction
+	at org.springframework.orm.jpa.JpaTransactionManager.doBegin(JpaTransactionManager.java:466)
+	at org.springframework.transaction.support.AbstractPlatformTransactionManager.startTransaction(AbstractPlatformTransactionManager.java:532)
+	at org.springframework.transaction.support.AbstractPlatformTransactionManager.getTransaction(AbstractPlatformTransactionManager.java:405)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.createTransactionIfNecessary(TransactionAspectSupport.java:639)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:374)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:138)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.data.jpa.repository.support.CrudMethodMetadataPostProcessor$CrudMethodMetadataPopulatingMethodInterceptor.invoke(CrudMethodMetadataPostProcessor.java:165)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:223)
+	at jdk.proxy2/jdk.proxy2.$Proxy161.deleteAll(Unknown Source)
+	at com.tanyourpeach.backend.util.TestDataCleaner.cleanAll(TestDataCleaner.java:38)
+	at com.tanyourpeach.backend.controller.AdminStatsControllerIntegrationTest.setUp(AdminStatsControllerIntegrationTest.java:42)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+Caused by: org.hibernate.exception.JDBCConnectionException: Unable to acquire JDBC Connection [Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.] [n/a]
+	at org.hibernate.exception.internal.SQLStateConversionDelegate.convert(SQLStateConversionDelegate.java:100)
+	at org.hibernate.exception.internal.StandardSQLExceptionConverter.convert(StandardSQLExceptionConverter.java:58)
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:108)
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:94)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.acquireConnectionIfNeeded(LogicalConnectionManagedImpl.java:129)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.getPhysicalConnection(LogicalConnectionManagedImpl.java:156)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.getConnectionForTransactionManagement(LogicalConnectionManagedImpl.java:286)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.begin(LogicalConnectionManagedImpl.java:294)
+	at org.hibernate.resource.transaction.backend.jdbc.internal.JdbcResourceLocalTransactionCoordinatorImpl$TransactionDriverControlImpl.begin(JdbcResourceLocalTransactionCoordinatorImpl.java:232)
+	at org.hibernate.engine.transaction.internal.TransactionImpl.begin(TransactionImpl.java:83)
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.beginTransaction(HibernateJpaDialect.java:176)
+	at org.springframework.orm.jpa.JpaTransactionManager.doBegin(JpaTransactionManager.java:420)
+	... 17 more
+Caused by: com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at com.mysql.cj.jdbc.exceptions.SQLError.createCommunicationsException(SQLError.java:165)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:55)
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:837)
+	at com.mysql.cj.jdbc.ConnectionImpl.<init>(ConnectionImpl.java:420)
+	at com.mysql.cj.jdbc.ConnectionImpl.getInstance(ConnectionImpl.java:238)
+	at com.mysql.cj.jdbc.NonRegisteringDriver.connect(NonRegisteringDriver.java:180)
+	at com.zaxxer.hikari.util.DriverDataSource.getConnection(DriverDataSource.java:139)
+	at com.zaxxer.hikari.pool.PoolBase.newConnection(PoolBase.java:368)
+	at com.zaxxer.hikari.pool.PoolBase.newPoolEntry(PoolBase.java:205)
+	at com.zaxxer.hikari.pool.HikariPool.createPoolEntry(HikariPool.java:483)
+	at com.zaxxer.hikari.pool.HikariPool.checkFailFast(HikariPool.java:571)
+	at com.zaxxer.hikari.pool.HikariPool.<init>(HikariPool.java:101)
+	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:111)
+	at org.hibernate.engine.jdbc.connections.internal.DatasourceConnectionProviderImpl.getConnection(DatasourceConnectionProviderImpl.java:126)
+	at org.hibernate.internal.NonContextualJdbcConnectionAccess.obtainConnection(NonContextualJdbcConnectionAccess.java:46)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.acquireConnectionIfNeeded(LogicalConnectionManagedImpl.java:126)
+	... 24 more
+Caused by: com.mysql.cj.exceptions.CJCommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:499)
+	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:480)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:52)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:95)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:140)
+	at com.mysql.cj.exceptions.ExceptionFactory.createCommunicationsException(ExceptionFactory.java:156)
+	at com.mysql.cj.protocol.a.NativeSocketConnection.connect(NativeSocketConnection.java:79)
+	at com.mysql.cj.NativeSession.connect(NativeSession.java:142)
+	at com.mysql.cj.jdbc.ConnectionImpl.connectOneTryOnly(ConnectionImpl.java:961)
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:825)
+	... 37 more
+Caused by: java.net.ConnectException: Connection refused: no further information
+	at java.base/sun.nio.ch.Net.pollConnect(Native Method)
+	at java.base/sun.nio.ch.Net.pollConnectNow(Net.java:672)
+	at java.base/sun.nio.ch.NioSocketImpl.timedFinishConnect(NioSocketImpl.java:547)
+	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:602)
+	at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:327)
+	at java.base/java.net.Socket.connect(Socket.java:633)
+	at com.mysql.cj.protocol.StandardSocketFactory.connect(StandardSocketFactory.java:144)
+	at com.mysql.cj.protocol.a.NativeSocketConnection.connect(NativeSocketConnection.java:53)
+	... 40 more
+]]></error>
+    <system-out><![CDATA[2025-10-07T00:03:27.068-04:00  INFO 11508 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-10-07T00:03:28.086-04:00  WARN 11508 --- [           main] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 08S01
+2025-10-07T00:03:28.086-04:00 ERROR 11508 --- [           main] o.h.engine.jdbc.spi.SqlExceptionHelper   : Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
 ]]></system-out>
   </testcase>
-  <testcase name="getUpcomingAppointments_shouldReturnOkForAdmin" classname="com.tanyourpeach.backend.controller.AdminStatsControllerIntegrationTest" time="0.23">
-    <system-out><![CDATA[Hibernate: select ash1_0.status_history_id,ash1_0.appointment_id,ash1_0.changed_at,ash1_0.changed_by_email,ash1_0.changed_by_user_id,ash1_0.status from appointment_status_history ash1_0
-Hibernate: select r1_0.receipt_id,r1_0.appointment_id,r1_0.date_issued,r1_0.notes,r1_0.payment_method,r1_0.total_amount from receipts r1_0
-Hibernate: select fl1_0.log_id,fl1_0.amount,fl1_0.description,fl1_0.log_date,fl1_0.reference_id,fl1_0.source,fl1_0.type from financial_log fl1_0
-Hibernate: select siu1_0.item_id,siu1_0.service_id,siu1_0.quantity_used from service_inventory_usage siu1_0
-Hibernate: select a1_0.appointment_id,a1_0.appointment_date,a1_0.availability_slot_id,a1_0.base_price,a1_0.client_address,a1_0.client_email,a1_0.client_name,a1_0.created_at,a1_0.distance_miles,a1_0.notes,a1_0.service_id,a1_0.status,a1_0.total_price,a1_0.travel_fee,a1_0.user_id from appointments a1_0
-Hibernate: select a1_0.slot_id,a1_0.created_at,a1_0.date,a1_0.end_time,a1_0.is_booked,a1_0.notes,a1_0.start_time from availabilities a1_0
-Hibernate: select i1_0.item_id,i1_0.name,i1_0.last_updated,i1_0.low_stock_threshold,i1_0.notes,i1_0.quantity,i1_0.total_spent,i1_0.unit_cost from inventory i1_0
-Hibernate: select ts1_0.service_id,ts1_0.base_price,ts1_0.created_at,ts1_0.description,ts1_0.duration_minutes,ts1_0.is_active,ts1_0.name,ts1_0.updated_at from services ts1_0
-Hibernate: select u1_0.user_id,u1_0.address,u1_0.created_at,u1_0.email,u1_0.is_admin,u1_0.name,u1_0.password_hash from users u1_0
-Hibernate: delete from users where user_id=?
-Hibernate: delete from users where user_id=?
-Hibernate: insert into users (address,created_at,email,is_admin,name,password_hash) values (?,?,?,?,?,?)
-Hibernate: insert into users (address,created_at,email,is_admin,name,password_hash) values (?,?,?,?,?,?)
-Hibernate: select u1_0.user_id,u1_0.address,u1_0.created_at,u1_0.email,u1_0.is_admin,u1_0.name,u1_0.password_hash from users u1_0 where u1_0.email=?
-Hibernate: select a1_0.appointment_id,a1_0.appointment_date,a1_0.availability_slot_id,a1_0.base_price,a1_0.client_address,a1_0.client_email,a1_0.client_name,a1_0.created_at,a1_0.distance_miles,a1_0.notes,a1_0.service_id,a1_0.status,a1_0.total_price,a1_0.travel_fee,a1_0.user_id from appointments a1_0 where a1_0.appointment_date>? order by a1_0.appointment_date
+  <testcase name="getUpcomingAppointments_shouldReturnOkForAdmin" classname="com.tanyourpeach.backend.controller.AdminStatsControllerIntegrationTest" time="1.05">
+    <error message="Could not open JPA EntityManager for transaction" type="org.springframework.transaction.CannotCreateTransactionException"><![CDATA[org.springframework.transaction.CannotCreateTransactionException: Could not open JPA EntityManager for transaction
+	at org.springframework.orm.jpa.JpaTransactionManager.doBegin(JpaTransactionManager.java:466)
+	at org.springframework.transaction.support.AbstractPlatformTransactionManager.startTransaction(AbstractPlatformTransactionManager.java:532)
+	at org.springframework.transaction.support.AbstractPlatformTransactionManager.getTransaction(AbstractPlatformTransactionManager.java:405)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.createTransactionIfNecessary(TransactionAspectSupport.java:639)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:374)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:138)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.data.jpa.repository.support.CrudMethodMetadataPostProcessor$CrudMethodMetadataPopulatingMethodInterceptor.invoke(CrudMethodMetadataPostProcessor.java:165)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:223)
+	at jdk.proxy2/jdk.proxy2.$Proxy161.deleteAll(Unknown Source)
+	at com.tanyourpeach.backend.util.TestDataCleaner.cleanAll(TestDataCleaner.java:38)
+	at com.tanyourpeach.backend.controller.AdminStatsControllerIntegrationTest.setUp(AdminStatsControllerIntegrationTest.java:42)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+Caused by: org.hibernate.exception.JDBCConnectionException: Unable to acquire JDBC Connection [Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.] [n/a]
+	at org.hibernate.exception.internal.SQLStateConversionDelegate.convert(SQLStateConversionDelegate.java:100)
+	at org.hibernate.exception.internal.StandardSQLExceptionConverter.convert(StandardSQLExceptionConverter.java:58)
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:108)
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:94)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.acquireConnectionIfNeeded(LogicalConnectionManagedImpl.java:129)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.getPhysicalConnection(LogicalConnectionManagedImpl.java:156)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.getConnectionForTransactionManagement(LogicalConnectionManagedImpl.java:286)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.begin(LogicalConnectionManagedImpl.java:294)
+	at org.hibernate.resource.transaction.backend.jdbc.internal.JdbcResourceLocalTransactionCoordinatorImpl$TransactionDriverControlImpl.begin(JdbcResourceLocalTransactionCoordinatorImpl.java:232)
+	at org.hibernate.engine.transaction.internal.TransactionImpl.begin(TransactionImpl.java:83)
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.beginTransaction(HibernateJpaDialect.java:176)
+	at org.springframework.orm.jpa.JpaTransactionManager.doBegin(JpaTransactionManager.java:420)
+	... 17 more
+Caused by: com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at com.mysql.cj.jdbc.exceptions.SQLError.createCommunicationsException(SQLError.java:165)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:55)
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:837)
+	at com.mysql.cj.jdbc.ConnectionImpl.<init>(ConnectionImpl.java:420)
+	at com.mysql.cj.jdbc.ConnectionImpl.getInstance(ConnectionImpl.java:238)
+	at com.mysql.cj.jdbc.NonRegisteringDriver.connect(NonRegisteringDriver.java:180)
+	at com.zaxxer.hikari.util.DriverDataSource.getConnection(DriverDataSource.java:139)
+	at com.zaxxer.hikari.pool.PoolBase.newConnection(PoolBase.java:368)
+	at com.zaxxer.hikari.pool.PoolBase.newPoolEntry(PoolBase.java:205)
+	at com.zaxxer.hikari.pool.HikariPool.createPoolEntry(HikariPool.java:483)
+	at com.zaxxer.hikari.pool.HikariPool.checkFailFast(HikariPool.java:571)
+	at com.zaxxer.hikari.pool.HikariPool.<init>(HikariPool.java:101)
+	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:111)
+	at org.hibernate.engine.jdbc.connections.internal.DatasourceConnectionProviderImpl.getConnection(DatasourceConnectionProviderImpl.java:126)
+	at org.hibernate.internal.NonContextualJdbcConnectionAccess.obtainConnection(NonContextualJdbcConnectionAccess.java:46)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.acquireConnectionIfNeeded(LogicalConnectionManagedImpl.java:126)
+	... 24 more
+Caused by: com.mysql.cj.exceptions.CJCommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:499)
+	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:480)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:52)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:95)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:140)
+	at com.mysql.cj.exceptions.ExceptionFactory.createCommunicationsException(ExceptionFactory.java:156)
+	at com.mysql.cj.protocol.a.NativeSocketConnection.connect(NativeSocketConnection.java:79)
+	at com.mysql.cj.NativeSession.connect(NativeSession.java:142)
+	at com.mysql.cj.jdbc.ConnectionImpl.connectOneTryOnly(ConnectionImpl.java:961)
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:825)
+	... 37 more
+Caused by: java.net.ConnectException: Connection refused: no further information
+	at java.base/sun.nio.ch.Net.pollConnect(Native Method)
+	at java.base/sun.nio.ch.Net.pollConnectNow(Net.java:672)
+	at java.base/sun.nio.ch.NioSocketImpl.timedFinishConnect(NioSocketImpl.java:547)
+	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:602)
+	at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:327)
+	at java.base/java.net.Socket.connect(Socket.java:633)
+	at com.mysql.cj.protocol.StandardSocketFactory.connect(StandardSocketFactory.java:144)
+	at com.mysql.cj.protocol.a.NativeSocketConnection.connect(NativeSocketConnection.java:53)
+	... 40 more
+]]></error>
+    <system-out><![CDATA[2025-10-07T00:03:28.111-04:00  INFO 11508 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-10-07T00:03:29.130-04:00  WARN 11508 --- [           main] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 08S01
+2025-10-07T00:03:29.131-04:00 ERROR 11508 --- [           main] o.h.engine.jdbc.spi.SqlExceptionHelper   : Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
 ]]></system-out>
   </testcase>
-  <testcase name="allEndpoints_shouldReturnForbiddenForInvalidToken" classname="com.tanyourpeach.backend.controller.AdminStatsControllerIntegrationTest" time="0.538">
-    <system-out><![CDATA[Hibernate: select ash1_0.status_history_id,ash1_0.appointment_id,ash1_0.changed_at,ash1_0.changed_by_email,ash1_0.changed_by_user_id,ash1_0.status from appointment_status_history ash1_0
-Hibernate: select r1_0.receipt_id,r1_0.appointment_id,r1_0.date_issued,r1_0.notes,r1_0.payment_method,r1_0.total_amount from receipts r1_0
-Hibernate: select fl1_0.log_id,fl1_0.amount,fl1_0.description,fl1_0.log_date,fl1_0.reference_id,fl1_0.source,fl1_0.type from financial_log fl1_0
-Hibernate: select siu1_0.item_id,siu1_0.service_id,siu1_0.quantity_used from service_inventory_usage siu1_0
-Hibernate: select a1_0.appointment_id,a1_0.appointment_date,a1_0.availability_slot_id,a1_0.base_price,a1_0.client_address,a1_0.client_email,a1_0.client_name,a1_0.created_at,a1_0.distance_miles,a1_0.notes,a1_0.service_id,a1_0.status,a1_0.total_price,a1_0.travel_fee,a1_0.user_id from appointments a1_0
-Hibernate: select a1_0.slot_id,a1_0.created_at,a1_0.date,a1_0.end_time,a1_0.is_booked,a1_0.notes,a1_0.start_time from availabilities a1_0
-Hibernate: select i1_0.item_id,i1_0.name,i1_0.last_updated,i1_0.low_stock_threshold,i1_0.notes,i1_0.quantity,i1_0.total_spent,i1_0.unit_cost from inventory i1_0
-Hibernate: select ts1_0.service_id,ts1_0.base_price,ts1_0.created_at,ts1_0.description,ts1_0.duration_minutes,ts1_0.is_active,ts1_0.name,ts1_0.updated_at from services ts1_0
-Hibernate: select u1_0.user_id,u1_0.address,u1_0.created_at,u1_0.email,u1_0.is_admin,u1_0.name,u1_0.password_hash from users u1_0
-Hibernate: delete from users where user_id=?
-Hibernate: delete from users where user_id=?
-Hibernate: insert into users (address,created_at,email,is_admin,name,password_hash) values (?,?,?,?,?,?)
-Hibernate: insert into users (address,created_at,email,is_admin,name,password_hash) values (?,?,?,?,?,?)
-Hibernate: select u1_0.user_id,u1_0.address,u1_0.created_at,u1_0.email,u1_0.is_admin,u1_0.name,u1_0.password_hash from users u1_0 where u1_0.email is null
-Hibernate: select u1_0.user_id,u1_0.address,u1_0.created_at,u1_0.email,u1_0.is_admin,u1_0.name,u1_0.password_hash from users u1_0 where u1_0.email is null
-Hibernate: select u1_0.user_id,u1_0.address,u1_0.created_at,u1_0.email,u1_0.is_admin,u1_0.name,u1_0.password_hash from users u1_0 where u1_0.email is null
-Hibernate: select u1_0.user_id,u1_0.address,u1_0.created_at,u1_0.email,u1_0.is_admin,u1_0.name,u1_0.password_hash from users u1_0 where u1_0.email is null
+  <testcase name="allEndpoints_shouldReturnForbiddenForInvalidToken" classname="com.tanyourpeach.backend.controller.AdminStatsControllerIntegrationTest" time="1.047">
+    <error message="Could not open JPA EntityManager for transaction" type="org.springframework.transaction.CannotCreateTransactionException"><![CDATA[org.springframework.transaction.CannotCreateTransactionException: Could not open JPA EntityManager for transaction
+	at org.springframework.orm.jpa.JpaTransactionManager.doBegin(JpaTransactionManager.java:466)
+	at org.springframework.transaction.support.AbstractPlatformTransactionManager.startTransaction(AbstractPlatformTransactionManager.java:532)
+	at org.springframework.transaction.support.AbstractPlatformTransactionManager.getTransaction(AbstractPlatformTransactionManager.java:405)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.createTransactionIfNecessary(TransactionAspectSupport.java:639)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:374)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:138)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.data.jpa.repository.support.CrudMethodMetadataPostProcessor$CrudMethodMetadataPopulatingMethodInterceptor.invoke(CrudMethodMetadataPostProcessor.java:165)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:223)
+	at jdk.proxy2/jdk.proxy2.$Proxy161.deleteAll(Unknown Source)
+	at com.tanyourpeach.backend.util.TestDataCleaner.cleanAll(TestDataCleaner.java:38)
+	at com.tanyourpeach.backend.controller.AdminStatsControllerIntegrationTest.setUp(AdminStatsControllerIntegrationTest.java:42)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+Caused by: org.hibernate.exception.JDBCConnectionException: Unable to acquire JDBC Connection [Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.] [n/a]
+	at org.hibernate.exception.internal.SQLStateConversionDelegate.convert(SQLStateConversionDelegate.java:100)
+	at org.hibernate.exception.internal.StandardSQLExceptionConverter.convert(StandardSQLExceptionConverter.java:58)
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:108)
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:94)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.acquireConnectionIfNeeded(LogicalConnectionManagedImpl.java:129)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.getPhysicalConnection(LogicalConnectionManagedImpl.java:156)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.getConnectionForTransactionManagement(LogicalConnectionManagedImpl.java:286)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.begin(LogicalConnectionManagedImpl.java:294)
+	at org.hibernate.resource.transaction.backend.jdbc.internal.JdbcResourceLocalTransactionCoordinatorImpl$TransactionDriverControlImpl.begin(JdbcResourceLocalTransactionCoordinatorImpl.java:232)
+	at org.hibernate.engine.transaction.internal.TransactionImpl.begin(TransactionImpl.java:83)
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.beginTransaction(HibernateJpaDialect.java:176)
+	at org.springframework.orm.jpa.JpaTransactionManager.doBegin(JpaTransactionManager.java:420)
+	... 17 more
+Caused by: com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at com.mysql.cj.jdbc.exceptions.SQLError.createCommunicationsException(SQLError.java:165)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:55)
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:837)
+	at com.mysql.cj.jdbc.ConnectionImpl.<init>(ConnectionImpl.java:420)
+	at com.mysql.cj.jdbc.ConnectionImpl.getInstance(ConnectionImpl.java:238)
+	at com.mysql.cj.jdbc.NonRegisteringDriver.connect(NonRegisteringDriver.java:180)
+	at com.zaxxer.hikari.util.DriverDataSource.getConnection(DriverDataSource.java:139)
+	at com.zaxxer.hikari.pool.PoolBase.newConnection(PoolBase.java:368)
+	at com.zaxxer.hikari.pool.PoolBase.newPoolEntry(PoolBase.java:205)
+	at com.zaxxer.hikari.pool.HikariPool.createPoolEntry(HikariPool.java:483)
+	at com.zaxxer.hikari.pool.HikariPool.checkFailFast(HikariPool.java:571)
+	at com.zaxxer.hikari.pool.HikariPool.<init>(HikariPool.java:101)
+	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:111)
+	at org.hibernate.engine.jdbc.connections.internal.DatasourceConnectionProviderImpl.getConnection(DatasourceConnectionProviderImpl.java:126)
+	at org.hibernate.internal.NonContextualJdbcConnectionAccess.obtainConnection(NonContextualJdbcConnectionAccess.java:46)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.acquireConnectionIfNeeded(LogicalConnectionManagedImpl.java:126)
+	... 24 more
+Caused by: com.mysql.cj.exceptions.CJCommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:499)
+	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:480)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:52)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:95)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:140)
+	at com.mysql.cj.exceptions.ExceptionFactory.createCommunicationsException(ExceptionFactory.java:156)
+	at com.mysql.cj.protocol.a.NativeSocketConnection.connect(NativeSocketConnection.java:79)
+	at com.mysql.cj.NativeSession.connect(NativeSession.java:142)
+	at com.mysql.cj.jdbc.ConnectionImpl.connectOneTryOnly(ConnectionImpl.java:961)
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:825)
+	... 37 more
+Caused by: java.net.ConnectException: Connection refused: no further information
+	at java.base/sun.nio.ch.Net.pollConnect(Native Method)
+	at java.base/sun.nio.ch.Net.pollConnectNow(Net.java:672)
+	at java.base/sun.nio.ch.NioSocketImpl.timedFinishConnect(NioSocketImpl.java:547)
+	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:602)
+	at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:327)
+	at java.base/java.net.Socket.connect(Socket.java:633)
+	at com.mysql.cj.protocol.StandardSocketFactory.connect(StandardSocketFactory.java:144)
+	at com.mysql.cj.protocol.a.NativeSocketConnection.connect(NativeSocketConnection.java:53)
+	... 40 more
+]]></error>
+    <system-out><![CDATA[2025-10-07T00:03:29.160-04:00  INFO 11508 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-10-07T00:03:30.193-04:00  WARN 11508 --- [           main] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 08S01
+2025-10-07T00:03:30.193-04:00 ERROR 11508 --- [           main] o.h.engine.jdbc.spi.SqlExceptionHelper   : Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
 ]]></system-out>
   </testcase>
-  <testcase name="getMonthlyStats_shouldReturnOkForAdmin" classname="com.tanyourpeach.backend.controller.AdminStatsControllerIntegrationTest" time="0.298">
-    <system-out><![CDATA[Hibernate: select ash1_0.status_history_id,ash1_0.appointment_id,ash1_0.changed_at,ash1_0.changed_by_email,ash1_0.changed_by_user_id,ash1_0.status from appointment_status_history ash1_0
-Hibernate: select r1_0.receipt_id,r1_0.appointment_id,r1_0.date_issued,r1_0.notes,r1_0.payment_method,r1_0.total_amount from receipts r1_0
-Hibernate: select fl1_0.log_id,fl1_0.amount,fl1_0.description,fl1_0.log_date,fl1_0.reference_id,fl1_0.source,fl1_0.type from financial_log fl1_0
-Hibernate: select siu1_0.item_id,siu1_0.service_id,siu1_0.quantity_used from service_inventory_usage siu1_0
-Hibernate: select a1_0.appointment_id,a1_0.appointment_date,a1_0.availability_slot_id,a1_0.base_price,a1_0.client_address,a1_0.client_email,a1_0.client_name,a1_0.created_at,a1_0.distance_miles,a1_0.notes,a1_0.service_id,a1_0.status,a1_0.total_price,a1_0.travel_fee,a1_0.user_id from appointments a1_0
-Hibernate: select a1_0.slot_id,a1_0.created_at,a1_0.date,a1_0.end_time,a1_0.is_booked,a1_0.notes,a1_0.start_time from availabilities a1_0
-Hibernate: select i1_0.item_id,i1_0.name,i1_0.last_updated,i1_0.low_stock_threshold,i1_0.notes,i1_0.quantity,i1_0.total_spent,i1_0.unit_cost from inventory i1_0
-Hibernate: select ts1_0.service_id,ts1_0.base_price,ts1_0.created_at,ts1_0.description,ts1_0.duration_minutes,ts1_0.is_active,ts1_0.name,ts1_0.updated_at from services ts1_0
-Hibernate: select u1_0.user_id,u1_0.address,u1_0.created_at,u1_0.email,u1_0.is_admin,u1_0.name,u1_0.password_hash from users u1_0
-Hibernate: delete from users where user_id=?
-Hibernate: delete from users where user_id=?
-Hibernate: insert into users (address,created_at,email,is_admin,name,password_hash) values (?,?,?,?,?,?)
-Hibernate: insert into users (address,created_at,email,is_admin,name,password_hash) values (?,?,?,?,?,?)
-Hibernate: select u1_0.user_id,u1_0.address,u1_0.created_at,u1_0.email,u1_0.is_admin,u1_0.name,u1_0.password_hash from users u1_0 where u1_0.email=?
-Hibernate: select sum(fl1_0.amount) from financial_log fl1_0 where fl1_0.type=? and date_format(fl1_0.log_date,'%Y-%m')=?
-Hibernate: select sum(fl1_0.amount) from financial_log fl1_0 where fl1_0.type=? and date_format(fl1_0.log_date,'%Y-%m')=?
-Hibernate: select sum(fl1_0.amount) from financial_log fl1_0 where fl1_0.type=? and date_format(fl1_0.log_date,'%Y-%m')=?
-Hibernate: select sum(fl1_0.amount) from financial_log fl1_0 where fl1_0.type=? and date_format(fl1_0.log_date,'%Y-%m')=?
-Hibernate: select sum(fl1_0.amount) from financial_log fl1_0 where fl1_0.type=? and date_format(fl1_0.log_date,'%Y-%m')=?
-Hibernate: select sum(fl1_0.amount) from financial_log fl1_0 where fl1_0.type=? and date_format(fl1_0.log_date,'%Y-%m')=?
-Hibernate: select sum(fl1_0.amount) from financial_log fl1_0 where fl1_0.type=? and date_format(fl1_0.log_date,'%Y-%m')=?
-Hibernate: select sum(fl1_0.amount) from financial_log fl1_0 where fl1_0.type=? and date_format(fl1_0.log_date,'%Y-%m')=?
+  <testcase name="getMonthlyStats_shouldReturnOkForAdmin" classname="com.tanyourpeach.backend.controller.AdminStatsControllerIntegrationTest" time="1.035">
+    <error message="Could not open JPA EntityManager for transaction" type="org.springframework.transaction.CannotCreateTransactionException"><![CDATA[org.springframework.transaction.CannotCreateTransactionException: Could not open JPA EntityManager for transaction
+	at org.springframework.orm.jpa.JpaTransactionManager.doBegin(JpaTransactionManager.java:466)
+	at org.springframework.transaction.support.AbstractPlatformTransactionManager.startTransaction(AbstractPlatformTransactionManager.java:532)
+	at org.springframework.transaction.support.AbstractPlatformTransactionManager.getTransaction(AbstractPlatformTransactionManager.java:405)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.createTransactionIfNecessary(TransactionAspectSupport.java:639)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:374)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:138)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.data.jpa.repository.support.CrudMethodMetadataPostProcessor$CrudMethodMetadataPopulatingMethodInterceptor.invoke(CrudMethodMetadataPostProcessor.java:165)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:223)
+	at jdk.proxy2/jdk.proxy2.$Proxy161.deleteAll(Unknown Source)
+	at com.tanyourpeach.backend.util.TestDataCleaner.cleanAll(TestDataCleaner.java:38)
+	at com.tanyourpeach.backend.controller.AdminStatsControllerIntegrationTest.setUp(AdminStatsControllerIntegrationTest.java:42)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+Caused by: org.hibernate.exception.JDBCConnectionException: Unable to acquire JDBC Connection [Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.] [n/a]
+	at org.hibernate.exception.internal.SQLStateConversionDelegate.convert(SQLStateConversionDelegate.java:100)
+	at org.hibernate.exception.internal.StandardSQLExceptionConverter.convert(StandardSQLExceptionConverter.java:58)
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:108)
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:94)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.acquireConnectionIfNeeded(LogicalConnectionManagedImpl.java:129)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.getPhysicalConnection(LogicalConnectionManagedImpl.java:156)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.getConnectionForTransactionManagement(LogicalConnectionManagedImpl.java:286)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.begin(LogicalConnectionManagedImpl.java:294)
+	at org.hibernate.resource.transaction.backend.jdbc.internal.JdbcResourceLocalTransactionCoordinatorImpl$TransactionDriverControlImpl.begin(JdbcResourceLocalTransactionCoordinatorImpl.java:232)
+	at org.hibernate.engine.transaction.internal.TransactionImpl.begin(TransactionImpl.java:83)
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.beginTransaction(HibernateJpaDialect.java:176)
+	at org.springframework.orm.jpa.JpaTransactionManager.doBegin(JpaTransactionManager.java:420)
+	... 17 more
+Caused by: com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at com.mysql.cj.jdbc.exceptions.SQLError.createCommunicationsException(SQLError.java:165)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:55)
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:837)
+	at com.mysql.cj.jdbc.ConnectionImpl.<init>(ConnectionImpl.java:420)
+	at com.mysql.cj.jdbc.ConnectionImpl.getInstance(ConnectionImpl.java:238)
+	at com.mysql.cj.jdbc.NonRegisteringDriver.connect(NonRegisteringDriver.java:180)
+	at com.zaxxer.hikari.util.DriverDataSource.getConnection(DriverDataSource.java:139)
+	at com.zaxxer.hikari.pool.PoolBase.newConnection(PoolBase.java:368)
+	at com.zaxxer.hikari.pool.PoolBase.newPoolEntry(PoolBase.java:205)
+	at com.zaxxer.hikari.pool.HikariPool.createPoolEntry(HikariPool.java:483)
+	at com.zaxxer.hikari.pool.HikariPool.checkFailFast(HikariPool.java:571)
+	at com.zaxxer.hikari.pool.HikariPool.<init>(HikariPool.java:101)
+	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:111)
+	at org.hibernate.engine.jdbc.connections.internal.DatasourceConnectionProviderImpl.getConnection(DatasourceConnectionProviderImpl.java:126)
+	at org.hibernate.internal.NonContextualJdbcConnectionAccess.obtainConnection(NonContextualJdbcConnectionAccess.java:46)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.acquireConnectionIfNeeded(LogicalConnectionManagedImpl.java:126)
+	... 24 more
+Caused by: com.mysql.cj.exceptions.CJCommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:499)
+	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:480)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:52)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:95)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:140)
+	at com.mysql.cj.exceptions.ExceptionFactory.createCommunicationsException(ExceptionFactory.java:156)
+	at com.mysql.cj.protocol.a.NativeSocketConnection.connect(NativeSocketConnection.java:79)
+	at com.mysql.cj.NativeSession.connect(NativeSession.java:142)
+	at com.mysql.cj.jdbc.ConnectionImpl.connectOneTryOnly(ConnectionImpl.java:961)
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:825)
+	... 37 more
+Caused by: java.net.ConnectException: Connection refused: no further information
+	at java.base/sun.nio.ch.Net.pollConnect(Native Method)
+	at java.base/sun.nio.ch.Net.pollConnectNow(Net.java:672)
+	at java.base/sun.nio.ch.NioSocketImpl.timedFinishConnect(NioSocketImpl.java:547)
+	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:602)
+	at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:327)
+	at java.base/java.net.Socket.connect(Socket.java:633)
+	at com.mysql.cj.protocol.StandardSocketFactory.connect(StandardSocketFactory.java:144)
+	at com.mysql.cj.protocol.a.NativeSocketConnection.connect(NativeSocketConnection.java:53)
+	... 40 more
+]]></error>
+    <system-out><![CDATA[2025-10-07T00:03:30.213-04:00  INFO 11508 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-10-07T00:03:31.230-04:00  WARN 11508 --- [           main] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 08S01
+2025-10-07T00:03:31.230-04:00 ERROR 11508 --- [           main] o.h.engine.jdbc.spi.SqlExceptionHelper   : Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
 ]]></system-out>
   </testcase>
-  <testcase name="allEndpoints_shouldReturnForbiddenIfTokenMissingBearerPrefix" classname="com.tanyourpeach.backend.controller.AdminStatsControllerIntegrationTest" time="0.196">
-    <system-out><![CDATA[Hibernate: select ash1_0.status_history_id,ash1_0.appointment_id,ash1_0.changed_at,ash1_0.changed_by_email,ash1_0.changed_by_user_id,ash1_0.status from appointment_status_history ash1_0
-Hibernate: select r1_0.receipt_id,r1_0.appointment_id,r1_0.date_issued,r1_0.notes,r1_0.payment_method,r1_0.total_amount from receipts r1_0
-Hibernate: select fl1_0.log_id,fl1_0.amount,fl1_0.description,fl1_0.log_date,fl1_0.reference_id,fl1_0.source,fl1_0.type from financial_log fl1_0
-Hibernate: select siu1_0.item_id,siu1_0.service_id,siu1_0.quantity_used from service_inventory_usage siu1_0
-Hibernate: select a1_0.appointment_id,a1_0.appointment_date,a1_0.availability_slot_id,a1_0.base_price,a1_0.client_address,a1_0.client_email,a1_0.client_name,a1_0.created_at,a1_0.distance_miles,a1_0.notes,a1_0.service_id,a1_0.status,a1_0.total_price,a1_0.travel_fee,a1_0.user_id from appointments a1_0
-Hibernate: select a1_0.slot_id,a1_0.created_at,a1_0.date,a1_0.end_time,a1_0.is_booked,a1_0.notes,a1_0.start_time from availabilities a1_0
-Hibernate: select i1_0.item_id,i1_0.name,i1_0.last_updated,i1_0.low_stock_threshold,i1_0.notes,i1_0.quantity,i1_0.total_spent,i1_0.unit_cost from inventory i1_0
-Hibernate: select ts1_0.service_id,ts1_0.base_price,ts1_0.created_at,ts1_0.description,ts1_0.duration_minutes,ts1_0.is_active,ts1_0.name,ts1_0.updated_at from services ts1_0
-Hibernate: select u1_0.user_id,u1_0.address,u1_0.created_at,u1_0.email,u1_0.is_admin,u1_0.name,u1_0.password_hash from users u1_0
-Hibernate: delete from users where user_id=?
-Hibernate: delete from users where user_id=?
-Hibernate: insert into users (address,created_at,email,is_admin,name,password_hash) values (?,?,?,?,?,?)
-Hibernate: insert into users (address,created_at,email,is_admin,name,password_hash) values (?,?,?,?,?,?)
-Hibernate: select u1_0.user_id,u1_0.address,u1_0.created_at,u1_0.email,u1_0.is_admin,u1_0.name,u1_0.password_hash from users u1_0 where u1_0.email is null
-Hibernate: select u1_0.user_id,u1_0.address,u1_0.created_at,u1_0.email,u1_0.is_admin,u1_0.name,u1_0.password_hash from users u1_0 where u1_0.email is null
-Hibernate: select u1_0.user_id,u1_0.address,u1_0.created_at,u1_0.email,u1_0.is_admin,u1_0.name,u1_0.password_hash from users u1_0 where u1_0.email is null
-Hibernate: select u1_0.user_id,u1_0.address,u1_0.created_at,u1_0.email,u1_0.is_admin,u1_0.name,u1_0.password_hash from users u1_0 where u1_0.email is null
+  <testcase name="allEndpoints_shouldReturnForbiddenIfTokenMissingBearerPrefix" classname="com.tanyourpeach.backend.controller.AdminStatsControllerIntegrationTest" time="1.032">
+    <error message="Could not open JPA EntityManager for transaction" type="org.springframework.transaction.CannotCreateTransactionException"><![CDATA[org.springframework.transaction.CannotCreateTransactionException: Could not open JPA EntityManager for transaction
+	at org.springframework.orm.jpa.JpaTransactionManager.doBegin(JpaTransactionManager.java:466)
+	at org.springframework.transaction.support.AbstractPlatformTransactionManager.startTransaction(AbstractPlatformTransactionManager.java:532)
+	at org.springframework.transaction.support.AbstractPlatformTransactionManager.getTransaction(AbstractPlatformTransactionManager.java:405)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.createTransactionIfNecessary(TransactionAspectSupport.java:639)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:374)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:138)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.data.jpa.repository.support.CrudMethodMetadataPostProcessor$CrudMethodMetadataPopulatingMethodInterceptor.invoke(CrudMethodMetadataPostProcessor.java:165)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:223)
+	at jdk.proxy2/jdk.proxy2.$Proxy161.deleteAll(Unknown Source)
+	at com.tanyourpeach.backend.util.TestDataCleaner.cleanAll(TestDataCleaner.java:38)
+	at com.tanyourpeach.backend.controller.AdminStatsControllerIntegrationTest.setUp(AdminStatsControllerIntegrationTest.java:42)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+Caused by: org.hibernate.exception.JDBCConnectionException: Unable to acquire JDBC Connection [Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.] [n/a]
+	at org.hibernate.exception.internal.SQLStateConversionDelegate.convert(SQLStateConversionDelegate.java:100)
+	at org.hibernate.exception.internal.StandardSQLExceptionConverter.convert(StandardSQLExceptionConverter.java:58)
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:108)
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:94)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.acquireConnectionIfNeeded(LogicalConnectionManagedImpl.java:129)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.getPhysicalConnection(LogicalConnectionManagedImpl.java:156)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.getConnectionForTransactionManagement(LogicalConnectionManagedImpl.java:286)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.begin(LogicalConnectionManagedImpl.java:294)
+	at org.hibernate.resource.transaction.backend.jdbc.internal.JdbcResourceLocalTransactionCoordinatorImpl$TransactionDriverControlImpl.begin(JdbcResourceLocalTransactionCoordinatorImpl.java:232)
+	at org.hibernate.engine.transaction.internal.TransactionImpl.begin(TransactionImpl.java:83)
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.beginTransaction(HibernateJpaDialect.java:176)
+	at org.springframework.orm.jpa.JpaTransactionManager.doBegin(JpaTransactionManager.java:420)
+	... 17 more
+Caused by: com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at com.mysql.cj.jdbc.exceptions.SQLError.createCommunicationsException(SQLError.java:165)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:55)
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:837)
+	at com.mysql.cj.jdbc.ConnectionImpl.<init>(ConnectionImpl.java:420)
+	at com.mysql.cj.jdbc.ConnectionImpl.getInstance(ConnectionImpl.java:238)
+	at com.mysql.cj.jdbc.NonRegisteringDriver.connect(NonRegisteringDriver.java:180)
+	at com.zaxxer.hikari.util.DriverDataSource.getConnection(DriverDataSource.java:139)
+	at com.zaxxer.hikari.pool.PoolBase.newConnection(PoolBase.java:368)
+	at com.zaxxer.hikari.pool.PoolBase.newPoolEntry(PoolBase.java:205)
+	at com.zaxxer.hikari.pool.HikariPool.createPoolEntry(HikariPool.java:483)
+	at com.zaxxer.hikari.pool.HikariPool.checkFailFast(HikariPool.java:571)
+	at com.zaxxer.hikari.pool.HikariPool.<init>(HikariPool.java:101)
+	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:111)
+	at org.hibernate.engine.jdbc.connections.internal.DatasourceConnectionProviderImpl.getConnection(DatasourceConnectionProviderImpl.java:126)
+	at org.hibernate.internal.NonContextualJdbcConnectionAccess.obtainConnection(NonContextualJdbcConnectionAccess.java:46)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.acquireConnectionIfNeeded(LogicalConnectionManagedImpl.java:126)
+	... 24 more
+Caused by: com.mysql.cj.exceptions.CJCommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:499)
+	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:480)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:52)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:95)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:140)
+	at com.mysql.cj.exceptions.ExceptionFactory.createCommunicationsException(ExceptionFactory.java:156)
+	at com.mysql.cj.protocol.a.NativeSocketConnection.connect(NativeSocketConnection.java:79)
+	at com.mysql.cj.NativeSession.connect(NativeSession.java:142)
+	at com.mysql.cj.jdbc.ConnectionImpl.connectOneTryOnly(ConnectionImpl.java:961)
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:825)
+	... 37 more
+Caused by: java.net.ConnectException: Connection refused: no further information
+	at java.base/sun.nio.ch.Net.pollConnect(Native Method)
+	at java.base/sun.nio.ch.Net.pollConnectNow(Net.java:672)
+	at java.base/sun.nio.ch.NioSocketImpl.timedFinishConnect(NioSocketImpl.java:547)
+	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:602)
+	at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:327)
+	at java.base/java.net.Socket.connect(Socket.java:633)
+	at com.mysql.cj.protocol.StandardSocketFactory.connect(StandardSocketFactory.java:144)
+	at com.mysql.cj.protocol.a.NativeSocketConnection.connect(NativeSocketConnection.java:53)
+	... 40 more
+]]></error>
+    <system-out><![CDATA[2025-10-07T00:03:31.246-04:00  INFO 11508 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-10-07T00:03:32.259-04:00  WARN 11508 --- [           main] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 08S01
+2025-10-07T00:03:32.260-04:00 ERROR 11508 --- [           main] o.h.engine.jdbc.spi.SqlExceptionHelper   : Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
 ]]></system-out>
   </testcase>
-  <testcase name="allEndpoints_shouldReturnForbiddenForNonAdmin" classname="com.tanyourpeach.backend.controller.AdminStatsControllerIntegrationTest" time="0.176">
-    <system-out><![CDATA[Hibernate: select ash1_0.status_history_id,ash1_0.appointment_id,ash1_0.changed_at,ash1_0.changed_by_email,ash1_0.changed_by_user_id,ash1_0.status from appointment_status_history ash1_0
-Hibernate: select r1_0.receipt_id,r1_0.appointment_id,r1_0.date_issued,r1_0.notes,r1_0.payment_method,r1_0.total_amount from receipts r1_0
-Hibernate: select fl1_0.log_id,fl1_0.amount,fl1_0.description,fl1_0.log_date,fl1_0.reference_id,fl1_0.source,fl1_0.type from financial_log fl1_0
-Hibernate: select siu1_0.item_id,siu1_0.service_id,siu1_0.quantity_used from service_inventory_usage siu1_0
-Hibernate: select a1_0.appointment_id,a1_0.appointment_date,a1_0.availability_slot_id,a1_0.base_price,a1_0.client_address,a1_0.client_email,a1_0.client_name,a1_0.created_at,a1_0.distance_miles,a1_0.notes,a1_0.service_id,a1_0.status,a1_0.total_price,a1_0.travel_fee,a1_0.user_id from appointments a1_0
-Hibernate: select a1_0.slot_id,a1_0.created_at,a1_0.date,a1_0.end_time,a1_0.is_booked,a1_0.notes,a1_0.start_time from availabilities a1_0
-Hibernate: select i1_0.item_id,i1_0.name,i1_0.last_updated,i1_0.low_stock_threshold,i1_0.notes,i1_0.quantity,i1_0.total_spent,i1_0.unit_cost from inventory i1_0
-Hibernate: select ts1_0.service_id,ts1_0.base_price,ts1_0.created_at,ts1_0.description,ts1_0.duration_minutes,ts1_0.is_active,ts1_0.name,ts1_0.updated_at from services ts1_0
-Hibernate: select u1_0.user_id,u1_0.address,u1_0.created_at,u1_0.email,u1_0.is_admin,u1_0.name,u1_0.password_hash from users u1_0
-Hibernate: delete from users where user_id=?
-Hibernate: delete from users where user_id=?
-Hibernate: insert into users (address,created_at,email,is_admin,name,password_hash) values (?,?,?,?,?,?)
-Hibernate: insert into users (address,created_at,email,is_admin,name,password_hash) values (?,?,?,?,?,?)
-Hibernate: select u1_0.user_id,u1_0.address,u1_0.created_at,u1_0.email,u1_0.is_admin,u1_0.name,u1_0.password_hash from users u1_0 where u1_0.email=?
-Hibernate: select u1_0.user_id,u1_0.address,u1_0.created_at,u1_0.email,u1_0.is_admin,u1_0.name,u1_0.password_hash from users u1_0 where u1_0.email=?
-Hibernate: select u1_0.user_id,u1_0.address,u1_0.created_at,u1_0.email,u1_0.is_admin,u1_0.name,u1_0.password_hash from users u1_0 where u1_0.email=?
-Hibernate: select u1_0.user_id,u1_0.address,u1_0.created_at,u1_0.email,u1_0.is_admin,u1_0.name,u1_0.password_hash from users u1_0 where u1_0.email=?
+  <testcase name="allEndpoints_shouldReturnForbiddenForNonAdmin" classname="com.tanyourpeach.backend.controller.AdminStatsControllerIntegrationTest" time="1.019">
+    <error message="Could not open JPA EntityManager for transaction" type="org.springframework.transaction.CannotCreateTransactionException"><![CDATA[org.springframework.transaction.CannotCreateTransactionException: Could not open JPA EntityManager for transaction
+	at org.springframework.orm.jpa.JpaTransactionManager.doBegin(JpaTransactionManager.java:466)
+	at org.springframework.transaction.support.AbstractPlatformTransactionManager.startTransaction(AbstractPlatformTransactionManager.java:532)
+	at org.springframework.transaction.support.AbstractPlatformTransactionManager.getTransaction(AbstractPlatformTransactionManager.java:405)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.createTransactionIfNecessary(TransactionAspectSupport.java:639)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:374)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:138)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.data.jpa.repository.support.CrudMethodMetadataPostProcessor$CrudMethodMetadataPopulatingMethodInterceptor.invoke(CrudMethodMetadataPostProcessor.java:165)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:223)
+	at jdk.proxy2/jdk.proxy2.$Proxy161.deleteAll(Unknown Source)
+	at com.tanyourpeach.backend.util.TestDataCleaner.cleanAll(TestDataCleaner.java:38)
+	at com.tanyourpeach.backend.controller.AdminStatsControllerIntegrationTest.setUp(AdminStatsControllerIntegrationTest.java:42)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+Caused by: org.hibernate.exception.JDBCConnectionException: Unable to acquire JDBC Connection [Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.] [n/a]
+	at org.hibernate.exception.internal.SQLStateConversionDelegate.convert(SQLStateConversionDelegate.java:100)
+	at org.hibernate.exception.internal.StandardSQLExceptionConverter.convert(StandardSQLExceptionConverter.java:58)
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:108)
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:94)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.acquireConnectionIfNeeded(LogicalConnectionManagedImpl.java:129)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.getPhysicalConnection(LogicalConnectionManagedImpl.java:156)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.getConnectionForTransactionManagement(LogicalConnectionManagedImpl.java:286)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.begin(LogicalConnectionManagedImpl.java:294)
+	at org.hibernate.resource.transaction.backend.jdbc.internal.JdbcResourceLocalTransactionCoordinatorImpl$TransactionDriverControlImpl.begin(JdbcResourceLocalTransactionCoordinatorImpl.java:232)
+	at org.hibernate.engine.transaction.internal.TransactionImpl.begin(TransactionImpl.java:83)
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.beginTransaction(HibernateJpaDialect.java:176)
+	at org.springframework.orm.jpa.JpaTransactionManager.doBegin(JpaTransactionManager.java:420)
+	... 17 more
+Caused by: com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at com.mysql.cj.jdbc.exceptions.SQLError.createCommunicationsException(SQLError.java:165)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:55)
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:837)
+	at com.mysql.cj.jdbc.ConnectionImpl.<init>(ConnectionImpl.java:420)
+	at com.mysql.cj.jdbc.ConnectionImpl.getInstance(ConnectionImpl.java:238)
+	at com.mysql.cj.jdbc.NonRegisteringDriver.connect(NonRegisteringDriver.java:180)
+	at com.zaxxer.hikari.util.DriverDataSource.getConnection(DriverDataSource.java:139)
+	at com.zaxxer.hikari.pool.PoolBase.newConnection(PoolBase.java:368)
+	at com.zaxxer.hikari.pool.PoolBase.newPoolEntry(PoolBase.java:205)
+	at com.zaxxer.hikari.pool.HikariPool.createPoolEntry(HikariPool.java:483)
+	at com.zaxxer.hikari.pool.HikariPool.checkFailFast(HikariPool.java:571)
+	at com.zaxxer.hikari.pool.HikariPool.<init>(HikariPool.java:101)
+	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:111)
+	at org.hibernate.engine.jdbc.connections.internal.DatasourceConnectionProviderImpl.getConnection(DatasourceConnectionProviderImpl.java:126)
+	at org.hibernate.internal.NonContextualJdbcConnectionAccess.obtainConnection(NonContextualJdbcConnectionAccess.java:46)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.acquireConnectionIfNeeded(LogicalConnectionManagedImpl.java:126)
+	... 24 more
+Caused by: com.mysql.cj.exceptions.CJCommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:499)
+	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:480)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:52)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:95)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:140)
+	at com.mysql.cj.exceptions.ExceptionFactory.createCommunicationsException(ExceptionFactory.java:156)
+	at com.mysql.cj.protocol.a.NativeSocketConnection.connect(NativeSocketConnection.java:79)
+	at com.mysql.cj.NativeSession.connect(NativeSession.java:142)
+	at com.mysql.cj.jdbc.ConnectionImpl.connectOneTryOnly(ConnectionImpl.java:961)
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:825)
+	... 37 more
+Caused by: java.net.ConnectException: Connection refused: no further information
+	at java.base/sun.nio.ch.Net.pollConnect(Native Method)
+	at java.base/sun.nio.ch.Net.pollConnectNow(Net.java:672)
+	at java.base/sun.nio.ch.NioSocketImpl.timedFinishConnect(NioSocketImpl.java:547)
+	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:602)
+	at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:327)
+	at java.base/java.net.Socket.connect(Socket.java:633)
+	at com.mysql.cj.protocol.StandardSocketFactory.connect(StandardSocketFactory.java:144)
+	at com.mysql.cj.protocol.a.NativeSocketConnection.connect(NativeSocketConnection.java:53)
+	... 40 more
+]]></error>
+    <system-out><![CDATA[2025-10-07T00:03:32.279-04:00  INFO 11508 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-10-07T00:03:33.287-04:00  WARN 11508 --- [           main] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 08S01
+2025-10-07T00:03:33.287-04:00 ERROR 11508 --- [           main] o.h.engine.jdbc.spi.SqlExceptionHelper   : Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
 ]]></system-out>
   </testcase>
-  <testcase name="getSummary_shouldReturnOkForAdmin" classname="com.tanyourpeach.backend.controller.AdminStatsControllerIntegrationTest" time="0.147">
-    <system-out><![CDATA[Hibernate: select ash1_0.status_history_id,ash1_0.appointment_id,ash1_0.changed_at,ash1_0.changed_by_email,ash1_0.changed_by_user_id,ash1_0.status from appointment_status_history ash1_0
-Hibernate: select r1_0.receipt_id,r1_0.appointment_id,r1_0.date_issued,r1_0.notes,r1_0.payment_method,r1_0.total_amount from receipts r1_0
-Hibernate: select fl1_0.log_id,fl1_0.amount,fl1_0.description,fl1_0.log_date,fl1_0.reference_id,fl1_0.source,fl1_0.type from financial_log fl1_0
-Hibernate: select siu1_0.item_id,siu1_0.service_id,siu1_0.quantity_used from service_inventory_usage siu1_0
-Hibernate: select a1_0.appointment_id,a1_0.appointment_date,a1_0.availability_slot_id,a1_0.base_price,a1_0.client_address,a1_0.client_email,a1_0.client_name,a1_0.created_at,a1_0.distance_miles,a1_0.notes,a1_0.service_id,a1_0.status,a1_0.total_price,a1_0.travel_fee,a1_0.user_id from appointments a1_0
-Hibernate: select a1_0.slot_id,a1_0.created_at,a1_0.date,a1_0.end_time,a1_0.is_booked,a1_0.notes,a1_0.start_time from availabilities a1_0
-Hibernate: select i1_0.item_id,i1_0.name,i1_0.last_updated,i1_0.low_stock_threshold,i1_0.notes,i1_0.quantity,i1_0.total_spent,i1_0.unit_cost from inventory i1_0
-Hibernate: select ts1_0.service_id,ts1_0.base_price,ts1_0.created_at,ts1_0.description,ts1_0.duration_minutes,ts1_0.is_active,ts1_0.name,ts1_0.updated_at from services ts1_0
-Hibernate: select u1_0.user_id,u1_0.address,u1_0.created_at,u1_0.email,u1_0.is_admin,u1_0.name,u1_0.password_hash from users u1_0
-Hibernate: delete from users where user_id=?
-Hibernate: delete from users where user_id=?
-Hibernate: insert into users (address,created_at,email,is_admin,name,password_hash) values (?,?,?,?,?,?)
-Hibernate: insert into users (address,created_at,email,is_admin,name,password_hash) values (?,?,?,?,?,?)
-Hibernate: select u1_0.user_id,u1_0.address,u1_0.created_at,u1_0.email,u1_0.is_admin,u1_0.name,u1_0.password_hash from users u1_0 where u1_0.email=?
-Hibernate: select sum(fl1_0.amount) from financial_log fl1_0 where fl1_0.type=?
-Hibernate: select sum(fl1_0.amount) from financial_log fl1_0 where fl1_0.type=?
+  <testcase name="getSummary_shouldReturnOkForAdmin" classname="com.tanyourpeach.backend.controller.AdminStatsControllerIntegrationTest" time="1.034">
+    <error message="Could not open JPA EntityManager for transaction" type="org.springframework.transaction.CannotCreateTransactionException"><![CDATA[org.springframework.transaction.CannotCreateTransactionException: Could not open JPA EntityManager for transaction
+	at org.springframework.orm.jpa.JpaTransactionManager.doBegin(JpaTransactionManager.java:466)
+	at org.springframework.transaction.support.AbstractPlatformTransactionManager.startTransaction(AbstractPlatformTransactionManager.java:532)
+	at org.springframework.transaction.support.AbstractPlatformTransactionManager.getTransaction(AbstractPlatformTransactionManager.java:405)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.createTransactionIfNecessary(TransactionAspectSupport.java:639)
+	at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:374)
+	at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:138)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.data.jpa.repository.support.CrudMethodMetadataPostProcessor$CrudMethodMetadataPopulatingMethodInterceptor.invoke(CrudMethodMetadataPostProcessor.java:165)
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184)
+	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:223)
+	at jdk.proxy2/jdk.proxy2.$Proxy161.deleteAll(Unknown Source)
+	at com.tanyourpeach.backend.util.TestDataCleaner.cleanAll(TestDataCleaner.java:38)
+	at com.tanyourpeach.backend.controller.AdminStatsControllerIntegrationTest.setUp(AdminStatsControllerIntegrationTest.java:42)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:568)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+Caused by: org.hibernate.exception.JDBCConnectionException: Unable to acquire JDBC Connection [Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.] [n/a]
+	at org.hibernate.exception.internal.SQLStateConversionDelegate.convert(SQLStateConversionDelegate.java:100)
+	at org.hibernate.exception.internal.StandardSQLExceptionConverter.convert(StandardSQLExceptionConverter.java:58)
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:108)
+	at org.hibernate.engine.jdbc.spi.SqlExceptionHelper.convert(SqlExceptionHelper.java:94)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.acquireConnectionIfNeeded(LogicalConnectionManagedImpl.java:129)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.getPhysicalConnection(LogicalConnectionManagedImpl.java:156)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.getConnectionForTransactionManagement(LogicalConnectionManagedImpl.java:286)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.begin(LogicalConnectionManagedImpl.java:294)
+	at org.hibernate.resource.transaction.backend.jdbc.internal.JdbcResourceLocalTransactionCoordinatorImpl$TransactionDriverControlImpl.begin(JdbcResourceLocalTransactionCoordinatorImpl.java:232)
+	at org.hibernate.engine.transaction.internal.TransactionImpl.begin(TransactionImpl.java:83)
+	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.beginTransaction(HibernateJpaDialect.java:176)
+	at org.springframework.orm.jpa.JpaTransactionManager.doBegin(JpaTransactionManager.java:420)
+	... 17 more
+Caused by: com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at com.mysql.cj.jdbc.exceptions.SQLError.createCommunicationsException(SQLError.java:165)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:55)
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:837)
+	at com.mysql.cj.jdbc.ConnectionImpl.<init>(ConnectionImpl.java:420)
+	at com.mysql.cj.jdbc.ConnectionImpl.getInstance(ConnectionImpl.java:238)
+	at com.mysql.cj.jdbc.NonRegisteringDriver.connect(NonRegisteringDriver.java:180)
+	at com.zaxxer.hikari.util.DriverDataSource.getConnection(DriverDataSource.java:139)
+	at com.zaxxer.hikari.pool.PoolBase.newConnection(PoolBase.java:368)
+	at com.zaxxer.hikari.pool.PoolBase.newPoolEntry(PoolBase.java:205)
+	at com.zaxxer.hikari.pool.HikariPool.createPoolEntry(HikariPool.java:483)
+	at com.zaxxer.hikari.pool.HikariPool.checkFailFast(HikariPool.java:571)
+	at com.zaxxer.hikari.pool.HikariPool.<init>(HikariPool.java:101)
+	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:111)
+	at org.hibernate.engine.jdbc.connections.internal.DatasourceConnectionProviderImpl.getConnection(DatasourceConnectionProviderImpl.java:126)
+	at org.hibernate.internal.NonContextualJdbcConnectionAccess.obtainConnection(NonContextualJdbcConnectionAccess.java:46)
+	at org.hibernate.resource.jdbc.internal.LogicalConnectionManagedImpl.acquireConnectionIfNeeded(LogicalConnectionManagedImpl.java:126)
+	... 24 more
+Caused by: com.mysql.cj.exceptions.CJCommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at java.base/jdk.internal.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:499)
+	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:480)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:52)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:95)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:140)
+	at com.mysql.cj.exceptions.ExceptionFactory.createCommunicationsException(ExceptionFactory.java:156)
+	at com.mysql.cj.protocol.a.NativeSocketConnection.connect(NativeSocketConnection.java:79)
+	at com.mysql.cj.NativeSession.connect(NativeSession.java:142)
+	at com.mysql.cj.jdbc.ConnectionImpl.connectOneTryOnly(ConnectionImpl.java:961)
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:825)
+	... 37 more
+Caused by: java.net.ConnectException: Connection refused: no further information
+	at java.base/sun.nio.ch.Net.pollConnect(Native Method)
+	at java.base/sun.nio.ch.Net.pollConnectNow(Net.java:672)
+	at java.base/sun.nio.ch.NioSocketImpl.timedFinishConnect(NioSocketImpl.java:547)
+	at java.base/sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:602)
+	at java.base/java.net.SocksSocketImpl.connect(SocksSocketImpl.java:327)
+	at java.base/java.net.Socket.connect(Socket.java:633)
+	at com.mysql.cj.protocol.StandardSocketFactory.connect(StandardSocketFactory.java:144)
+	at com.mysql.cj.protocol.a.NativeSocketConnection.connect(NativeSocketConnection.java:53)
+	... 40 more
+]]></error>
+    <system-out><![CDATA[2025-10-07T00:03:33.298-04:00  INFO 11508 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-10-07T00:03:34.313-04:00  WARN 11508 --- [           main] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 08S01
+2025-10-07T00:03:34.314-04:00 ERROR 11508 --- [           main] o.h.engine.jdbc.spi.SqlExceptionHelper   : Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
 ]]></system-out>
   </testcase>
 </testsuite>

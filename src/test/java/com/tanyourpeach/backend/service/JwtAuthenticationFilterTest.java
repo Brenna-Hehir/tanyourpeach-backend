@@ -157,4 +157,41 @@ class JwtAuthenticationFilterTest {
         org.junit.jupiter.api.Assertions.assertTrue(body.contains("\"status\":401"));
         verify(filterChain, never()).doFilter(any(), any());
     }
+
+    @org.junit.jupiter.api.Test
+    void shouldReturn401_whenExtractUsernameThrows() throws Exception {
+        var request = new org.springframework.mock.web.MockHttpServletRequest();
+        request.addHeader("Authorization", "Bearer boom");
+        var response = new org.springframework.mock.web.MockHttpServletResponse();
+
+        org.mockito.Mockito.when(jwtService.extractUsername("boom"))
+            .thenThrow(new RuntimeException("parse error"));
+
+        jwtFilter.doFilterInternal(request, response, filterChain);
+
+        org.junit.jupiter.api.Assertions.assertEquals(401, response.getStatus());
+        org.junit.jupiter.api.Assertions.assertTrue(response.getContentAsString().contains("\"status\":401"));
+        org.mockito.Mockito.verify(filterChain, org.mockito.Mockito.never()).doFilter(
+            org.mockito.ArgumentMatchers.any(), org.mockito.ArgumentMatchers.any());
+    }
+
+    @org.junit.jupiter.api.Test
+    void shouldReturn401_whenIsTokenValidThrows() throws Exception {
+        var request = new org.springframework.mock.web.MockHttpServletRequest();
+        request.addHeader("Authorization", "Bearer badsig");
+        var response = new org.springframework.mock.web.MockHttpServletResponse();
+
+        org.mockito.Mockito.when(jwtService.extractUsername("badsig")).thenReturn("user@example.com");
+        var userDetails = new org.springframework.security.core.userdetails.User("user@example.com", "x", java.util.Collections.emptyList());
+        org.mockito.Mockito.when(userDetailsService.loadUserByUsername("user@example.com")).thenReturn(userDetails);
+        org.mockito.Mockito.when(jwtService.isTokenValid("badsig", userDetails))
+            .thenThrow(new RuntimeException("signature invalid"));
+
+        jwtFilter.doFilterInternal(request, response, filterChain);
+
+        org.junit.jupiter.api.Assertions.assertEquals(401, response.getStatus());
+        org.junit.jupiter.api.Assertions.assertTrue(response.getContentAsString().contains("\"status\":401"));
+        org.mockito.Mockito.verify(filterChain, org.mockito.Mockito.never()).doFilter(
+            org.mockito.ArgumentMatchers.any(), org.mockito.ArgumentMatchers.any());
+    }
 }

@@ -1,69 +1,56 @@
 package com.tanyourpeach.backend.controller;
 
+import com.tanyourpeach.backend.dto.UserCreateDto;
+import com.tanyourpeach.backend.dto.UserUpdateDto;
+import com.tanyourpeach.backend.model.User;
+import com.tanyourpeach.backend.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import com.tanyourpeach.backend.model.User;
-import com.tanyourpeach.backend.repository.UserRepository;
-import com.tanyourpeach.backend.service.JwtService;
-import com.tanyourpeach.backend.service.UserService;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
 @CrossOrigin(origins = "*")
+@Validated
 public class UserController {
-
-    @Autowired
-    private JwtService jwtService;
-
-    @Autowired
-    private UserRepository userRepository;
 
     @Autowired
     private UserService userService;
 
-    // GET all users
+    // Admin-only listing (leave this as protected)
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
-    // GET user by ID
+    // Public: get user by id (404 if missing -> unified JSON via handler)
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id) {
-        return userService.getUserById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        return ResponseEntity.ok(userService.getUserByIdOrThrow(id));
     }
 
-    // POST create a new user
+    // Public: create (400 on validation, 409 on duplicate -> unified JSON)
     @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        User created = userService.createUser(user);
-        return created != null
-            ? ResponseEntity.status(HttpStatus.CREATED).body(created)
-            : ResponseEntity.badRequest().build();
+    public ResponseEntity<User> createUser(@Valid @RequestBody UserCreateDto dto) {
+        User created = userService.createUser(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
-    // PUT update an existing user
+    // Public: update (404 if missing, 409 email collision)
     @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User updatedUser) {
-        return userService.updateUser(id, updatedUser)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<User> updateUser(@PathVariable Long id, @Valid @RequestBody UserUpdateDto dto) {
+        return ResponseEntity.ok(userService.updateUser(id, dto));
     }
 
-    // DELETE user by ID
+    // Public: delete (404 if missing)
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-        return userService.deleteUser(id)
-                ? ResponseEntity.noContent().build()
-                : ResponseEntity.notFound().build();
+        userService.deleteUser(id);
+        return ResponseEntity.noContent().build();
     }
 }

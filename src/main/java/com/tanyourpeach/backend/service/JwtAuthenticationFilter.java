@@ -14,6 +14,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 
@@ -74,6 +75,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         final String jwt = authHeader.substring(7).trim();
+
+        if (!StringUtils.hasText(jwt)) {
+            authenticationEntryPoint(om())
+                .commence(request, response,
+                    new InsufficientAuthenticationException("Missing bearer token"));
+            return;
+        }
 
         // If already authenticated, skip re-auth
         if (SecurityContextHolder.getContext().getAuthentication() != null) {

@@ -16,6 +16,7 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.http.HttpMethod;
 
 import static com.tanyourpeach.backend.security.JsonAuthHandlers.authenticationEntryPoint;
 import static com.tanyourpeach.backend.security.JsonAuthHandlers.accessDeniedHandler;
@@ -47,24 +48,57 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http, ObjectMapper om) throws Exception {
         http
             .csrf(csrf -> csrf.disable())
-            .cors(cors -> { }) // configure if you need specific origins/headers
+
+            // CORS: inline config (Java 8 friendly). This makes preflight OPTIONS return 200.
+            .cors(cors -> cors.configurationSource(request -> {
+                org.springframework.web.cors.CorsConfiguration c = new org.springframework.web.cors.CorsConfiguration();
+                // For tests: allow all origins & methods; no credentials when using "*"
+                c.setAllowedOrigins(java.util.Collections.singletonList("*"));
+                c.setAllowedMethods(java.util.Arrays.asList("GET","POST","PUT","DELETE","PATCH","OPTIONS"));
+                c.setAllowedHeaders(java.util.Arrays.asList(
+                    "Authorization","Content-Type","Accept","Origin",
+                    "X-Correlation-Id","X-Requested-With",
+                    "Access-Control-Request-Method","Access-Control-Request-Headers"
+                ));
+                c.setExposedHeaders(java.util.Collections.singletonList("X-Correlation-Id"));
+                c.setAllowCredentials(false);
+                return c;
+            }))
+
             .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            // turn off legacy login/logout endpoints and browser prompts
             .httpBasic(b -> b.disable())
             .formLogin(f -> f.disable())
             .logout(l -> l.disable())
+            .requestCache(rc -> rc.disable())
+
             .authorizeHttpRequests(auth -> auth
-            // public endpoints
+                // ⬇️ MUST be first so preflight is permitted before any other rule
+                .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
+
+                // public infra
+                .requestMatchers("/actuator/health", "/error", "/assets/**", "/static/**").permitAll()
+
+                // your public pages
+                .requestMatchers("/", "/home", "/about", "/contact", "/services/**", "/users/**").permitAll()
+
+                // auth endpoints
                 .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers("/actuator/health", "/error").permitAll()
-                // if you have OpenAPI/Swagger later, uncomment:
-                // .requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**").permitAll()
-                .anyRequest().authenticated()
+
+                // ADMIN api — this is the route under test
+                .requestMatchers("/api/admin/**").hasRole("ADMIN")
+
+                // example of other protected apis
+                .requestMatchers("/api/user/**").authenticated()
+
+                // everything else public (tighten later if you want)
+                .anyRequest().permitAll()
             )
+
             .exceptionHandling(e -> e
                 .authenticationEntryPoint(authenticationEntryPoint(om)) // 401 JSON
                 .accessDeniedHandler(accessDeniedHandler(om))           // 403 JSON
             )
+
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

@@ -23,20 +23,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class UserControllerIntegrationTest {
 
-    @Autowired
-    private MockMvc mockMvc;
-
-    @Autowired
-    private ObjectMapper objectMapper;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private JwtService jwtService;
-
-    @Autowired
-    private TestDataCleaner testDataCleaner;
+    @Autowired private MockMvc mockMvc;
+    @Autowired private ObjectMapper objectMapper;
+    @Autowired private UserRepository userRepository;
+    @Autowired private JwtService jwtService;
+    @Autowired private TestDataCleaner testDataCleaner;
 
     private User testUser;
     private String adminToken;
@@ -89,129 +80,185 @@ class UserControllerIntegrationTest {
 
     @Test
     void createUser_shouldSucceed_withValidInput() throws Exception {
-        User newUser = new User();
-        newUser.setName("New User");
-        newUser.setEmail("newuser@example.com");
-        newUser.setPasswordHash("newpass");
-        newUser.setIsAdmin(true);
-        newUser.setAddress("456 Other St");
+        // DTO payload (password field, not passwordHash)
+        String payload = """
+            {
+              "name": "New User",
+              "email": "newuser@example.com",
+              "password": "newpass",
+              "isAdmin": true,
+              "address": "456 Other St"
+            }
+        """;
 
         mockMvc.perform(post("/api/users")
                         .header("Authorization", "Bearer " + adminToken)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(newUser)))
+                        .content(payload))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.email").value("newuser@example.com"));
     }
 
     @Test
     void createUser_shouldReturn400_whenMissingEmail() throws Exception {
-        User invalid = new User();
-        invalid.setName("No Email");
-        invalid.setPasswordHash("pass");
+        String payload = """
+            {"name":"No Email","password":"pass123"}
+        """;
 
         mockMvc.perform(post("/api/users")
-                        .header("Authorization", "Bearer " + adminToken)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(invalid)))
-                .andExpect(status().isBadRequest());
+                .header("Authorization", "Bearer " + adminToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(payload))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.status").value(400))
+            .andExpect(jsonPath("$.error").value("Bad Request"))
+            .andExpect(jsonPath("$.message").value("Field validation failed"))
+            .andExpect(jsonPath("$.path").value("/api/users"))
+            .andExpect(jsonPath("$.method").value("POST"))
+            .andExpect(jsonPath("$.timestamp").exists())
+            .andExpect(jsonPath("$.fieldErrors").isArray())
+            .andExpect(jsonPath("$.fieldErrors[0].field").exists())
+            .andExpect(jsonPath("$.fieldErrors[0].message").exists());
     }
 
     @Test
     void createUser_shouldReturn400_whenMissingPassword() throws Exception {
-        User invalid = new User();
-        invalid.setName("No Pass");
-        invalid.setEmail("nopass@example.com");
+        String payload = """
+            {
+              "name": "No Pass",
+              "email": "nopass@example.com"
+            }
+        """;
 
         mockMvc.perform(post("/api/users")
                         .header("Authorization", "Bearer " + adminToken)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(invalid)))
+                        .content(payload))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     void createUser_shouldReturn400_whenEmailInvalidFormat() throws Exception {
-        User invalid = new User();
-        invalid.setName("Bad Email");
-        invalid.setEmail("invalid-email");
-        invalid.setPasswordHash("pass");
+        String payload = """
+            {
+              "name": "Bad Email",
+              "email": "invalid-email",
+              "password": "pass"
+            }
+        """;
 
         mockMvc.perform(post("/api/users")
                         .header("Authorization", "Bearer " + adminToken)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(invalid)))
+                        .content(payload))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
-    void createUser_shouldReturn400_whenDuplicateEmail() throws Exception {
-        User duplicate = new User();
-        duplicate.setName("Duplicate");
-        duplicate.setEmail("test@example.com");
-        duplicate.setPasswordHash("pass");
-        duplicate.setIsAdmin(false);
+    void createUser_shouldReturn409_whenDuplicateEmail() throws Exception {
+        String payload = """
+            {"name":"Duplicate","email":"test@example.com","password":"pass123","isAdmin":false}
+        """;
 
         mockMvc.perform(post("/api/users")
-                        .header("Authorization", "Bearer " + adminToken)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(duplicate)))
-                .andExpect(status().isBadRequest());
+                .header("Authorization", "Bearer " + adminToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(payload))
+            .andExpect(status().isConflict())
+            .andExpect(jsonPath("$.status").value(409))
+            .andExpect(jsonPath("$.error").value("Conflict"))
+            .andExpect(jsonPath("$.message").value("Duplicate resource"))
+            .andExpect(jsonPath("$.path").value("/api/users"))
+            .andExpect(jsonPath("$.method").value("POST"))
+            .andExpect(jsonPath("$.timestamp").exists());
     }
 
     @Test
     void updateUser_shouldSucceed_withValidUpdate() throws Exception {
-        testUser.setName("Updated Name");
+        String payload = """
+            {
+              "name": "Updated Name",
+              "email": "updated@example.com",
+              "password": "newSecret",
+              "address": "New Address",
+              "isAdmin": true
+            }
+        """;
 
         mockMvc.perform(put("/api/users/" + testUser.getUserId())
                         .header("Authorization", "Bearer " + adminToken)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(testUser)))
+                        .content(payload))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value("Updated Name"));
+                .andExpect(jsonPath("$.name").value("Updated Name"))
+                .andExpect(jsonPath("$.email").value("updated@example.com"));
     }
 
     @Test
     void updateUser_shouldReturn404_whenNotFound() throws Exception {
-        testUser.setName("No Match");
+        String payload = """
+            {"name":"No Match","email":"nomatch@example.com","password":"secret12"}
+        """;
 
         mockMvc.perform(put("/api/users/99999")
-                        .header("Authorization", "Bearer " + adminToken)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(testUser)))
-                .andExpect(status().isNotFound());
+                .header("Authorization", "Bearer " + adminToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(payload))
+            .andExpect(status().isNotFound())
+            .andExpect(jsonPath("$.status").value(404))
+            .andExpect(jsonPath("$.error").value("Not Found"))
+            .andExpect(jsonPath("$.message").value("User not found"))
+            .andExpect(jsonPath("$.path").value("/api/users/99999"))
+            .andExpect(jsonPath("$.method").value("PUT"))
+            .andExpect(jsonPath("$.timestamp").exists());
     }
 
     @Test
     void updateUser_shouldReturn400_whenMissingName() throws Exception {
-        testUser.setName(null);
+        String payload = """
+            {
+              "name": null,
+              "email": "ok@example.com",
+              "password": "pw"
+            }
+        """;
 
         mockMvc.perform(put("/api/users/" + testUser.getUserId())
                         .header("Authorization", "Bearer " + adminToken)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(testUser)))
+                        .content(payload))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     void updateUser_shouldReturn400_whenMissingEmail() throws Exception {
-        testUser.setEmail(null);
+        String payload = """
+            {
+              "name": "Valid",
+              "password": "pw"
+            }
+        """;
 
         mockMvc.perform(put("/api/users/" + testUser.getUserId())
                         .header("Authorization", "Bearer " + adminToken)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(testUser)))
+                        .content(payload))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     void updateUser_shouldReturn400_whenMissingPassword() throws Exception {
-        testUser.setPasswordHash(null);
+        String payload = """
+            {
+              "name": "Valid",
+              "email": "valid@example.com"
+            }
+        """;
 
         mockMvc.perform(put("/api/users/" + testUser.getUserId())
                         .header("Authorization", "Bearer " + adminToken)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(testUser)))
+                        .content(payload))
                 .andExpect(status().isBadRequest());
     }
 

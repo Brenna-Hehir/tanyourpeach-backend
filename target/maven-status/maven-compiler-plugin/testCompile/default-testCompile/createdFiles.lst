@@ -1,7 +1,6 @@
 com\tanyourpeach\backend\controller\AdminStatsControllerTest.class
 com\tanyourpeach\backend\DbConnectionTest.class
 com\tanyourpeach\backend\service\AvailabilityServiceTest.class
-com\tanyourpeach\backend\service\UserServiceTest.class
 com\tanyourpeach\backend\controller\AuthControllerIntegrationTest.class
 com\tanyourpeach\backend\controller\FinancialLogControllerTest.class
 com\tanyourpeach\backend\controller\InventoryControllerTest.class
@@ -20,7 +19,6 @@ com\tanyourpeach\backend\service\FinancialLogServiceTest.class
 com\tanyourpeach\backend\controller\ReceiptControllerTest.class
 com\tanyourpeach\backend\service\ReceiptServiceTest.class
 com\tanyourpeach\backend\controller\AvailabilityControllerTest.class
-com\tanyourpeach\backend\controller\UserControllerTest.class
 com\tanyourpeach\backend\service\JwtAuthenticationFilterTest.class
 com\tanyourpeach\backend\controller\TanServiceControllerIntegrationTest.class
 com\tanyourpeach\backend\controller\AuthControllerTest.class

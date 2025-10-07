@@ -1,5 +1,7 @@
 package com.tanyourpeach.backend.controller;
 
+import com.tanyourpeach.backend.dto.UserCreateDto;
+import com.tanyourpeach.backend.dto.UserUpdateDto;
 import com.tanyourpeach.backend.model.User;
 import com.tanyourpeach.backend.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,9 +11,9 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -55,7 +57,7 @@ class UserControllerTest {
 
     @Test
     void getUserById_shouldReturnUser_ifFound() {
-        when(userService.getUserById(1L)).thenReturn(Optional.of(testUser));
+        when(userService.getUserByIdOrThrow(1L)).thenReturn(testUser);
 
         ResponseEntity<User> response = controller.getUserById(1L);
 
@@ -64,102 +66,94 @@ class UserControllerTest {
     }
 
     @Test
-    void getUserById_shouldReturn404_ifNotFound() {
-        when(userService.getUserById(1L)).thenReturn(Optional.empty());
+    void getUserById_shouldThrow404_ifNotFound() {
+        when(userService.getUserByIdOrThrow(1L))
+            .thenThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 
-        ResponseEntity<User> response = controller.getUserById(1L);
-
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        ResponseStatusException ex = assertThrows(ResponseStatusException.class,
+            () -> controller.getUserById(1L));
+        assertEquals(HttpStatus.NOT_FOUND, ex.getStatusCode());
     }
 
     @Test
     void createUser_shouldReturnCreatedUser() {
-        when(userService.createUser(testUser)).thenReturn(testUser);
+        UserCreateDto dto = new UserCreateDto();
+        dto.setName("Brenna");
+        dto.setEmail("brenna@example.com");
+        dto.setPassword("secret");
+        dto.setAddress("Peach St");
+        dto.setIsAdmin(false);
 
-        ResponseEntity<User> response = controller.createUser(testUser);
+        when(userService.createUser(any(UserCreateDto.class))).thenReturn(testUser);
+
+        ResponseEntity<User> response = controller.createUser(dto);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         assertEquals(testUser, response.getBody());
     }
 
     @Test
-    void createUser_shouldReturn400_whenInvalidInput() {
-        when(userService.createUser(any())).thenReturn(null);
-        ResponseEntity<User> response = controller.createUser(new User());
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    void createUser_shouldPropagate400_whenServiceSignalsBadRequest() {
+        UserCreateDto dto = new UserCreateDto();
+        // intentionally leave invalid to simulate service signaling a 400 (in real life, @Valid would catch this at MVC layer)
+        when(userService.createUser(any(UserCreateDto.class)))
+            .thenThrow(new ResponseStatusException(HttpStatus.BAD_REQUEST, "bad"));
+
+        ResponseStatusException ex = assertThrows(ResponseStatusException.class,
+            () -> controller.createUser(dto));
+        assertEquals(HttpStatus.BAD_REQUEST, ex.getStatusCode());
     }
 
     @Test
     void updateUser_shouldReturnUpdated_ifFound() {
-        when(userService.updateUser(eq(1L), any())).thenReturn(Optional.of(testUser));
+        UserUpdateDto dto = new UserUpdateDto();
+        dto.setName("Updated");
+        dto.setEmail("updated@example.com");
+        dto.setPassword("newSecret");
+        dto.setAddress("New Address");
+        dto.setIsAdmin(true);
 
-        ResponseEntity<User> response = controller.updateUser(1L, testUser);
+        when(userService.updateUser(eq(1L), any(UserUpdateDto.class))).thenReturn(testUser);
+
+        ResponseEntity<User> response = controller.updateUser(1L, dto);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(testUser, response.getBody());
     }
 
     @Test
-    void updateUser_shouldReturnEmpty_whenInvalidInput() {
-        User invalidUpdate = new User();
-        invalidUpdate.setName(""); // blank name
-        invalidUpdate.setEmail("bademail"); // assume invalid format
+    void updateUser_shouldThrow404_ifNotFound() {
+        UserUpdateDto dto = new UserUpdateDto();
+        dto.setName("Updated");
+        dto.setEmail("updated@example.com");
+        dto.setPassword("pw");
 
-        when(userService.updateUser(eq(1L), any())).thenReturn(Optional.empty());
+        when(userService.updateUser(eq(1L), any(UserUpdateDto.class)))
+            .thenThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 
-        ResponseEntity<User> response = controller.updateUser(1L, invalidUpdate);
-
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        verify(userService).updateUser(eq(1L), any());
-    }
-
-    @Test
-    void updateUser_shouldReturnNotFound_whenUserDoesNotExist() {
-        User updatedUser = new User();
-        updatedUser.setName("Updated");
-        updatedUser.setEmail("updated@example.com");
-
-        when(userService.updateUser(eq(99L), any())).thenReturn(Optional.empty());
-
-        ResponseEntity<User> response = controller.updateUser(99L, updatedUser);
-
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        verify(userService).updateUser(eq(99L), any());
-    }
-
-    @Test
-    void updateUser_shouldReturn404_ifNotFound() {
-        when(userService.updateUser(eq(1L), any())).thenReturn(Optional.empty());
-
-        ResponseEntity<User> response = controller.updateUser(1L, testUser);
-
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        ResponseStatusException ex = assertThrows(ResponseStatusException.class,
+            () -> controller.updateUser(1L, dto));
+        assertEquals(HttpStatus.NOT_FOUND, ex.getStatusCode());
     }
 
     @Test
     void deleteUser_shouldReturn204_ifSuccessful() {
-        when(userService.deleteUser(1L)).thenReturn(true);
+        // service is void; no exception means success
+        doNothing().when(userService).deleteUser(1L);
 
         ResponseEntity<Void> response = controller.deleteUser(1L);
-
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+        verify(userService).deleteUser(1L);
     }
 
     @Test
-    void deleteUser_shouldReturnNotFound_whenUserDoesNotExist() {
-        when(userService.deleteUser(999L)).thenReturn(false);
+    void deleteUser_shouldThrow404_whenUserDoesNotExist() {
+        doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"))
+            .when(userService).deleteUser(999L);
 
-        ResponseEntity<Void> response = controller.deleteUser(999L);
+        ResponseStatusException ex = assertThrows(ResponseStatusException.class,
+            () -> controller.deleteUser(999L));
 
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertEquals(HttpStatus.NOT_FOUND, ex.getStatusCode());
         verify(userService).deleteUser(999L);
-    }
-
-    @Test
-    void deleteUser_shouldReturn404_ifNotFound() {
-        when(userService.deleteUser(1L)).thenReturn(false);
-
-        ResponseEntity<Void> response = controller.deleteUser(1L);
-
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 }
