@@ -7,6 +7,7 @@ import io.jsonwebtoken.security.Keys;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import com.tanyourpeach.backend.model.User;
 import io.jsonwebtoken.io.Decoders;
@@ -31,6 +32,10 @@ class JwtServiceTest {
     @BeforeEach
     void setup() {
         jwtService = new JwtService();
+        ReflectionTestUtils.setField(jwtService, "secretKey",
+                "MzI3NjM0NzVENEY2NDU1NzY4NTY2QjU5NzAzMzczMzY3NjM5NzkyNDQyMjY0NTI5NDg0MDRENjM1MTY2NTQ2QQ==");
+
+        ReflectionTestUtils.setField(jwtService, "expirationMs", 86400000L);
 
         // This should match the SECRET_KEY in JwtService
         key = Keys.hmacShaKeyFor(Decoders.BASE64.decode("MzI3NjM0NzVENEY2NDU1NzY4NTY2QjU5NzAzMzczMzY3NjM5NzkyNDQyMjY0NTI5NDg0MDRENjM1MTY2NTQ2QQ=="));
