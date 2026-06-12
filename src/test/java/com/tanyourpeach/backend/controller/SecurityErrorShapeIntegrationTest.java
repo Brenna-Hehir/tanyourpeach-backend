@@ -51,6 +51,15 @@ class SecurityErrorShapeIntegrationTest {
     }
 
     @Test
+    void publicRoutes_allowAnonymousAccess() throws Exception {
+        mockMvc.perform(get("/api/services"))
+            .andExpect(status().isOk());
+
+        mockMvc.perform(get("/api/availabilities"))
+            .andExpect(status().isOk());
+    }
+
+    @Test
     void adminRoute_withoutToken_returns401_withJsonShape_andCorrelationId() throws Exception {
         mockMvc.perform(get("/api/admin/stats/summary"))
             .andExpect(status().isUnauthorized())
