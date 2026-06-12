@@ -72,26 +72,33 @@ public class SecurityConfig {
             .requestCache(rc -> rc.disable())
 
             .authorizeHttpRequests(auth -> auth
-                // ⬇️ MUST be first so preflight is permitted before any other rule
-                .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
-
-                // public infra
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .requestMatchers("/actuator/health", "/error", "/assets/**", "/static/**").permitAll()
+                .requestMatchers("/", "/home", "/about", "/contact").permitAll()
 
-                // your public pages
-                .requestMatchers("/", "/home", "/about", "/contact", "/services/**", "/users/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/auth/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/services/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/availabilities/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/appointments").permitAll()
 
-                // auth endpoints
-                .requestMatchers("/api/auth/**").permitAll()
-
-                // ADMIN api — this is the route under test
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                .requestMatchers("/api/users/**").hasRole("ADMIN")
+                .requestMatchers("/api/inventory/**").hasRole("ADMIN")
+                .requestMatchers("/api/financial-log/**").hasRole("ADMIN")
+                .requestMatchers("/api/service-usage/**").hasRole("ADMIN")
 
-                // example of other protected apis
+                .requestMatchers(HttpMethod.POST, "/api/services/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/api/services/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/api/services/**").hasRole("ADMIN")
+
+                .requestMatchers(HttpMethod.POST, "/api/availabilities/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/api/availabilities/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/api/availabilities/**").hasRole("ADMIN")
+
+                .requestMatchers("/api/appointments/**").authenticated()
                 .requestMatchers("/api/user/**").authenticated()
 
-                // everything else public (tighten later if you want)
-                .anyRequest().permitAll()
+                .anyRequest().authenticated()
             )
 
             .exceptionHandling(e -> e
