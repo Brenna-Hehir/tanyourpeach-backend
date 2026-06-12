@@ -91,6 +91,7 @@ public class AppointmentService {
     }
 
     // POST create new appointment
+    @Transactional
     public Optional<Appointment> createAppointment(Appointment appointment, HttpServletRequest request) {
         // Attempt to extract user from JWT if logged in
         String authHeader = request.getHeader("Authorization");
@@ -163,6 +164,7 @@ public class AppointmentService {
     }
 
     // PUT update appointment
+    @Transactional
     public Optional<Appointment> updateAppointment(Long id, Appointment updated, HttpServletRequest request) {
         Optional<Appointment> existingOpt = appointmentRepository.findById(id);
         if (existingOpt.isEmpty()) return Optional.empty();
