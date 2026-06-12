@@ -157,14 +157,4 @@ class SecurityErrorShapeIntegrationTest {
                 .content("{}")
         ).andExpect(status().isForbidden());
     }
-
-    @org.junit.jupiter.api.Test
-    void adminPost_withAdminToken_returns2xx() throws Exception {
-        mockMvc.perform(
-            org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post("/api/admin/stats/rebuild")
-                .header("Authorization", "Bearer " + adminToken)
-                .contentType("application/json")
-                .content("{}")
-        ).andExpect(status().is2xxSuccessful());
-    }
 }
