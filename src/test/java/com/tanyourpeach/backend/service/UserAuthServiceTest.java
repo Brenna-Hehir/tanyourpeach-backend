@@ -19,6 +19,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.*;
 
 class UserAuthServiceTest {
@@ -101,6 +102,30 @@ class UserAuthServiceTest {
         when(userRepository.save(any(User.class))).thenThrow(new RuntimeException("Duplicate"));
 
         assertThrows(RuntimeException.class, () -> userAuthService.register(request));
+    }
+
+    @Test
+    void register_ignoresAdminFlag() {
+        RegisterRequest request = new RegisterRequest();
+        request.setName("Test User");
+        request.setEmail("test-admin-flag@example.com");
+        request.setPassword("password");
+        request.setAddress("123 Main St");
+        request.setIsAdmin(true);
+
+        when(userRepository.findByEmail("test-admin-flag@example.com")).thenReturn(Optional.empty());
+        when(passwordEncoder.encode("password")).thenReturn(encodedPassword);
+        when(jwtService.generateToken(any(User.class))).thenReturn("mock-token");
+        when(userRepository.save(any(User.class))).thenAnswer(inv -> inv.getArgument(0));
+
+        AuthenticationResponse response = userAuthService.register(request);
+
+        assertNotNull(response);
+        assertEquals("mock-token", response.getToken());
+
+        verify(userRepository).save(
+            argThat(user -> Boolean.FALSE.equals(user.getIsAdmin()))
+        );
     }
 
     @Test

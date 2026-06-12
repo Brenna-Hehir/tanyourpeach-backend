@@ -49,7 +49,7 @@ public class UserAuthService {
         user.setEmail(request.getEmail());
         user.setPasswordHash(passwordEncoder.encode(request.getPassword()));
         user.setAddress(request.getAddress());
-        user.setIsAdmin(request.getIsAdmin() != null && request.getIsAdmin()); // default false if null
+        user.setIsAdmin(false); // public registration must never create admin users
 
         userRepository.save(user);
 
