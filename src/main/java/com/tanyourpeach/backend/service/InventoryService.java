@@ -6,6 +6,7 @@ import com.tanyourpeach.backend.repository.InventoryRepository;
 import com.tanyourpeach.backend.repository.FinancialLogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -44,6 +45,7 @@ public class InventoryService {
 
 
     // Update existing inventory item with expense logging
+    @Transactional
     public Optional<Inventory> updateInventory(Long id, Inventory updated) {
         // Basic validation
         if (updated.getItemName() == null || updated.getItemName().isBlank()) return Optional.empty();
@@ -81,6 +83,7 @@ public class InventoryService {
     }
 
     // Delete inventory item with logging
+    @Transactional
     public boolean deleteInventory(Long id) {
         Optional<Inventory> optional = inventoryRepository.findById(id);
         if (optional.isEmpty()) return false;
