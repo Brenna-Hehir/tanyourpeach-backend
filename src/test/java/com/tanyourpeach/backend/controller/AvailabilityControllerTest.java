@@ -9,6 +9,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -69,9 +70,26 @@ class AvailabilityControllerTest {
 
     @Test
     void getAvailableSlotsByDate_shouldReturn400_ifDateInvalid() {
-        ResponseEntity<?> response = availabilityController.getAvailableSlotsByDate("not-a-date");
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        assertEquals("Invalid date format", response.getBody());
+        ResponseStatusException ex = assertThrows(
+                ResponseStatusException.class,
+                () -> availabilityController.getAvailableSlotsByDate("not-a-date")
+        );
+
+        assertEquals(HttpStatus.BAD_REQUEST, ex.getStatusCode());
+        assertEquals("Invalid date format", ex.getReason());
+    }
+
+    @Test
+    void createAvailability_shouldReturn400_ifServiceReturnsNull() {
+        when(availabilityService.createAvailability(any())).thenReturn(null);
+
+        ResponseStatusException ex = assertThrows(
+                ResponseStatusException.class,
+                () -> availabilityController.createAvailability(testAvailability)
+        );
+
+        assertEquals(HttpStatus.BAD_REQUEST, ex.getStatusCode());
+        assertEquals("Unable to create availability", ex.getReason());
     }
 
     @Test
@@ -103,8 +121,13 @@ class AvailabilityControllerTest {
     void updateAvailability_shouldReturn400_ifInvalidOrNotFound() {
         when(availabilityService.updateAvailability(eq(1L), any())).thenReturn(Optional.empty());
 
-        ResponseEntity<Availability> response = availabilityController.updateAvailability(1L, testAvailability);
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        ResponseStatusException ex = assertThrows(
+                ResponseStatusException.class,
+                () -> availabilityController.updateAvailability(1L, testAvailability)
+        );
+
+        assertEquals(HttpStatus.BAD_REQUEST, ex.getStatusCode());
+        assertEquals("Unable to update availability", ex.getReason());
     }
 
     @Test
@@ -119,7 +142,12 @@ class AvailabilityControllerTest {
     void deleteAvailability_shouldReturn404_ifNotFound() {
         when(availabilityService.deleteAvailability(1L)).thenReturn(false);
 
-        ResponseEntity<Void> response = availabilityController.deleteAvailability(1L);
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        ResponseStatusException ex = assertThrows(
+                ResponseStatusException.class,
+                () -> availabilityController.deleteAvailability(1L)
+        );
+
+        assertEquals(HttpStatus.NOT_FOUND, ex.getStatusCode());
+        assertEquals("Availability not found", ex.getReason());
     }
 }

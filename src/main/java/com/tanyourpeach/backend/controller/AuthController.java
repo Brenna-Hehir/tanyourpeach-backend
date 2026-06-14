@@ -23,20 +23,12 @@ public class AuthController {
     // Endpoint for user registration
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(@Valid @RequestBody RegisterRequest request) {
-        try {
-            return ResponseEntity.ok(userAuthService.register(request));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        return ResponseEntity.ok(userAuthService.register(request));
     }
 
     // Endpoint for user login
     @PostMapping("/login")
     public ResponseEntity<AuthenticationResponse> login(@Valid @RequestBody AuthenticationRequest request) {
-        try {
-            return ResponseEntity.ok(userAuthService.authenticate(request));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        return ResponseEntity.ok(userAuthService.authenticate(request));
     }
 }

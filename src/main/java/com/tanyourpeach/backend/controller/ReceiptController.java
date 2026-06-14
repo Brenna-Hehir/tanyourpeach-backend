@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 
@@ -55,7 +57,7 @@ public class ReceiptController {
     @GetMapping
     public ResponseEntity<?> getAllReceipts(HttpServletRequest request) {
         if (!isAdmin(request)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access denied");
+            throw new AccessDeniedException("Access denied");
         }
         return ResponseEntity.ok(receiptService.getAllReceipts());
     }
@@ -64,10 +66,15 @@ public class ReceiptController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getReceiptById(@PathVariable Long id, HttpServletRequest request) {
         if (!isAdmin(request)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access denied");
+            throw new AccessDeniedException("Access denied");
         }
+
         Optional<Receipt> receipt = receiptService.getReceiptById(id);
-        return receipt.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+        return receipt.map(ResponseEntity::ok)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Receipt not found"
+                ));
     }
 
     // GET receipt by appointment ID (user can only fetch their own)
@@ -75,25 +82,25 @@ public class ReceiptController {
     public ResponseEntity<?> getReceiptByAppointmentId(@PathVariable Long appointmentId, HttpServletRequest request) {
         String email = getUserEmail(request);
         if (email == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized");
         }
 
-        Optional<Receipt> receipt = receiptService.getReceiptByAppointmentId(appointmentId);
+        Receipt receipt = receiptService.getReceiptByAppointmentId(appointmentId)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Receipt not found"
+                ));
 
-        if (receipt.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-
-        String receiptOwner = receipt.get().getAppointment().getClientEmail();
+        String receiptOwner = receipt.getAppointment().getClientEmail();
         if (receiptOwner != null && receiptOwner.equals(email)) {
-            return ResponseEntity.ok(receipt.get());
+            return ResponseEntity.ok(receipt);
         }
 
         // Only admins can access someone else's receipt
         if (isAdmin(request)) {
-            return ResponseEntity.ok(receipt.get());
+            return ResponseEntity.ok(receipt);
         }
 
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access denied");
+        throw new AccessDeniedException("Access denied");
     }
 }

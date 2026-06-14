@@ -16,6 +16,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -70,28 +71,40 @@ class AdminStatsControllerTest {
 
     @Test
     void getSummary_shouldReturn403_ifTokenMissing() {
-        when(request.getHeader("Authorization")).thenReturn(null); // no token
+        when(request.getHeader("Authorization")).thenReturn(null);
 
-        ResponseEntity<?> response = controller.getSummary(request);
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+        AccessDeniedException ex = assertThrows(
+                AccessDeniedException.class,
+                () -> controller.getSummary(request)
+        );
+
+        assertEquals("Access denied", ex.getMessage());
     }
 
     @Test
     void getSummary_shouldReturn403_ifTokenMalformed() {
-        when(request.getHeader("Authorization")).thenReturn("badformat"); // not "Bearer ..."
+        when(request.getHeader("Authorization")).thenReturn("badformat");
 
-        ResponseEntity<?> response = controller.getSummary(request);
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+        AccessDeniedException ex = assertThrows(
+                AccessDeniedException.class,
+                () -> controller.getSummary(request)
+        );
+
+        assertEquals("Access denied", ex.getMessage());
     }
 
     @Test
     void getSummary_shouldReturn403_ifNotAdmin() {
         when(request.getHeader("Authorization")).thenReturn(jwtToken);
         when(jwtService.extractUsername("mocktoken")).thenReturn(email);
-        when(userRepository.findByEmail(email)).thenReturn(Optional.of(new User())); // not admin
+        when(userRepository.findByEmail(email)).thenReturn(Optional.of(new User()));
 
-        ResponseEntity<?> response = controller.getSummary(request);
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+        AccessDeniedException ex = assertThrows(
+                AccessDeniedException.class,
+                () -> controller.getSummary(request)
+        );
+
+        assertEquals("Access denied", ex.getMessage());
     }
 
     @Test
@@ -100,8 +113,12 @@ class AdminStatsControllerTest {
         when(jwtService.extractUsername("mocktoken")).thenReturn(email);
         when(userRepository.findByEmail(email)).thenReturn(Optional.empty());
 
-        ResponseEntity<?> response = controller.getSummary(request);
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+        AccessDeniedException ex = assertThrows(
+                AccessDeniedException.class,
+                () -> controller.getSummary(request)
+        );
+
+        assertEquals("Access denied", ex.getMessage());
     }
 
     @Test
@@ -122,10 +139,14 @@ class AdminStatsControllerTest {
     void getMonthlyStats_shouldReturn403_ifNotAdmin() {
         when(request.getHeader("Authorization")).thenReturn(jwtToken);
         when(jwtService.extractUsername("mocktoken")).thenReturn(email);
-        when(userRepository.findByEmail(email)).thenReturn(Optional.of(new User())); // not admin
+        when(userRepository.findByEmail(email)).thenReturn(Optional.of(new User()));
 
-        ResponseEntity<?> response = controller.getMonthlyStats(request);
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+        AccessDeniedException ex = assertThrows(
+                AccessDeniedException.class,
+                () -> controller.getMonthlyStats(request)
+        );
+
+        assertEquals("Access denied", ex.getMessage());
     }
 
     @Test
@@ -146,10 +167,14 @@ class AdminStatsControllerTest {
     void getUpcomingAppointments_shouldReturn403_ifNotAdmin() {
         when(request.getHeader("Authorization")).thenReturn(jwtToken);
         when(jwtService.extractUsername("mocktoken")).thenReturn(email);
-        when(userRepository.findByEmail(email)).thenReturn(Optional.of(new User())); // not admin
+        when(userRepository.findByEmail(email)).thenReturn(Optional.of(new User()));
 
-        ResponseEntity<?> response = controller.getUpcomingAppointments(request);
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+        AccessDeniedException ex = assertThrows(
+                AccessDeniedException.class,
+                () -> controller.getUpcomingAppointments(request)
+        );
+
+        assertEquals("Access denied", ex.getMessage());
     }
 
     @Test
@@ -170,9 +195,13 @@ class AdminStatsControllerTest {
     void getLowStockItems_shouldReturn403_ifNotAdmin() {
         when(request.getHeader("Authorization")).thenReturn(jwtToken);
         when(jwtService.extractUsername("mocktoken")).thenReturn(email);
-        when(userRepository.findByEmail(email)).thenReturn(Optional.of(new User())); // not admin
+        when(userRepository.findByEmail(email)).thenReturn(Optional.of(new User()));
 
-        ResponseEntity<?> response = controller.getLowStockItems(request);
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+        AccessDeniedException ex = assertThrows(
+                AccessDeniedException.class,
+                () -> controller.getLowStockItems(request)
+        );
+
+        assertEquals("Access denied", ex.getMessage());
     }
 }

@@ -9,6 +9,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -57,8 +58,14 @@ class TanServiceControllerTest {
     @Test
     void getServiceById_shouldReturn404_ifNotFound() {
         when(serviceService.getServiceById(1L)).thenReturn(Optional.empty());
-        ResponseEntity<TanService> response = controller.getServiceById(1L);
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+
+        ResponseStatusException ex = assertThrows(
+                ResponseStatusException.class,
+                () -> controller.getServiceById(1L)
+        );
+
+        assertEquals(HttpStatus.NOT_FOUND, ex.getStatusCode());
+        assertEquals("Service not found", ex.getReason());
     }
 
     @Test
@@ -73,8 +80,14 @@ class TanServiceControllerTest {
     @Test
     void createService_shouldReturn400_whenServiceIsNull() {
         when(serviceService.createService(null)).thenReturn(null);
-        ResponseEntity<TanService> response = controller.createService(null);
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+
+        ResponseStatusException ex = assertThrows(
+                ResponseStatusException.class,
+                () -> controller.createService(null)
+        );
+
+        assertEquals(HttpStatus.BAD_REQUEST, ex.getStatusCode());
+        assertEquals("Unable to create service", ex.getReason());
     }
 
     @Test
@@ -88,15 +101,27 @@ class TanServiceControllerTest {
     @Test
     void updateService_shouldHandleNullUpdateObject() {
         when(serviceService.updateService(eq(1L), isNull())).thenReturn(Optional.empty());
-        ResponseEntity<TanService> response = controller.updateService(1L, null);
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+
+        ResponseStatusException ex = assertThrows(
+                ResponseStatusException.class,
+                () -> controller.updateService(1L, null)
+        );
+
+        assertEquals(HttpStatus.NOT_FOUND, ex.getStatusCode());
+        assertEquals("Service not found", ex.getReason());
     }
 
     @Test
     void updateService_shouldReturn404_ifNotFound() {
         when(serviceService.updateService(eq(1L), any())).thenReturn(Optional.empty());
-        ResponseEntity<TanService> response = controller.updateService(1L, testService);
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+
+        ResponseStatusException ex = assertThrows(
+                ResponseStatusException.class,
+                () -> controller.updateService(1L, testService)
+        );
+
+        assertEquals(HttpStatus.NOT_FOUND, ex.getStatusCode());
+        assertEquals("Service not found", ex.getReason());
     }
 
     @Test
@@ -109,8 +134,14 @@ class TanServiceControllerTest {
     @Test
     void deactivateService_shouldReturn404_ifNotFound() {
         when(serviceService.deactivateService(1L)).thenReturn(false);
-        ResponseEntity<Void> response = controller.deactivateService(1L);
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+
+        ResponseStatusException ex = assertThrows(
+                ResponseStatusException.class,
+                () -> controller.deactivateService(1L)
+        );
+
+        assertEquals(HttpStatus.NOT_FOUND, ex.getStatusCode());
+        assertEquals("Service not found", ex.getReason());
     }
 
     @Test
@@ -123,7 +154,13 @@ class TanServiceControllerTest {
     @Test
     void deleteServicePermanently_shouldReturn404_ifNotFound() {
         when(serviceService.deleteServicePermanently(1L)).thenReturn(false);
-        ResponseEntity<Void> response = controller.deleteServicePermanently(1L);
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+
+        ResponseStatusException ex = assertThrows(
+                ResponseStatusException.class,
+                () -> controller.deleteServicePermanently(1L)
+        );
+
+        assertEquals(HttpStatus.NOT_FOUND, ex.getStatusCode());
+        assertEquals("Service not found", ex.getReason());
     }
 }

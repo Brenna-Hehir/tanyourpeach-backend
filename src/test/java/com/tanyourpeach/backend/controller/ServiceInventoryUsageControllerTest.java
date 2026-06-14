@@ -11,6 +11,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -81,8 +82,13 @@ class ServiceInventoryUsageControllerTest {
     void createUsage_shouldReturnBadRequest_ifInvalid() {
         when(usageService.createUsage(any())).thenReturn(Optional.empty());
 
-        ResponseEntity<ServiceInventoryUsage> response = controller.createUsage(usage);
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        ResponseStatusException ex = assertThrows(
+                ResponseStatusException.class,
+                () -> controller.createUsage(usage)
+        );
+
+        assertEquals(HttpStatus.BAD_REQUEST, ex.getStatusCode());
+        assertEquals("Unable to create service inventory usage", ex.getReason());
     }
 
     @Test
@@ -105,15 +111,25 @@ class ServiceInventoryUsageControllerTest {
     void updateQuantityUsed_shouldReturnNotFound_ifNotFound() {
         when(usageService.updateQuantity(1L, 100L, 5)).thenReturn(Optional.empty());
 
-        ResponseEntity<ServiceInventoryUsage> response = controller.updateQuantityUsed(1L, 100L, 5);
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        ResponseStatusException ex = assertThrows(
+                ResponseStatusException.class,
+                () -> controller.updateQuantityUsed(1L, 100L, 5)
+        );
+
+        assertEquals(HttpStatus.NOT_FOUND, ex.getStatusCode());
+        assertEquals("Service inventory usage not found", ex.getReason());
     }
 
     @Test
     void deleteUsage_shouldReturnNotFound_ifMissing() {
         when(usageService.deleteUsage(1L, 100L)).thenReturn(false);
 
-        ResponseEntity<Void> response = controller.deleteUsage(1L, 100L);
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        ResponseStatusException ex = assertThrows(
+                ResponseStatusException.class,
+                () -> controller.deleteUsage(1L, 100L)
+        );
+
+        assertEquals(HttpStatus.NOT_FOUND, ex.getStatusCode());
+        assertEquals("Service inventory usage not found", ex.getReason());
     }
 }

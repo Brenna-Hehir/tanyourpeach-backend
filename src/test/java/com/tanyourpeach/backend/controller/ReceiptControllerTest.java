@@ -16,6 +16,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 import java.util.List;
@@ -83,22 +85,36 @@ class ReceiptControllerTest {
     void getAllReceipts_shouldReturn403_whenNotAdmin() {
         when(userRepository.findByEmail(email)).thenReturn(Optional.of(regularUser));
 
-        ResponseEntity<?> response = controller.getAllReceipts(request);
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+        AccessDeniedException ex = assertThrows(
+                AccessDeniedException.class,
+                () -> controller.getAllReceipts(request)
+        );
+
+        assertEquals("Access denied", ex.getMessage());
     }
 
     @Test
     void getAllReceipts_shouldReturn403_whenTokenMalformed() {
         when(request.getHeader("Authorization")).thenReturn("bad");
-        ResponseEntity<?> response = controller.getAllReceipts(request);
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+
+        AccessDeniedException ex = assertThrows(
+                AccessDeniedException.class,
+                () -> controller.getAllReceipts(request)
+        );
+
+        assertEquals("Access denied", ex.getMessage());
     }
 
     @Test
     void getAllReceipts_shouldReturn403_whenUserNotFound() {
         when(userRepository.findByEmail(email)).thenReturn(Optional.empty());
-        ResponseEntity<?> response = controller.getAllReceipts(request);
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+
+        AccessDeniedException ex = assertThrows(
+                AccessDeniedException.class,
+                () -> controller.getAllReceipts(request)
+        );
+
+        assertEquals("Access denied", ex.getMessage());
     }
 
     @Test
@@ -114,8 +130,12 @@ class ReceiptControllerTest {
     void getReceiptById_shouldReturn403_whenNotAdmin() {
         when(userRepository.findByEmail(email)).thenReturn(Optional.of(regularUser));
 
-        ResponseEntity<?> response = controller.getReceiptById(1L, request);
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+        AccessDeniedException ex = assertThrows(
+                AccessDeniedException.class,
+                () -> controller.getReceiptById(1L, request)
+        );
+
+        assertEquals("Access denied", ex.getMessage());
     }
 
     @Test
@@ -123,8 +143,13 @@ class ReceiptControllerTest {
         when(userRepository.findByEmail(email)).thenReturn(Optional.of(adminUser));
         when(receiptService.getReceiptById(1L)).thenReturn(Optional.empty());
 
-        ResponseEntity<?> response = controller.getReceiptById(1L, request);
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        ResponseStatusException ex = assertThrows(
+                ResponseStatusException.class,
+                () -> controller.getReceiptById(1L, request)
+        );
+
+        assertEquals(HttpStatus.NOT_FOUND, ex.getStatusCode());
+        assertEquals("Receipt not found", ex.getReason());
     }
 
     @Test
@@ -152,8 +177,13 @@ class ReceiptControllerTest {
     void getReceiptByAppointmentId_shouldReturn401_whenTokenMissing() {
         when(request.getHeader("Authorization")).thenReturn(null);
 
-        ResponseEntity<?> response = controller.getReceiptByAppointmentId(1L, request);
-        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
+        ResponseStatusException ex = assertThrows(
+                ResponseStatusException.class,
+                () -> controller.getReceiptByAppointmentId(1L, request)
+        );
+
+        assertEquals(HttpStatus.UNAUTHORIZED, ex.getStatusCode());
+        assertEquals("Unauthorized", ex.getReason());
     }
 
     @Test
@@ -165,15 +195,24 @@ class ReceiptControllerTest {
         when(receiptService.getReceiptByAppointmentId(1L)).thenReturn(Optional.of(testReceipt));
         when(userRepository.findByEmail(email)).thenReturn(Optional.of(regularUser));
 
-        ResponseEntity<?> response = controller.getReceiptByAppointmentId(1L, request);
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+        AccessDeniedException ex = assertThrows(
+                AccessDeniedException.class,
+                () -> controller.getReceiptByAppointmentId(1L, request)
+        );
+
+        assertEquals("Access denied", ex.getMessage());
     }
 
     @Test
     void getReceiptByAppointmentId_shouldReturn404_whenNotFound() {
         when(receiptService.getReceiptByAppointmentId(1L)).thenReturn(Optional.empty());
 
-        ResponseEntity<?> response = controller.getReceiptByAppointmentId(1L, request);
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        ResponseStatusException ex = assertThrows(
+                ResponseStatusException.class,
+                () -> controller.getReceiptByAppointmentId(1L, request)
+        );
+
+        assertEquals(HttpStatus.NOT_FOUND, ex.getStatusCode());
+        assertEquals("Receipt not found", ex.getReason());
     }
 }

@@ -14,6 +14,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -82,8 +84,13 @@ class InventoryControllerTest {
     void getInventoryById_shouldReturn404_ifNotFound() {
         when(inventoryService.getInventoryById(1L)).thenReturn(Optional.empty());
 
-        ResponseEntity<Inventory> response = controller.getInventoryById(1L);
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        ResponseStatusException ex = assertThrows(
+                ResponseStatusException.class,
+                () -> controller.getInventoryById(1L)
+        );
+
+        assertEquals(HttpStatus.NOT_FOUND, ex.getStatusCode());
+        assertEquals("Inventory item not found", ex.getReason());
     }
 
     @Test
@@ -97,22 +104,37 @@ class InventoryControllerTest {
     @Test
     void createInventory_shouldReturn403_ifNotAdmin() {
         adminUser.setIsAdmin(false);
-        ResponseEntity<?> response = controller.createInventory(testItem, request);
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+
+        AccessDeniedException ex = assertThrows(
+                AccessDeniedException.class,
+                () -> controller.createInventory(testItem, request)
+        );
+
+        assertEquals("Access denied", ex.getMessage());
     }
 
     @Test
     void createInventory_shouldReturn403_whenAuthorizationHeaderMissing() {
         when(request.getHeader("Authorization")).thenReturn(null);
-        ResponseEntity<?> response = controller.createInventory(testItem, request);
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+
+        AccessDeniedException ex = assertThrows(
+                AccessDeniedException.class,
+                () -> controller.createInventory(testItem, request)
+        );
+
+        assertEquals("Access denied", ex.getMessage());
     }
 
     @Test
     void createInventory_shouldReturn403_whenAuthorizationHeaderMalformed() {
         when(request.getHeader("Authorization")).thenReturn("bad");
-        ResponseEntity<?> response = controller.createInventory(testItem, request);
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+
+        AccessDeniedException ex = assertThrows(
+                AccessDeniedException.class,
+                () -> controller.createInventory(testItem, request)
+        );
+
+        assertEquals("Access denied", ex.getMessage());
     }
 
     @Test
@@ -129,23 +151,37 @@ class InventoryControllerTest {
         when(jwtService.extractUsername("mock-token")).thenReturn(email);
         when(userRepository.findByEmail(email)).thenReturn(Optional.empty());
 
-        ResponseEntity<?> response = controller.updateInventory(1L, testItem, request);
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+        AccessDeniedException ex = assertThrows(
+                AccessDeniedException.class,
+                () -> controller.updateInventory(1L, testItem, request)
+        );
+
+        assertEquals("Access denied", ex.getMessage());
     }
 
     @Test
     void updateInventory_shouldReturn403_ifNotAdmin() {
         adminUser.setIsAdmin(false);
-        ResponseEntity<?> response = controller.updateInventory(1L, testItem, request);
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+
+        AccessDeniedException ex = assertThrows(
+                AccessDeniedException.class,
+                () -> controller.updateInventory(1L, testItem, request)
+        );
+
+        assertEquals("Access denied", ex.getMessage());
     }
 
     @Test
     void updateInventory_shouldReturn404_ifNotFound() {
         when(inventoryService.updateInventory(eq(1L), any())).thenReturn(Optional.empty());
 
-        ResponseEntity<?> response = controller.updateInventory(1L, testItem, request);
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        ResponseStatusException ex = assertThrows(
+                ResponseStatusException.class,
+                () -> controller.updateInventory(1L, testItem, request)
+        );
+
+        assertEquals(HttpStatus.NOT_FOUND, ex.getStatusCode());
+        assertEquals("Inventory item not found", ex.getReason());
     }
 
     @Test
@@ -159,16 +195,26 @@ class InventoryControllerTest {
     @Test
     void deleteInventory_shouldReturn403_ifNotAdmin() {
         adminUser.setIsAdmin(false);
-        ResponseEntity<?> response = controller.deleteInventory(1L, request);
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+
+        AccessDeniedException ex = assertThrows(
+                AccessDeniedException.class,
+                () -> controller.deleteInventory(1L, request)
+        );
+
+        assertEquals("Access denied", ex.getMessage());
     }
 
     @Test
     void deleteInventory_shouldReturn404_ifNotFound() {
         when(inventoryService.deleteInventory(1L)).thenReturn(false);
 
-        ResponseEntity<?> response = controller.deleteInventory(1L, request);
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        ResponseStatusException ex = assertThrows(
+                ResponseStatusException.class,
+                () -> controller.deleteInventory(1L, request)
+        );
+
+        assertEquals(HttpStatus.NOT_FOUND, ex.getStatusCode());
+        assertEquals("Inventory item not found", ex.getReason());
     }
 
     @Test
@@ -183,8 +229,13 @@ class InventoryControllerTest {
     void deductQuantity_shouldReturn400_ifFails() {
         when(inventoryService.deductQuantity(1L, 2)).thenReturn(false);
 
-        ResponseEntity<Void> response = controller.deductQuantity(1L, 2);
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        ResponseStatusException ex = assertThrows(
+                ResponseStatusException.class,
+                () -> controller.deductQuantity(1L, 2)
+        );
+
+        assertEquals(HttpStatus.BAD_REQUEST, ex.getStatusCode());
+        assertEquals("Unable to deduct inventory quantity", ex.getReason());
     }
 
     @Test
@@ -199,14 +250,24 @@ class InventoryControllerTest {
     void addStock_shouldReturn400_ifFails() {
         when(inventoryService.addQuantityAndCost(1L, 5, new BigDecimal("2.50"))).thenReturn(false);
 
-        ResponseEntity<?> response = controller.addStock(1L, 5, new BigDecimal("2.50"), request);
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        ResponseStatusException ex = assertThrows(
+                ResponseStatusException.class,
+                () -> controller.addStock(1L, 5, new BigDecimal("2.50"), request)
+        );
+
+        assertEquals(HttpStatus.BAD_REQUEST, ex.getStatusCode());
+        assertEquals("Unable to add stock", ex.getReason());
     }
 
     @Test
     void addStock_shouldReturn403_ifNotAdmin() {
         adminUser.setIsAdmin(false);
-        ResponseEntity<?> response = controller.addStock(1L, 5, new BigDecimal("2.50"), request);
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+
+        AccessDeniedException ex = assertThrows(
+                AccessDeniedException.class,
+                () -> controller.addStock(1L, 5, new BigDecimal("2.50"), request)
+        );
+
+        assertEquals("Access denied", ex.getMessage());
     }
 }

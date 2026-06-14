@@ -3,6 +3,8 @@ package com.tanyourpeach.backend.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.tanyourpeach.backend.model.Availability;
 import com.tanyourpeach.backend.service.AvailabilityService;
@@ -33,7 +35,7 @@ public class AvailabilityController {
             List<Availability> slots = availabilityService.getAvailableSlotsByDate(LocalDate.parse(date));
             return ResponseEntity.ok(slots);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Invalid date format");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid date format");
         }
     }
 
@@ -42,7 +44,7 @@ public class AvailabilityController {
     public ResponseEntity<Availability> createAvailability(@Valid @RequestBody Availability availability) {
         Availability saved = availabilityService.createAvailability(availability);
         if (saved == null) {
-            return ResponseEntity.badRequest().build();
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unable to create availability");
         }
         return ResponseEntity.ok(saved);
     }
@@ -52,14 +54,19 @@ public class AvailabilityController {
     public ResponseEntity<Availability> updateAvailability(@PathVariable Long id, @Valid @RequestBody Availability updated) {
         return availabilityService.updateAvailability(id, updated)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.badRequest().build());
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST,
+                        "Unable to update availability"
+                ));
     }
 
     // DELETE a slot
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteAvailability(@PathVariable Long id) {
-        return availabilityService.deleteAvailability(id)
-                ? ResponseEntity.noContent().build()
-                : ResponseEntity.notFound().build();
+        boolean deleted = availabilityService.deleteAvailability(id);
+        if (!deleted) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Availability not found");
+        }
+        return ResponseEntity.noContent().build();
     }
 }

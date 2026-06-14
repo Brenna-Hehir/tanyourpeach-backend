@@ -14,6 +14,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -81,16 +83,24 @@ class AppointmentControllerTest {
         when(jwtService.extractUsername("mocktoken")).thenReturn(email);
         when(userRepository.findByEmail(email)).thenReturn(Optional.of(normalUser));
 
-        ResponseEntity<?> response = controller.getAllAppointments(request);
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+        AccessDeniedException ex = assertThrows(
+                AccessDeniedException.class,
+                () -> controller.getAllAppointments(request)
+        );
+
+        assertEquals("Access denied", ex.getMessage());
     }
 
     @Test
     void getAllAppointments_shouldReturn403_ifTokenMalformed() {
         when(request.getHeader("Authorization")).thenReturn("BadTokenFormat");
 
-        ResponseEntity<?> response = controller.getAllAppointments(request);
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+        AccessDeniedException ex = assertThrows(
+                AccessDeniedException.class,
+                () -> controller.getAllAppointments(request)
+        );
+
+        assertEquals("Access denied", ex.getMessage());
     }
 
     @Test
@@ -103,8 +113,12 @@ class AppointmentControllerTest {
         when(jwtService.extractUsername("mocktoken")).thenReturn(adminEmail);
         when(userRepository.findByEmail(adminEmail)).thenReturn(Optional.of(nullAdmin));
 
-        ResponseEntity<?> response = controller.getAllAppointments(request);
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+        AccessDeniedException ex = assertThrows(
+                AccessDeniedException.class,
+                () -> controller.getAllAppointments(request)
+        );
+
+        assertEquals("Access denied", ex.getMessage());
     }
 
     @Test
@@ -112,8 +126,12 @@ class AppointmentControllerTest {
         when(request.getHeader("Authorization")).thenReturn(jwtToken);
         when(jwtService.extractUsername("mocktoken")).thenThrow(new RuntimeException("invalid token"));
 
-        ResponseEntity<?> response = controller.getAllAppointments(request);
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+        AccessDeniedException ex = assertThrows(
+                AccessDeniedException.class,
+                () -> controller.getAllAppointments(request)
+        );
+
+        assertEquals("Access denied", ex.getMessage());
     }
 
     @Test
@@ -146,8 +164,12 @@ class AppointmentControllerTest {
         when(jwtService.extractUsername("mocktoken")).thenReturn(email);
         when(userRepository.findByEmail(email)).thenReturn(Optional.of(normalUser));
 
-        ResponseEntity<?> response = controller.getAppointmentById(1L, request);
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+        AccessDeniedException ex = assertThrows(
+                AccessDeniedException.class,
+                () -> controller.getAppointmentById(1L, request)
+        );
+
+        assertEquals("Access denied", ex.getMessage());
     }
 
     @Test
@@ -155,16 +177,25 @@ class AppointmentControllerTest {
         when(appointmentService.getAppointmentById(1L)).thenReturn(Optional.of(testAppointment));
         when(request.getHeader("Authorization")).thenReturn(null);
 
-        ResponseEntity<?> response = controller.getAppointmentById(1L, request);
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+        AccessDeniedException ex = assertThrows(
+                AccessDeniedException.class,
+                () -> controller.getAppointmentById(1L, request)
+        );
+
+        assertEquals("Access denied", ex.getMessage());
     }
 
     @Test
     void getAppointmentById_shouldReturn404_ifNotFound() {
         when(appointmentService.getAppointmentById(1L)).thenReturn(Optional.empty());
 
-        ResponseEntity<?> response = controller.getAppointmentById(1L, request);
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        ResponseStatusException ex = assertThrows(
+                ResponseStatusException.class,
+                () -> controller.getAppointmentById(1L, request)
+        );
+
+        assertEquals(HttpStatus.NOT_FOUND, ex.getStatusCode());
+        assertEquals("Appointment not found", ex.getReason());
     }
 
     @Test
@@ -184,8 +215,14 @@ class AppointmentControllerTest {
     @Test
     void getUserAppointments_shouldReturn401_ifEmailNull() {
         when(request.getHeader("Authorization")).thenReturn(null);
-        ResponseEntity<?> response = controller.getUserAppointments(request);
-        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
+
+        ResponseStatusException ex = assertThrows(
+                ResponseStatusException.class,
+                () -> controller.getUserAppointments(request)
+        );
+
+        assertEquals(HttpStatus.UNAUTHORIZED, ex.getStatusCode());
+        assertEquals("Unauthorized", ex.getReason());
     }
 
     @Test
@@ -206,8 +243,13 @@ class AppointmentControllerTest {
     @Test
     void createAppointment_shouldReturn400_ifFailure() {
         when(appointmentService.createAppointment(any(), eq(request))).thenReturn(Optional.empty());
-        ResponseEntity<Appointment> response = controller.createAppointment(testAppointment, request);
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        ResponseStatusException ex = assertThrows(
+                ResponseStatusException.class,
+                () -> controller.createAppointment(testAppointment, request)
+        );
+
+        assertEquals(HttpStatus.BAD_REQUEST, ex.getStatusCode());
+        assertEquals("Unable to create appointment", ex.getReason());
     }
 
     @Test
@@ -234,8 +276,12 @@ class AppointmentControllerTest {
         when(jwtService.extractUsername("mocktoken")).thenReturn(email);
         when(userRepository.findByEmail(email)).thenReturn(Optional.of(normalUser));
 
-        ResponseEntity<?> response = controller.updateAppointment(1L, new Appointment(), request);
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+        AccessDeniedException ex = assertThrows(
+                AccessDeniedException.class,
+                () -> controller.updateAppointment(1L, new Appointment(), request)
+        );
+
+        assertEquals("Access denied", ex.getMessage());
     }
 
     @Test
@@ -243,16 +289,25 @@ class AppointmentControllerTest {
         when(appointmentService.getAppointmentById(1L)).thenReturn(Optional.of(testAppointment));
         when(request.getHeader("Authorization")).thenReturn(null);
 
-        ResponseEntity<?> response = controller.updateAppointment(1L, new Appointment(), request);
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+        AccessDeniedException ex = assertThrows(
+                AccessDeniedException.class,
+                () -> controller.updateAppointment(1L, new Appointment(), request)
+        );
+
+        assertEquals("Access denied", ex.getMessage());
     }
 
     @Test
     void updateAppointment_shouldReturn404_ifNotFound() {
         when(appointmentService.getAppointmentById(1L)).thenReturn(Optional.empty());
 
-        ResponseEntity<?> response = controller.updateAppointment(1L, new Appointment(), request);
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        ResponseStatusException ex = assertThrows(
+                ResponseStatusException.class,
+                () -> controller.updateAppointment(1L, new Appointment(), request)
+        );
+
+        assertEquals(HttpStatus.NOT_FOUND, ex.getStatusCode());
+        assertEquals("Appointment not found", ex.getReason());
     }
 
     @Test
@@ -263,20 +318,30 @@ class AppointmentControllerTest {
         when(userRepository.findByEmail(email)).thenReturn(Optional.of(normalUser));
         when(appointmentService.updateAppointment(eq(1L), any(), eq(request))).thenReturn(Optional.empty());
 
-        ResponseEntity<?> response = controller.updateAppointment(1L, new Appointment(), request);
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        ResponseStatusException ex = assertThrows(
+                ResponseStatusException.class,
+                () -> controller.updateAppointment(1L, new Appointment(), request)
+        );
+
+        assertEquals(HttpStatus.BAD_REQUEST, ex.getStatusCode());
+        assertEquals("Unable to update appointment", ex.getReason());
     }
 
     @Test
     void updateAppointment_shouldReturn403_ifUserNotAuthorized() {
+        testAppointment.setClientEmail("owner@example.com");
+
         when(appointmentService.getAppointmentById(1L)).thenReturn(Optional.of(testAppointment));
         when(request.getHeader("Authorization")).thenReturn("Bearer mocktoken");
         when(jwtService.extractUsername("mocktoken")).thenReturn("unauthorized@example.com");
         when(userRepository.findByEmail("unauthorized@example.com")).thenReturn(Optional.of(normalUser));
 
-        ResponseEntity<?> response = controller.updateAppointment(1L, new Appointment(), request);
+        AccessDeniedException ex = assertThrows(
+                AccessDeniedException.class,
+                () -> controller.updateAppointment(1L, new Appointment(), request)
+        );
 
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+        assertEquals("Access denied", ex.getMessage());
     }
 
     @Test
@@ -284,9 +349,13 @@ class AppointmentControllerTest {
         when(appointmentService.getAppointmentById(1L)).thenReturn(Optional.empty());
         when(request.getHeader("Authorization")).thenReturn("Bearer mocktoken");
 
-        ResponseEntity<?> response = controller.updateAppointment(1L, new Appointment(), request);
+        ResponseStatusException ex = assertThrows(
+                ResponseStatusException.class,
+                () -> controller.updateAppointment(1L, new Appointment(), request)
+        );
 
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertEquals(HttpStatus.NOT_FOUND, ex.getStatusCode());
+        assertEquals("Appointment not found", ex.getReason());
     }
 
     @Test
@@ -306,8 +375,12 @@ class AppointmentControllerTest {
         when(jwtService.extractUsername("mocktoken")).thenReturn(email);
         when(userRepository.findByEmail(email)).thenReturn(Optional.of(normalUser));
 
-        ResponseEntity<?> response = controller.deleteAppointment(1L, request);
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+        AccessDeniedException ex = assertThrows(
+                AccessDeniedException.class,
+                () -> controller.deleteAppointment(1L, request)
+        );
+
+        assertEquals("Access denied", ex.getMessage());
     }
 
     @Test
@@ -317,7 +390,12 @@ class AppointmentControllerTest {
         when(userRepository.findByEmail(adminEmail)).thenReturn(Optional.of(adminUser));
         when(appointmentService.deleteAppointment(1L)).thenReturn(false);
 
-        ResponseEntity<?> response = controller.deleteAppointment(1L, request);
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        ResponseStatusException ex = assertThrows(
+                ResponseStatusException.class,
+                () -> controller.deleteAppointment(1L, request)
+        );
+
+        assertEquals(HttpStatus.NOT_FOUND, ex.getStatusCode());
+        assertEquals("Appointment not found", ex.getReason());
     }
 }
