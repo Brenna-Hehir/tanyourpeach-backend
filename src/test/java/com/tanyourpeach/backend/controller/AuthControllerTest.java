@@ -64,13 +64,16 @@ class AuthControllerTest {
     }
 
     @Test
-    void register_shouldReturn500_ifServiceThrowsException() {
+    void register_shouldThrow_ifServiceThrowsException() {
         RegisterRequest request = new RegisterRequest();
         when(userAuthService.register(request)).thenThrow(new RuntimeException("something failed"));
 
-        ResponseEntity<AuthenticationResponse> response = authController.register(request);
+        RuntimeException ex = assertThrows(
+                RuntimeException.class,
+                () -> authController.register(request)
+        );
 
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+        assertEquals("something failed", ex.getMessage());
     }
 
     @Test
@@ -84,12 +87,15 @@ class AuthControllerTest {
     }
 
     @Test
-    void login_shouldReturn500_ifServiceThrowsException() {
+    void login_shouldThrow_ifServiceThrowsException() {
         AuthenticationRequest request = new AuthenticationRequest();
         when(userAuthService.authenticate(request)).thenThrow(new RuntimeException("bad login"));
 
-        ResponseEntity<AuthenticationResponse> response = authController.login(request);
+        RuntimeException ex = assertThrows(
+                RuntimeException.class,
+                () -> authController.login(request)
+        );
 
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+        assertEquals("bad login", ex.getMessage());
     }
 }

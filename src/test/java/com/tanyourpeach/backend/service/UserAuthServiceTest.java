@@ -14,6 +14,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 
@@ -99,9 +101,20 @@ class UserAuthServiceTest {
         request.setAddress("abc");
         request.setIsAdmin(false);
 
-        when(userRepository.save(any(User.class))).thenThrow(new RuntimeException("Duplicate"));
+        User existingUser = new User();
+        existingUser.setEmail("dupe@example.com");
 
-        assertThrows(RuntimeException.class, () -> userAuthService.register(request));
+        when(userRepository.findByEmail("dupe@example.com")).thenReturn(Optional.of(existingUser));
+
+        ResponseStatusException ex = assertThrows(
+                ResponseStatusException.class,
+                () -> userAuthService.register(request)
+        );
+
+        assertEquals(HttpStatus.CONFLICT, ex.getStatusCode());
+        assertEquals("Email already in use", ex.getReason());
+
+        verify(userRepository, never()).save(any(User.class));
     }
 
     @Test
@@ -131,14 +144,19 @@ class UserAuthServiceTest {
     @Test
     void register_shouldFail_whenNameIsBlank() {
         RegisterRequest request = new RegisterRequest();
-        request.setName("   "); // blank
+        request.setName("   ");
         request.setEmail("test@example.com");
         request.setPassword("password");
         request.setAddress("123 Peach St");
         request.setIsAdmin(false);
 
-        RuntimeException ex = assertThrows(RuntimeException.class, () -> userAuthService.register(request));
-        assertEquals("Name is required", ex.getMessage());
+        ResponseStatusException ex = assertThrows(
+                ResponseStatusException.class,
+                () -> userAuthService.register(request)
+        );
+
+        assertEquals(HttpStatus.BAD_REQUEST, ex.getStatusCode());
+        assertEquals("Name is required", ex.getReason());
     }
 
     @Test
@@ -150,8 +168,13 @@ class UserAuthServiceTest {
         request.setAddress("123 Peach St");
         request.setIsAdmin(false);
 
-        RuntimeException ex = assertThrows(RuntimeException.class, () -> userAuthService.register(request));
-        assertEquals("Email is required", ex.getMessage());
+        ResponseStatusException ex = assertThrows(
+                ResponseStatusException.class,
+                () -> userAuthService.register(request)
+        );
+
+        assertEquals(HttpStatus.BAD_REQUEST, ex.getStatusCode());
+        assertEquals("Email is required", ex.getReason());
     }
 
     @Test
@@ -163,8 +186,13 @@ class UserAuthServiceTest {
         request.setAddress("123 Peach St");
         request.setIsAdmin(false);
 
-        RuntimeException ex = assertThrows(RuntimeException.class, () -> userAuthService.register(request));
-        assertEquals("Password is required", ex.getMessage());
+        ResponseStatusException ex = assertThrows(
+                ResponseStatusException.class,
+                () -> userAuthService.register(request)
+        );
+
+        assertEquals(HttpStatus.BAD_REQUEST, ex.getStatusCode());
+        assertEquals("Password is required", ex.getReason());
     }
 
     @Test
@@ -173,11 +201,16 @@ class UserAuthServiceTest {
         request.setName("Test User");
         request.setEmail("test@example.com");
         request.setPassword("password");
-        request.setAddress("   "); // blank
+        request.setAddress("   ");
         request.setIsAdmin(false);
 
-        RuntimeException ex = assertThrows(RuntimeException.class, () -> userAuthService.register(request));
-        assertEquals("Address is required", ex.getMessage());
+        ResponseStatusException ex = assertThrows(
+                ResponseStatusException.class,
+                () -> userAuthService.register(request)
+        );
+
+        assertEquals(HttpStatus.BAD_REQUEST, ex.getStatusCode());
+        assertEquals("Address is required", ex.getReason());
     }
 
     @Test
@@ -191,8 +224,13 @@ class UserAuthServiceTest {
 
         when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.of(testUser));
 
-        RuntimeException ex = assertThrows(RuntimeException.class, () -> userAuthService.register(request));
-        assertEquals("Email already in use", ex.getMessage());
+        ResponseStatusException ex = assertThrows(
+                ResponseStatusException.class,
+                () -> userAuthService.register(request)
+        );
+
+        assertEquals(HttpStatus.CONFLICT, ex.getStatusCode());
+        assertEquals("Email already in use", ex.getReason());
 
         verify(userRepository, never()).save(any(User.class));
     }
@@ -221,11 +259,17 @@ class UserAuthServiceTest {
         request.setEmail("wrong@example.com");
         request.setPassword("bad");
 
-        doThrow(new BadCredentialsException("Bad creds"))
+        doThrow(new org.springframework.security.authentication.BadCredentialsException("Bad creds"))
                 .when(authenticationManager)
                 .authenticate(any(UsernamePasswordAuthenticationToken.class));
 
-        assertThrows(BadCredentialsException.class, () -> userAuthService.authenticate(request));
+        ResponseStatusException ex = assertThrows(
+                ResponseStatusException.class,
+                () -> userAuthService.authenticate(request)
+        );
+
+        assertEquals(HttpStatus.UNAUTHORIZED, ex.getStatusCode());
+        assertEquals("Invalid email or password", ex.getReason());
     }
 
     @Test
@@ -236,6 +280,12 @@ class UserAuthServiceTest {
 
         when(userRepository.findByEmail("missing@example.com")).thenReturn(Optional.empty());
 
-        assertThrows(RuntimeException.class, () -> userAuthService.authenticate(request));
+        ResponseStatusException ex = assertThrows(
+                ResponseStatusException.class,
+                () -> userAuthService.authenticate(request)
+        );
+
+        assertEquals(HttpStatus.UNAUTHORIZED, ex.getStatusCode());
+        assertEquals("Invalid email or password", ex.getReason());
     }
 }
