@@ -65,22 +65,28 @@ class AuthControllerIntegrationTest {
 
     @Test
     void register_shouldFailWithDuplicateEmail() throws Exception {
-        // Pre-save a user
         User existing = new User();
         existing.setName("Existing");
         existing.setEmail("dupe@example.com");
         existing.setPasswordHash(passwordEncoder.encode("something"));
+        existing.setAddress("Existing Address");
         userRepository.save(existing);
 
         RegisterRequest request = new RegisterRequest();
         request.setName("New User");
         request.setEmail("dupe@example.com");
         request.setPassword("something");
+        request.setAddress("123 Main St");
 
         mockMvc.perform(post("/api/auth/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isInternalServerError());
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.status").value(409))
+                .andExpect(jsonPath("$.error").value("Conflict"))
+                .andExpect(jsonPath("$.message").value("Email already in use"))
+                .andExpect(jsonPath("$.path").value("/api/auth/register"))
+                .andExpect(jsonPath("$.method").value("POST"));
     }
 
     @Test
@@ -164,7 +170,12 @@ class AuthControllerIntegrationTest {
         mockMvc.perform(post("/api/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(login)))
-                .andExpect(status().isInternalServerError());
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.status").value(401))
+                .andExpect(jsonPath("$.error").value("Unauthorized"))
+                .andExpect(jsonPath("$.message").value("Invalid email or password"))
+                .andExpect(jsonPath("$.path").value("/api/auth/login"))
+                .andExpect(jsonPath("$.method").value("POST"));
     }
 
     @Test
@@ -176,7 +187,12 @@ class AuthControllerIntegrationTest {
         mockMvc.perform(post("/api/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(login)))
-                .andExpect(status().isInternalServerError());
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.status").value(401))
+                .andExpect(jsonPath("$.error").value("Unauthorized"))
+                .andExpect(jsonPath("$.message").value("Invalid email or password"))
+                .andExpect(jsonPath("$.path").value("/api/auth/login"))
+                .andExpect(jsonPath("$.method").value("POST"));
     }
 
     @Test

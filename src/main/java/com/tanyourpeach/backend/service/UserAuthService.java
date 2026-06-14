@@ -10,6 +10,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class UserAuthService {
@@ -28,20 +31,20 @@ public class UserAuthService {
 
     // REGISTER
     public AuthenticationResponse register(RegisterRequest request) {
-        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
-            throw new RuntimeException("Email already in use");
-        }
         if (request.getName() == null || request.getName().trim().isEmpty()) {
-            throw new RuntimeException("Name is required");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Name is required");
         }
         if (request.getEmail() == null || request.getEmail().trim().isEmpty()) {
-            throw new RuntimeException("Email is required");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email is required");
         }
         if (request.getPassword() == null || request.getPassword().trim().isEmpty()) {
-            throw new RuntimeException("Password is required");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password is required");
         }
         if (request.getAddress() == null || request.getAddress().trim().isEmpty()) {
-            throw new RuntimeException("Address is required");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Address is required");
+        }
+        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already in use");
         }
 
         User user = new User();
@@ -49,7 +52,7 @@ public class UserAuthService {
         user.setEmail(request.getEmail());
         user.setPasswordHash(passwordEncoder.encode(request.getPassword()));
         user.setAddress(request.getAddress());
-        user.setIsAdmin(false); // public registration must never create admin users
+        user.setIsAdmin(false);
 
         userRepository.save(user);
 
@@ -59,12 +62,20 @@ public class UserAuthService {
 
     // LOGIN
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
-        );
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+            );
+        } catch (AuthenticationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid email or password");
+        }
+
         User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new RuntimeException("User not found"));
-                
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.UNAUTHORIZED,
+                        "Invalid email or password"
+                ));
+
         String jwtToken = jwtService.generateToken(user);
         return new AuthenticationResponse(jwtToken);
     }
