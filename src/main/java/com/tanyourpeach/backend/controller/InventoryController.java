@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.tanyourpeach.backend.model.Inventory;
 import com.tanyourpeach.backend.model.User;
@@ -54,14 +56,17 @@ public class InventoryController {
     public ResponseEntity<Inventory> getInventoryById(@PathVariable Long id) {
         return inventoryService.getInventoryById(id)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Inventory item not found"
+                ));
     }
 
     // POST create (admin only)
     @PostMapping
     public ResponseEntity<?> createInventory(@Valid @RequestBody Inventory inventory, HttpServletRequest request) {
         if (!isAdmin(request)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access denied");
+            throw new AccessDeniedException("Access denied");
         }
         return ResponseEntity.ok(inventoryService.createInventory(inventory));
     }
@@ -70,44 +75,57 @@ public class InventoryController {
     @PutMapping("/{id}")
     public ResponseEntity<?> updateInventory(@PathVariable Long id, @Valid @RequestBody Inventory updated, HttpServletRequest request) {
         if (!isAdmin(request)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access denied");
+            throw new AccessDeniedException("Access denied");
         }
         return inventoryService.updateInventory(id, updated)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Inventory item not found"
+                ));
     }
 
     // DELETE (admin only)
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteInventory(@PathVariable Long id, HttpServletRequest request) {
         if (!isAdmin(request)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access denied");
+            throw new AccessDeniedException("Access denied");
         }
-        return inventoryService.deleteInventory(id)
-                ? ResponseEntity.noContent().build()
-                : ResponseEntity.notFound().build();
+
+        boolean deleted = inventoryService.deleteInventory(id);
+        if (!deleted) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Inventory item not found");
+        }
+
+        return ResponseEntity.noContent().build();
     }
 
     // PUT deduct quantity (used automatically by appointment logic — allow without admin check)
     @PutMapping("/deduct/{id}")
     public ResponseEntity<Void> deductQuantity(@PathVariable Long id, @RequestParam int amount) {
-        return inventoryService.deductQuantity(id, amount)
-                ? ResponseEntity.ok().build()
-                : ResponseEntity.badRequest().build();
+        boolean deducted = inventoryService.deductQuantity(id, amount);
+        if (!deducted) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unable to deduct inventory quantity");
+        }
+
+        return ResponseEntity.ok().build();
     }
 
     // PUT add stock (admin only)
     @PutMapping("/add-stock/{id}")
     public ResponseEntity<?> addStock(@PathVariable Long id,
-                                      @RequestParam int quantity,
-                                      @RequestParam BigDecimal unitCost,
-                                      HttpServletRequest request) {
+                                    @RequestParam int quantity,
+                                    @RequestParam BigDecimal unitCost,
+                                    HttpServletRequest request) {
         if (!isAdmin(request)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access denied");
+            throw new AccessDeniedException("Access denied");
         }
 
-        return inventoryService.addQuantityAndCost(id, quantity, unitCost)
-                ? ResponseEntity.ok().build()
-                : ResponseEntity.badRequest().build();
+        boolean added = inventoryService.addQuantityAndCost(id, quantity, unitCost);
+        if (!added) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unable to add stock");
+        }
+
+        return ResponseEntity.ok().build();
     }
 }

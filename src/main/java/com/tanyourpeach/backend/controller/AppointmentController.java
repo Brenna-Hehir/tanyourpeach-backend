@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.security.access.AccessDeniedException;
 
 import java.util.List;
 import java.util.Optional;
@@ -58,7 +60,7 @@ public class AppointmentController {
     @GetMapping
     public ResponseEntity<?> getAllAppointments(HttpServletRequest request) {
         if (!isAdmin(request)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access denied");
+            throw new AccessDeniedException("Access denied");
         }
         return ResponseEntity.ok(appointmentService.getAllAppointments());
     }
@@ -68,7 +70,7 @@ public class AppointmentController {
     public ResponseEntity<?> getAppointmentById(@PathVariable Long id, HttpServletRequest request) {
         Optional<Appointment> appointment = appointmentService.getAppointmentById(id);
         if (appointment.isEmpty()) {
-            return ResponseEntity.notFound().build();
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Appointment not found");
         }
 
         String email = getUserEmail(request);
@@ -82,7 +84,7 @@ public class AppointmentController {
             return ResponseEntity.ok(appointment.get());
         }
 
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access denied");
+        throw new AccessDeniedException("Access denied");
     }
 
     // GET all appointments for logged-in user
@@ -90,7 +92,7 @@ public class AppointmentController {
     public ResponseEntity<?> getUserAppointments(HttpServletRequest request) {
         String email = getUserEmail(request);
         if (email == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized");
         }
 
         List<Appointment> userAppointments = appointmentService.getAllAppointments().stream()
@@ -104,7 +106,12 @@ public class AppointmentController {
     @PostMapping
     public ResponseEntity<Appointment> createAppointment(@Valid @RequestBody Appointment appointment, HttpServletRequest request) {
         Optional<Appointment> created = appointmentService.createAppointment(appointment, request);
-        return created.map(ResponseEntity::ok).orElse(ResponseEntity.badRequest().build());
+        return created
+        .map(ResponseEntity::ok)
+        .orElseThrow(() -> new ResponseStatusException(
+                HttpStatus.BAD_REQUEST,
+                "Unable to create appointment"
+        ));
     }
 
     // PUT update appointment (admins or user that owns it)
@@ -112,7 +119,7 @@ public class AppointmentController {
     public ResponseEntity<?> updateAppointment(@PathVariable Long id, @Valid @RequestBody Appointment updated, HttpServletRequest request) {
         Optional<Appointment> existing = appointmentService.getAppointmentById(id);
         if (existing.isEmpty()) {
-            return ResponseEntity.notFound().build();
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Appointment not found");
         }
 
         String email = getUserEmail(request);
@@ -121,21 +128,27 @@ public class AppointmentController {
         if (isAdmin(request) || (ownerEmail != null && ownerEmail.equals(email))) {
             return appointmentService.updateAppointment(id, updated, request)
                     .map(ResponseEntity::ok)
-                    .orElse(ResponseEntity.badRequest().build());
+                    .orElseThrow(() -> new ResponseStatusException(
+                            HttpStatus.BAD_REQUEST,
+                            "Unable to update appointment"
+                    ));
         }
 
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access denied");
+        throw new AccessDeniedException("Access denied");
     }
 
     // DELETE appointment (admin only)
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteAppointment(@PathVariable Long id, HttpServletRequest request) {
         if (!isAdmin(request)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access denied");
+            throw new AccessDeniedException("Access denied");
         }
 
-        return appointmentService.deleteAppointment(id)
-                ? ResponseEntity.noContent().build()
-                : ResponseEntity.notFound().build();
+        boolean deleted = appointmentService.deleteAppointment(id);
+        if (!deleted) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Appointment not found");
+        }
+
+        return ResponseEntity.noContent().build();
     }
 }

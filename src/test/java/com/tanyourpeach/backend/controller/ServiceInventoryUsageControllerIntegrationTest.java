@@ -135,7 +135,12 @@ class ServiceInventoryUsageControllerIntegrationTest {
         mockMvc.perform(post("/api/service-usage")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status").value(400))
+                .andExpect(jsonPath("$.error").value("Bad Request"))
+                .andExpect(jsonPath("$.message").value("Unable to create service inventory usage"))
+                .andExpect(jsonPath("$.path").value("/api/service-usage"))
+                .andExpect(jsonPath("$.method").value("POST"));
     }
 
     @Test
@@ -154,7 +159,12 @@ class ServiceInventoryUsageControllerIntegrationTest {
     @Test
     void updateQuantity_shouldReturnNotFound_whenUsageDoesNotExist() throws Exception {
         mockMvc.perform(put("/api/service-usage/999/999?quantityUsed=2"))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.status").value(404))
+                .andExpect(jsonPath("$.error").value("Not Found"))
+                .andExpect(jsonPath("$.message").value("Service inventory usage not found"))
+                .andExpect(jsonPath("$.path").value("/api/service-usage/999/999"))
+                .andExpect(jsonPath("$.method").value("PUT"));
     }
 
     @Test
@@ -174,6 +184,11 @@ class ServiceInventoryUsageControllerIntegrationTest {
     @Test
     void deleteUsage_shouldReturnNotFound_whenAlreadyDeleted() throws Exception {
         mockMvc.perform(delete("/api/service-usage/123/456"))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.status").value(404))
+                .andExpect(jsonPath("$.error").value("Not Found"))
+                .andExpect(jsonPath("$.message").value("Service inventory usage not found"))
+                .andExpect(jsonPath("$.path").value("/api/service-usage/123/456"))
+                .andExpect(jsonPath("$.method").value("DELETE"));
     }
 }

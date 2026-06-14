@@ -93,7 +93,11 @@ class FinancialLogControllerIntegrationTest {
         mockMvc.perform(get("/api/financial-log")
                 .header("Authorization", userToken))
                 .andExpect(status().isForbidden())
-                .andExpect(content().string("Access denied"));
+                .andExpect(jsonPath("$.status").value(403))
+                .andExpect(jsonPath("$.error").value("Forbidden"))
+                .andExpect(jsonPath("$.message").value("Access denied"))
+                .andExpect(jsonPath("$.path").value("/api/financial-log"))
+                .andExpect(jsonPath("$.method").value("GET"));
     }
 
     @Test
@@ -108,7 +112,12 @@ class FinancialLogControllerIntegrationTest {
     void getLogById_shouldReturn404_ifNotFound() throws Exception {
         mockMvc.perform(get("/api/financial-log/9999")
                 .header("Authorization", adminToken))
-                .andExpect(status().isNotFound());
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.status").value(404))
+                .andExpect(jsonPath("$.error").value("Not Found"))
+                .andExpect(jsonPath("$.message").value("Financial log not found"))
+                .andExpect(jsonPath("$.path").value("/api/financial-log/9999"))
+                .andExpect(jsonPath("$.method").value("GET"));
     }
 
     @Test
@@ -116,6 +125,10 @@ class FinancialLogControllerIntegrationTest {
         mockMvc.perform(get("/api/financial-log/" + testLog.getLogId())
                 .header("Authorization", userToken))
                 .andExpect(status().isForbidden())
-                .andExpect(content().string("Access denied"));
+                .andExpect(jsonPath("$.status").value(403))
+                .andExpect(jsonPath("$.error").value("Forbidden"))
+                .andExpect(jsonPath("$.message").value("Access denied"))
+                .andExpect(jsonPath("$.path").value("/api/financial-log/" + testLog.getLogId()))
+                .andExpect(jsonPath("$.method").value("GET"));
     }
 }

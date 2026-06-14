@@ -15,6 +15,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -79,23 +81,37 @@ class FinancialLogControllerTest {
         when(jwtService.extractUsername("mock-token")).thenReturn(email);
         when(userRepository.findByEmail(email)).thenReturn(Optional.of(nonAdmin));
 
-        ResponseEntity<?> response = controller.getAllLogs(request);
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+        AccessDeniedException ex = assertThrows(
+                AccessDeniedException.class,
+                () -> controller.getAllLogs(request)
+        );
+
+        assertEquals("Access denied", ex.getMessage());
     }
 
     @Test
     void getAllLogs_shouldReturn403_whenAuthorizationHeaderMissing() {
         when(request.getHeader("Authorization")).thenReturn(null);
-        ResponseEntity<?> response = controller.getAllLogs(request);
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+
+        AccessDeniedException ex = assertThrows(
+                AccessDeniedException.class,
+                () -> controller.getAllLogs(request)
+        );
+
+        assertEquals("Access denied", ex.getMessage());
     }
 
     @Test
     void getAllLogs_shouldReturn403_whenJwtThrowsException() {
         when(request.getHeader("Authorization")).thenReturn(token);
         when(jwtService.extractUsername("mock-token")).thenThrow(new RuntimeException("Bad token"));
-        ResponseEntity<?> response = controller.getAllLogs(request);
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+
+        AccessDeniedException ex = assertThrows(
+                AccessDeniedException.class,
+                () -> controller.getAllLogs(request)
+        );
+
+        assertEquals("Access denied", ex.getMessage());
     }
 
     @Test
@@ -103,8 +119,13 @@ class FinancialLogControllerTest {
         when(request.getHeader("Authorization")).thenReturn(token);
         when(jwtService.extractUsername("mock-token")).thenReturn(email);
         when(userRepository.findByEmail(email)).thenReturn(Optional.empty());
-        ResponseEntity<?> response = controller.getAllLogs(request);
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+
+        AccessDeniedException ex = assertThrows(
+                AccessDeniedException.class,
+                () -> controller.getAllLogs(request)
+        );
+
+        assertEquals("Access denied", ex.getMessage());
     }
 
     @Test
@@ -129,15 +150,24 @@ class FinancialLogControllerTest {
         when(jwtService.extractUsername("mock-token")).thenReturn(email);
         when(userRepository.findByEmail(email)).thenReturn(Optional.of(nonAdmin));
 
-        ResponseEntity<?> response = controller.getLogById(1L, request);
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+        AccessDeniedException ex = assertThrows(
+                AccessDeniedException.class,
+                () -> controller.getLogById(1L, request)
+        );
+
+        assertEquals("Access denied", ex.getMessage());
     }
 
     @Test
     void getLogById_shouldReturn403_whenAuthorizationHeaderMissing() {
         when(request.getHeader("Authorization")).thenReturn(null);
-        ResponseEntity<?> response = controller.getLogById(1L, request);
-        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+
+        AccessDeniedException ex = assertThrows(
+                AccessDeniedException.class,
+                () -> controller.getLogById(1L, request)
+        );
+
+        assertEquals("Access denied", ex.getMessage());
     }
 
     @Test
@@ -147,7 +177,12 @@ class FinancialLogControllerTest {
         when(userRepository.findByEmail(email)).thenReturn(Optional.of(adminUser));
         when(financialLogService.getLogById(1L)).thenReturn(Optional.empty());
 
-        ResponseEntity<?> response = controller.getLogById(1L, request);
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        ResponseStatusException ex = assertThrows(
+                ResponseStatusException.class,
+                () -> controller.getLogById(1L, request)
+        );
+
+        assertEquals(HttpStatus.NOT_FOUND, ex.getStatusCode());
+        assertEquals("Financial log not found", ex.getReason());
     }
 }

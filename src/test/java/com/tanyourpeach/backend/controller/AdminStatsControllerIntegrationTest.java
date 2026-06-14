@@ -109,7 +109,11 @@ class AdminStatsControllerIntegrationTest {
             mockMvc.perform(get(url)
                     .header("Authorization", userToken))
                     .andExpect(status().isForbidden())
-                    .andExpect(content().string("Access denied"));
+                    .andExpect(jsonPath("$.status").value(403))
+                    .andExpect(jsonPath("$.error").value("Forbidden"))
+                    .andExpect(jsonPath("$.message").value("Access denied"))
+                    .andExpect(jsonPath("$.path").value(url))
+                    .andExpect(jsonPath("$.method").value("GET"));
         }
     }
 
@@ -125,7 +129,11 @@ class AdminStatsControllerIntegrationTest {
         for (String url : urls) {
             mockMvc.perform(get(url))
                     .andExpect(status().isForbidden())
-                    .andExpect(content().string("Access denied"));
+                    .andExpect(jsonPath("$.status").value(403))
+                    .andExpect(jsonPath("$.error").value("Forbidden"))
+                    .andExpect(jsonPath("$.message").value("Access denied"))
+                    .andExpect(jsonPath("$.path").value(url))
+                    .andExpect(jsonPath("$.method").value("GET"));
         }
     }
 
@@ -142,7 +150,11 @@ class AdminStatsControllerIntegrationTest {
             mockMvc.perform(get(url)
                     .header("Authorization", "Bearer invalid.token.here"))
                     .andExpect(status().isForbidden())
-                    .andExpect(content().string("Access denied"));
+                    .andExpect(jsonPath("$.status").value(403))
+                    .andExpect(jsonPath("$.error").value("Forbidden"))
+                    .andExpect(jsonPath("$.message").value("Access denied"))
+                    .andExpect(jsonPath("$.path").value(url))
+                    .andExpect(jsonPath("$.method").value("GET"));
         }
     }
 
@@ -159,9 +171,13 @@ class AdminStatsControllerIntegrationTest {
 
         for (String url : urls) {
             mockMvc.perform(get(url)
-                    .header("Authorization", rawToken)) // no "Bearer "
+                    .header("Authorization", rawToken))
                     .andExpect(status().isForbidden())
-                    .andExpect(content().string("Access denied"));
+                    .andExpect(jsonPath("$.status").value(403))
+                    .andExpect(jsonPath("$.error").value("Forbidden"))
+                    .andExpect(jsonPath("$.message").value("Access denied"))
+                    .andExpect(jsonPath("$.path").value(url))
+                    .andExpect(jsonPath("$.method").value("GET"));
         }
     }
 }

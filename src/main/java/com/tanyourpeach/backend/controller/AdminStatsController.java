@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.access.AccessDeniedException;
 
 @RestController
 @RequestMapping("/api/admin/stats")
@@ -42,7 +43,7 @@ public class AdminStatsController {
     @GetMapping("/summary")
     public ResponseEntity<?> getSummary(HttpServletRequest request) {
         if (!isAdmin(request)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access denied");
+            throw new AccessDeniedException("Access denied");
         }
         return ResponseEntity.ok(adminStatsService.getDashboardSummary());
     }
@@ -51,7 +52,7 @@ public class AdminStatsController {
     @GetMapping("/monthly")
     public ResponseEntity<?> getMonthlyStats(HttpServletRequest request) {
         if (!isAdmin(request)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access denied");
+            throw new AccessDeniedException("Access denied");
         }
         return ResponseEntity.ok(adminStatsService.getLastFourMonthsStats());
     }
@@ -60,7 +61,7 @@ public class AdminStatsController {
     @GetMapping("/upcoming")
     public ResponseEntity<?> getUpcomingAppointments(HttpServletRequest request) {
         if (!isAdmin(request)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access denied");
+            throw new AccessDeniedException("Access denied");
         }
         return ResponseEntity.ok(adminStatsService.getUpcomingAppointments());
     }
@@ -69,7 +70,7 @@ public class AdminStatsController {
     @GetMapping("/low-stock")
     public ResponseEntity<?> getLowStockItems(HttpServletRequest request) {
         if (!isAdmin(request)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access denied");
+            throw new AccessDeniedException("Access denied");
         }
         return ResponseEntity.ok(adminStatsService.getLowStockInventory());
     }

@@ -3,6 +3,8 @@ package com.tanyourpeach.backend.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.tanyourpeach.backend.model.ServiceInventoryUsage;
 import com.tanyourpeach.backend.service.ServiceInventoryUsageService;
@@ -40,7 +42,10 @@ public class ServiceInventoryUsageController {
     public ResponseEntity<ServiceInventoryUsage> createUsage(@RequestBody ServiceInventoryUsage usage) {
         return usageService.createUsage(usage)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.badRequest().build());
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST,
+                        "Unable to create service inventory usage"
+                ));
     }
 
     // PUT update quantity used
@@ -49,15 +54,24 @@ public class ServiceInventoryUsageController {
                                                                     @PathVariable Long itemId,
                                                                     @RequestParam int quantityUsed) {
         return usageService.updateQuantity(serviceId, itemId, quantityUsed)
-            .map(ResponseEntity::ok)
-            .orElse(ResponseEntity.notFound().build());
+                .map(ResponseEntity::ok)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Service inventory usage not found"
+                ));
     }
 
     // DELETE a link
     @DeleteMapping("/{serviceId}/{itemId}")
     public ResponseEntity<Void> deleteUsage(@PathVariable Long serviceId, @PathVariable Long itemId) {
-        return usageService.deleteUsage(serviceId, itemId)
-                ? ResponseEntity.noContent().build()
-                : ResponseEntity.notFound().build();
+        boolean deleted = usageService.deleteUsage(serviceId, itemId);
+        if (!deleted) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "Service inventory usage not found"
+            );
+        }
+
+        return ResponseEntity.noContent().build();
     }
 }

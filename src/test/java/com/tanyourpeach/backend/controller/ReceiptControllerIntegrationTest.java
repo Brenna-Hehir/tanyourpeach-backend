@@ -123,7 +123,11 @@ class ReceiptControllerIntegrationTest {
     void getAllReceipts_shouldFail_forNonAdmin() throws Exception {
         mockMvc.perform(get("/api/receipts").header("Authorization", userToken))
             .andExpect(status().isForbidden())
-            .andExpect(content().string("Access denied"));
+            .andExpect(jsonPath("$.status").value(403))
+            .andExpect(jsonPath("$.error").value("Forbidden"))
+            .andExpect(jsonPath("$.message").value("Access denied"))
+            .andExpect(jsonPath("$.path").value("/api/receipts"))
+            .andExpect(jsonPath("$.method").value("GET"));
     }
 
     @Test
@@ -137,13 +141,22 @@ class ReceiptControllerIntegrationTest {
     void getReceiptById_shouldFail_forNonAdmin() throws Exception {
         mockMvc.perform(get("/api/receipts/" + testReceipt.getReceiptId()).header("Authorization", userToken))
             .andExpect(status().isForbidden())
-            .andExpect(content().string("Access denied"));
+            .andExpect(jsonPath("$.status").value(403))
+            .andExpect(jsonPath("$.error").value("Forbidden"))
+            .andExpect(jsonPath("$.message").value("Access denied"))
+            .andExpect(jsonPath("$.path").value("/api/receipts/" + testReceipt.getReceiptId()))
+            .andExpect(jsonPath("$.method").value("GET"));
     }
 
     @Test
     void getReceiptById_shouldReturn404_ifNotFound() throws Exception {
         mockMvc.perform(get("/api/receipts/99999").header("Authorization", adminToken))
-            .andExpect(status().isNotFound());
+            .andExpect(status().isNotFound())
+            .andExpect(jsonPath("$.status").value(404))
+            .andExpect(jsonPath("$.error").value("Not Found"))
+            .andExpect(jsonPath("$.message").value("Receipt not found"))
+            .andExpect(jsonPath("$.path").value("/api/receipts/99999"))
+            .andExpect(jsonPath("$.method").value("GET"));
     }
 
     @Test
@@ -173,12 +186,21 @@ class ReceiptControllerIntegrationTest {
 
         mockMvc.perform(get("/api/receipts/appointment/" + userAppointment.getAppointmentId()).header("Authorization", otherToken))
             .andExpect(status().isForbidden())
-            .andExpect(content().string("Access denied"));
+            .andExpect(jsonPath("$.status").value(403))
+            .andExpect(jsonPath("$.error").value("Forbidden"))
+            .andExpect(jsonPath("$.message").value("Access denied"))
+            .andExpect(jsonPath("$.path").value("/api/receipts/appointment/" + userAppointment.getAppointmentId()))
+            .andExpect(jsonPath("$.method").value("GET"));
     }
 
     @Test
     void getReceiptByAppointmentId_shouldReturn404_ifNotFound() throws Exception {
         mockMvc.perform(get("/api/receipts/appointment/99999").header("Authorization", adminToken))
-            .andExpect(status().isNotFound());
+            .andExpect(status().isNotFound())
+            .andExpect(jsonPath("$.status").value(404))
+            .andExpect(jsonPath("$.error").value("Not Found"))
+            .andExpect(jsonPath("$.message").value("Receipt not found"))
+            .andExpect(jsonPath("$.path").value("/api/receipts/appointment/99999"))
+            .andExpect(jsonPath("$.method").value("GET"));
     }
 }

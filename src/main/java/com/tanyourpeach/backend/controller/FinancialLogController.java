@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 
@@ -45,7 +47,7 @@ public class FinancialLogController {
     @GetMapping
     public ResponseEntity<?> getAllLogs(HttpServletRequest request) {
         if (!isAdmin(request)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access denied");
+            throw new AccessDeniedException("Access denied");
         }
         return ResponseEntity.ok(financialLogService.getAllLogs());
     }
@@ -54,10 +56,14 @@ public class FinancialLogController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getLogById(@PathVariable Long id, HttpServletRequest request) {
         if (!isAdmin(request)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access denied");
+            throw new AccessDeniedException("Access denied");
         }
 
         Optional<FinancialLog> log = financialLogService.getLogById(id);
-        return log.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+        return log.map(ResponseEntity::ok)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Financial log not found"
+                ));
     }
 }

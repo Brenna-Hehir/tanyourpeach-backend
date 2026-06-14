@@ -81,7 +81,11 @@ class AvailabilityControllerIntegrationTest {
     void getAvailableSlotsByDate_shouldFailWithBadDate() throws Exception {
         mockMvc.perform(get("/api/availabilities/available/bad-date"))
                 .andExpect(status().isBadRequest())
-                .andExpect(content().string("Invalid date format"));
+                .andExpect(jsonPath("$.status").value(400))
+                .andExpect(jsonPath("$.error").value("Bad Request"))
+                .andExpect(jsonPath("$.message").value("Invalid date format"))
+                .andExpect(jsonPath("$.path").value("/api/availabilities/available/bad-date"))
+                .andExpect(jsonPath("$.method").value("GET"));
     }
 
     @Test
