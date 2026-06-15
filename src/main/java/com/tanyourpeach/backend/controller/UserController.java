@@ -28,26 +28,26 @@ public class UserController {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
-    // Public: get user by id (404 if missing -> unified JSON via handler)
+    // Admin-only: get user by id (404 if missing -> unified JSON via handler)
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id) {
         return ResponseEntity.ok(userService.getUserByIdOrThrow(id));
     }
 
-    // Public: create (400 on validation, 409 on duplicate -> unified JSON)
+    // Admin-only: create (400 on validation, 409 on duplicate -> unified JSON)
     @PostMapping
     public ResponseEntity<User> createUser(@Valid @RequestBody UserCreateDto dto) {
         User created = userService.createUser(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
-    // Public: update (404 if missing, 409 email collision)
+    // Admin-only: update (404 if missing, 409 email collision)
     @PutMapping("/{id}")
     public ResponseEntity<User> updateUser(@PathVariable Long id, @Valid @RequestBody UserUpdateDto dto) {
         return ResponseEntity.ok(userService.updateUser(id, dto));
     }
 
-    // Public: delete (404 if missing)
+    // Admin-only: delete (404 if missing)
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
