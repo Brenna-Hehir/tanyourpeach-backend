@@ -11,6 +11,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,6 +28,9 @@ class UserServiceTest {
     @InjectMocks
     private UserService userService;
 
+    @Mock
+    private PasswordEncoder passwordEncoder;   
+
     private User testUser;
 
     @BeforeEach
@@ -40,6 +44,9 @@ class UserServiceTest {
         testUser.setPasswordHash("hashed_pw");
         testUser.setAddress("Peach St, GA");
         testUser.setIsAdmin(false);
+
+        when(passwordEncoder.encode("pw")).thenReturn("encoded-pw");
+        when(passwordEncoder.encode("new_hash")).thenReturn("encoded-new-hash");
     }
 
     @Test
@@ -78,8 +85,12 @@ class UserServiceTest {
         when(userRepository.save(any(User.class))).thenAnswer(inv -> inv.getArgument(0));
 
         User result = userService.createUser(dto);
+
         assertNotNull(result);
         assertEquals("brenna@example.com", result.getEmail());
+        assertEquals("encoded-pw", result.getPasswordHash());
+
+        verify(passwordEncoder).encode("pw");
         verify(userRepository).save(any(User.class));
     }
 
@@ -115,7 +126,10 @@ class UserServiceTest {
 
         assertNotNull(result);
         assertEquals("updated@example.com", result.getEmail());
+        assertEquals("encoded-new-hash", result.getPasswordHash());
         assertTrue(result.getIsAdmin());
+
+        verify(passwordEncoder).encode("new_hash");
         verify(userRepository).save(any(User.class));
     }
 

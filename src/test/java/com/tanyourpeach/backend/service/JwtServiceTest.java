@@ -195,7 +195,7 @@ class JwtServiceTest {
     @Test
     void malformedToken_shouldBeInvalid() {
         String malformed = "not.a.jwt";
-        assertThrows(Exception.class, () -> jwtService.isTokenValid(malformed, springUser));
+        assertFalse(jwtService.isTokenValid(malformed, springUser));
     }
 
     @Test

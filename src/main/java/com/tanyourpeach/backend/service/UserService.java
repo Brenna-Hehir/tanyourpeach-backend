@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 
@@ -16,6 +17,9 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public List<User> getAllUsers() {
         return userRepository.findAll();
@@ -35,8 +39,7 @@ public class UserService {
         User user = new User();
         user.setName(dto.getName().trim());
         user.setEmail(email);
-        // If you hash passwords elsewhere, call that here instead:
-        user.setPasswordHash(dto.getPassword().trim());
+        user.setPasswordHash(passwordEncoder.encode(dto.getPassword().trim()));
         user.setAddress(dto.getAddress());
         user.setIsAdmin(Boolean.TRUE.equals(dto.getIsAdmin()));
 
@@ -55,7 +58,7 @@ public class UserService {
 
         user.setName(dto.getName().trim());
         user.setEmail(newEmail);
-        user.setPasswordHash(dto.getPassword().trim()); // hash if applicable
+        user.setPasswordHash(passwordEncoder.encode(dto.getPassword().trim()));
         user.setAddress(dto.getAddress());
         user.setIsAdmin(Boolean.TRUE.equals(dto.getIsAdmin()));
 
