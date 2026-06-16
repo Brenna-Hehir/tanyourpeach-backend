@@ -16,6 +16,8 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.*;
 
 class InventoryServiceTest {
@@ -67,16 +69,29 @@ class InventoryServiceTest {
     }
 
     @Test
-    void createInventory_shouldSetDefaultsAndSave() {
+    void createInventory_shouldCalculateTotalSpentAndLogInitialPurchase_whenStartingStockProvided() {
         Inventory newItem = new Inventory();
         newItem.setItemName("Caps");
-        newItem.setQuantity(-5);
+        newItem.setQuantity(10);
+        newItem.setUnitCost(BigDecimal.valueOf(8.00));
 
-        when(inventoryRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+        when(inventoryRepository.save(any())).thenAnswer(i -> {
+            Inventory saved = i.getArgument(0);
+            saved.setItemId(2L);
+            return saved;
+        });
 
         Inventory saved = inventoryService.createInventory(newItem);
-        assertEquals(0, saved.getQuantity());
-        assertEquals(BigDecimal.ZERO, saved.getTotalSpent());
+
+        assertNotNull(saved);
+        assertEquals(10, saved.getQuantity());
+        assertTrue(saved.getTotalSpent().compareTo(BigDecimal.valueOf(80.00)) == 0);
+
+        verify(financialLogRepository).save(argThat(log ->
+                log.getType() == FinancialLog.Type.expense
+                        && log.getAmount().compareTo(BigDecimal.valueOf(80.00)) == 0
+                        && log.getDescription().contains("Initial inventory purchase")
+        ));
     }
 
     @Test
@@ -96,10 +111,27 @@ class InventoryServiceTest {
         // Assert
         assertNotNull(result);
         assertEquals(0, result.getQuantity());
-        assertEquals(BigDecimal.ZERO, result.getTotalSpent());
+        assertTrue(result.getTotalSpent().compareTo(BigDecimal.ZERO) == 0);
         assertEquals(new BigDecimal("1.50"), result.getUnitCost());
-
         verify(inventoryRepository).save(any());
+    }
+
+    @Test
+    void createInventory_shouldNotLogInitialPurchase_whenQuantityIsZero() {
+        Inventory newItem = new Inventory();
+        newItem.setItemName("Caps");
+        newItem.setQuantity(0);
+        newItem.setUnitCost(BigDecimal.valueOf(8.00));
+
+        when(inventoryRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+
+        Inventory saved = inventoryService.createInventory(newItem);
+
+        assertNotNull(saved);
+        assertEquals(0, saved.getQuantity());
+        assertTrue(saved.getTotalSpent().compareTo(BigDecimal.ZERO) == 0);
+
+        verify(financialLogRepository, never()).save(any());
     }
 
     @Test
@@ -114,6 +146,20 @@ class InventoryServiceTest {
 
         assertNull(result); // Should be rejected
         verify(inventoryRepository, never()).save(any());
+    }
+
+    @Test
+    void createInventory_shouldRejectNegativeQuantity() {
+        Inventory newItem = new Inventory();
+        newItem.setItemName("Caps");
+        newItem.setQuantity(-5);
+        newItem.setUnitCost(BigDecimal.valueOf(8.00));
+
+        Inventory saved = inventoryService.createInventory(newItem);
+
+        assertNull(saved);
+        verify(inventoryRepository, never()).save(any());
+        verify(financialLogRepository, never()).save(any());
     }
 
     @Test
@@ -152,12 +198,13 @@ class InventoryServiceTest {
     }
 
     @Test
-    void updateInventory_shouldLogExpense_whenQuantityIncreases() {
+    void updateInventory_shouldOnlyUpdateMetadataAndIgnoreQuantityAndTotalSpent() {
         Inventory updated = new Inventory();
-        updated.setItemName("Gloves");
-        updated.setQuantity(15);
-        updated.setUnitCost(BigDecimal.valueOf(2.00));
-        updated.setNotes("Restocked");
+        updated.setItemName("Updated Gloves");
+        updated.setQuantity(999);
+        updated.setTotalSpent(BigDecimal.valueOf(9999.00));
+        updated.setUnitCost(BigDecimal.valueOf(3.00));
+        updated.setNotes("Updated notes");
         updated.setLowStockThreshold(5);
 
         when(inventoryRepository.findById(1L)).thenReturn(Optional.of(item));
@@ -166,19 +213,12 @@ class InventoryServiceTest {
         Optional<Inventory> result = inventoryService.updateInventory(1L, updated);
 
         assertTrue(result.isPresent());
-        verify(financialLogRepository).save(any(FinancialLog.class));
-    }
-
-    @Test
-    void updateInventory_shouldNotLogExpense_whenQuantityDoesNotIncrease() {
-        Inventory updated = new Inventory();
-        updated.setItemName("Gloves");
-        updated.setQuantity(5);
-        updated.setTotalSpent(BigDecimal.valueOf(30));
-
-        when(inventoryRepository.findById(1L)).thenReturn(Optional.of(item));
-
-        inventoryService.updateInventory(1L, updated);
+        assertEquals("Updated Gloves", item.getItemName());
+        assertEquals(10, item.getQuantity());
+        assertTrue(item.getTotalSpent().compareTo(BigDecimal.valueOf(20.00)) == 0);
+        assertTrue(item.getUnitCost().compareTo(BigDecimal.valueOf(3.00)) == 0);
+        assertEquals("Updated notes", item.getNotes());
+        assertEquals(5, item.getLowStockThreshold());
 
         verify(financialLogRepository, never()).save(any());
     }
@@ -287,7 +327,13 @@ class InventoryServiceTest {
 
         assertTrue(result);
         assertEquals(15, item.getQuantity());
-        assertEquals(BigDecimal.valueOf(30.00), item.getTotalSpent());
+        assertTrue(item.getTotalSpent().compareTo(BigDecimal.valueOf(30.00)) == 0);
+
+        verify(financialLogRepository).save(argThat(log ->
+                log.getType() == FinancialLog.Type.expense
+                        && log.getAmount().compareTo(BigDecimal.valueOf(10.00)) == 0
+                        && log.getDescription().contains("Added 5 units")
+        ));
     }
 
     @Test
@@ -297,11 +343,61 @@ class InventoryServiceTest {
     }
 
     @Test
+    void addQuantityAndCost_shouldFail_whenUnitCostIsZero() {
+        when(inventoryRepository.findById(1L)).thenReturn(Optional.of(item));
+
+        boolean result = inventoryService.addQuantityAndCost(1L, 5, BigDecimal.ZERO);
+
+        assertFalse(result);
+        verify(inventoryRepository, never()).save(any());
+        verify(financialLogRepository, never()).save(any());
+    }
+
+    @Test
     void addQuantityAndCost_shouldFail_whenItemNotFound() {
         when(inventoryRepository.findById(999L)).thenReturn(Optional.empty());
 
         boolean result = inventoryService.addQuantityAndCost(999L, 5, BigDecimal.valueOf(2.00));
 
         assertFalse(result);
+    }
+
+    @Test
+    void removeQuantity_shouldSucceed_whenValid() {
+        when(inventoryRepository.findById(1L)).thenReturn(Optional.of(item));
+        when(inventoryRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+
+        boolean result = inventoryService.removeQuantity(1L, 3);
+
+        assertTrue(result);
+        assertEquals(7, item.getQuantity());
+        assertTrue(item.getTotalSpent().compareTo(BigDecimal.valueOf(14.00)) == 0);
+
+        verify(financialLogRepository).save(argThat(log ->
+                log.getType() == FinancialLog.Type.expense
+                        && log.getAmount().compareTo(BigDecimal.valueOf(6.00)) == 0
+                        && log.getDescription().contains("Removed 3 units")
+        ));
+    }
+
+    @Test
+    void removeQuantity_shouldFail_whenQuantityExceedsStock() {
+        when(inventoryRepository.findById(1L)).thenReturn(Optional.of(item));
+
+        boolean result = inventoryService.removeQuantity(1L, 20);
+
+        assertFalse(result);
+        verify(inventoryRepository, never()).save(any());
+        verify(financialLogRepository, never()).save(any());
+    }
+
+    @Test
+    void removeQuantity_shouldFail_whenQuantityIsInvalid() {
+        boolean result = inventoryService.removeQuantity(1L, 0);
+
+        assertFalse(result);
+        verify(inventoryRepository, never()).findById(anyLong());
+        verify(inventoryRepository, never()).save(any());
+        verify(financialLogRepository, never()).save(any());
     }
 }
