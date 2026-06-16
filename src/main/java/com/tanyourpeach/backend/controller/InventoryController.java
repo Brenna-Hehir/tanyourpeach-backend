@@ -128,4 +128,21 @@ public class InventoryController {
 
         return ResponseEntity.ok().build();
     }
+
+    // PUT remove stock (admin only)
+    @PutMapping("/remove-stock/{id}")
+    public ResponseEntity<?> removeStock(@PathVariable Long id,
+                                        @RequestParam int quantity,
+                                        HttpServletRequest request) {
+        if (!isAdmin(request)) {
+            throw new AccessDeniedException("Access denied");
+        }
+
+        boolean removed = inventoryService.removeQuantity(id, quantity);
+        if (!removed) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unable to remove stock");
+        }
+
+        return ResponseEntity.ok().build();
+    }
 }

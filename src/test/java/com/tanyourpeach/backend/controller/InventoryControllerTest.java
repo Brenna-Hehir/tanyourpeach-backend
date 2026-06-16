@@ -270,4 +270,38 @@ class InventoryControllerTest {
 
         assertEquals("Access denied", ex.getMessage());
     }
+
+    @Test
+    void removeStock_shouldReturn200_ifSuccessAndAdmin() {
+        when(inventoryService.removeQuantity(1L, 3)).thenReturn(true);
+
+        ResponseEntity<?> response = controller.removeStock(1L, 3, request);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
+    void removeStock_shouldReturn400_ifFails() {
+        when(inventoryService.removeQuantity(1L, 3)).thenReturn(false);
+
+        ResponseStatusException ex = assertThrows(
+                ResponseStatusException.class,
+                () -> controller.removeStock(1L, 3, request)
+        );
+
+        assertEquals(HttpStatus.BAD_REQUEST, ex.getStatusCode());
+        assertEquals("Unable to remove stock", ex.getReason());
+    }
+
+    @Test
+    void removeStock_shouldReturn403_ifNotAdmin() {
+        adminUser.setIsAdmin(false);
+
+        AccessDeniedException ex = assertThrows(
+                AccessDeniedException.class,
+                () -> controller.removeStock(1L, 3, request)
+        );
+
+        assertEquals("Access denied", ex.getMessage());
+    }
 }

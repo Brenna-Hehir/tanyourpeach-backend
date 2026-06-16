@@ -22,6 +22,7 @@ import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -53,8 +54,6 @@ class InventoryControllerIntegrationTest {
     private String userToken;
 
     private Inventory testItem;
-
-    private Long testItemId;
 
     @BeforeEach
     void setup() {
@@ -207,6 +206,7 @@ class InventoryControllerIntegrationTest {
 
     @Test
     void updateInventory_shouldSucceed_withValidData() throws Exception {
+        testItem.setItemName("Updated Item Name");
         testItem.setQuantity(20);
 
         mockMvc.perform(put("/api/inventory/" + testItem.getItemId())
@@ -214,7 +214,8 @@ class InventoryControllerIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(testItem)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.quantity").value(20));
+                .andExpect(jsonPath("$.itemName").value("Updated Item Name"))
+                .andExpect(jsonPath("$.quantity").value(10));
     }
 
     @Test
@@ -275,7 +276,7 @@ class InventoryControllerIntegrationTest {
         invalid.setQuantity(10);
         invalid.setUnitCost(BigDecimal.valueOf(2.50));
 
-        mockMvc.perform(put("/api/inventory/" + testItemId)
+        mockMvc.perform(put("/api/inventory/" + testItem.getItemId())
                 .header("Authorization", adminToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(invalid)))
@@ -289,7 +290,7 @@ class InventoryControllerIntegrationTest {
         invalid.setQuantity(10);
         invalid.setUnitCost(BigDecimal.valueOf(2.50));
 
-        mockMvc.perform(put("/api/inventory/" + testItemId)
+        mockMvc.perform(put("/api/inventory/" + testItem.getItemId())
                 .header("Authorization", adminToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(invalid)))
@@ -303,7 +304,7 @@ class InventoryControllerIntegrationTest {
         invalid.setQuantity(-5);
         invalid.setUnitCost(BigDecimal.valueOf(2.50));
 
-        mockMvc.perform(put("/api/inventory/" + testItemId)
+        mockMvc.perform(put("/api/inventory/" + testItem.getItemId())
                 .header("Authorization", adminToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(invalid)))
@@ -317,7 +318,7 @@ class InventoryControllerIntegrationTest {
         invalid.setQuantity(10);
         invalid.setUnitCost(BigDecimal.valueOf(-3.00));
 
-        mockMvc.perform(put("/api/inventory/" + testItemId)
+        mockMvc.perform(put("/api/inventory/" + testItem.getItemId())
                 .header("Authorization", adminToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(invalid)))
@@ -481,5 +482,24 @@ class InventoryControllerIntegrationTest {
                 .param("unitCost", "2.50")
                 .header("Authorization", userToken))
                 .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void removeStock_shouldReturnOk_whenAdminAndValid() throws Exception {
+        Inventory item = new Inventory();
+        item.setItemName("Solution");
+        item.setQuantity(10);
+        item.setUnitCost(BigDecimal.valueOf(2.00));
+        item.setTotalSpent(BigDecimal.valueOf(20.00));
+        item = inventoryRepository.save(item);
+
+        mockMvc.perform(put("/api/inventory/remove-stock/" + item.getItemId())
+                .param("quantity", "3")
+                .header("Authorization", adminToken))
+                .andExpect(status().isOk());
+
+        Inventory reloaded = inventoryRepository.findById(item.getItemId()).orElseThrow();
+        assertEquals(7, reloaded.getQuantity());
+        assertTrue(reloaded.getTotalSpent().compareTo(BigDecimal.valueOf(14.00)) == 0);
     }
 }

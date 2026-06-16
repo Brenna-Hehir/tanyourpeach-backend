@@ -32,51 +32,46 @@ public class InventoryService {
     }
 
     // Create new inventory item
+    @Transactional
     public Inventory createInventory(Inventory inventory) {
-        // Basic validation
         if (inventory.getItemName() == null || inventory.getItemName().isBlank()) return null;
         if (inventory.getUnitCost() != null && inventory.getUnitCost().compareTo(BigDecimal.ZERO) < 0) return null;
 
-        if (inventory.getQuantity() == null || inventory.getQuantity() < 0) inventory.setQuantity(0);
-        if (inventory.getTotalSpent() == null) inventory.setTotalSpent(BigDecimal.ZERO);
+        int startingQuantity = inventory.getQuantity() != null ? inventory.getQuantity() : 0;
+        if (startingQuantity < 0) return null;
 
-        return inventoryRepository.save(inventory);
+        BigDecimal unitCost = inventory.getUnitCost() != null ? inventory.getUnitCost() : BigDecimal.ZERO;
+        BigDecimal startingTotalSpent = unitCost.multiply(BigDecimal.valueOf(startingQuantity));
+
+        inventory.setQuantity(startingQuantity);
+        inventory.setTotalSpent(startingTotalSpent);
+
+        Inventory saved = inventoryRepository.save(inventory);
+
+        if (startingQuantity > 0 && startingTotalSpent.compareTo(BigDecimal.ZERO) > 0) {
+            FinancialLog log = new FinancialLog();
+            log.setType(FinancialLog.Type.expense);
+            log.setSource("inventory");
+            log.setReferenceId(saved.getItemId());
+            log.setAmount(startingTotalSpent);
+            log.setDescription("Initial inventory purchase: " + startingQuantity + " units of " + saved.getItemName());
+            financialLogRepository.save(log);
+        }
+
+        return saved;
     }
 
 
-    // Update existing inventory item with expense logging
-    @Transactional
+    // Update existing inventory item metadata only
     public Optional<Inventory> updateInventory(Long id, Inventory updated) {
-        // Basic validation
         if (updated.getItemName() == null || updated.getItemName().isBlank()) return Optional.empty();
         if (updated.getUnitCost() != null && updated.getUnitCost().compareTo(BigDecimal.ZERO) < 0) return Optional.empty();
 
         return inventoryRepository.findById(id).map(existing -> {
-            int oldQuantity = existing.getQuantity() != null ? existing.getQuantity() : 0;
-            BigDecimal oldTotalSpent = existing.getTotalSpent() != null ? existing.getTotalSpent() : BigDecimal.ZERO;
-
             existing.setItemName(updated.getItemName());
-            existing.setQuantity(updated.getQuantity());
             existing.setUnitCost(updated.getUnitCost());
             existing.setNotes(updated.getNotes());
             existing.setLowStockThreshold(updated.getLowStockThreshold());
-
-            // Auto-log expense if more stock was added and unit cost is available
-            if (updated.getQuantity() > oldQuantity && updated.getUnitCost() != null) {
-                int addedQty = updated.getQuantity() - oldQuantity;
-                BigDecimal addedCost = updated.getUnitCost().multiply(BigDecimal.valueOf(addedQty));
-                existing.setTotalSpent(oldTotalSpent.add(addedCost));
-
-                FinancialLog log = new FinancialLog();
-                log.setType(FinancialLog.Type.expense);
-                log.setSource("inventory");
-                log.setReferenceId(existing.getItemId());
-                log.setAmount(addedCost);
-                log.setDescription("Added " + addedQty + " units of " + existing.getItemName());
-                financialLogRepository.save(log);
-            } else {
-                existing.setTotalSpent(updated.getTotalSpent()); // maintain current manual edit behavior
-            }
 
             return inventoryRepository.save(existing);
         });
@@ -121,17 +116,73 @@ public class InventoryService {
         return inventoryRepository.save(item) != null;
     }
 
-    // Add quantity and cost to inventory item
+    // Add purchased stock to inventory item
+    @Transactional
     public boolean addQuantityAndCost(Long itemId, int addedQty, BigDecimal costPerUnit) {
         Optional<Inventory> optional = inventoryRepository.findById(itemId);
         if (optional.isEmpty() || addedQty <= 0 || costPerUnit == null) return false;
+        if (costPerUnit.compareTo(BigDecimal.ZERO) <= 0) return false;
 
         Inventory item = optional.get();
-        item.setQuantity(item.getQuantity() + addedQty);
+
+        int currentQuantity = item.getQuantity() != null ? item.getQuantity() : 0;
+        BigDecimal currentTotalSpent = item.getTotalSpent() != null
+                ? item.getTotalSpent()
+                : BigDecimal.ZERO;
 
         BigDecimal addedCost = costPerUnit.multiply(BigDecimal.valueOf(addedQty));
-        item.setTotalSpent(item.getTotalSpent().add(addedCost));
 
-        return inventoryRepository.save(item) != null;
+        item.setQuantity(currentQuantity + addedQty);
+        item.setTotalSpent(currentTotalSpent.add(addedCost));
+
+        Inventory saved = inventoryRepository.save(item);
+
+        FinancialLog log = new FinancialLog();
+        log.setType(FinancialLog.Type.expense);
+        log.setSource("inventory");
+        log.setReferenceId(saved.getItemId());
+        log.setAmount(addedCost);
+        log.setDescription("Added " + addedQty + " units of " + saved.getItemName());
+        financialLogRepository.save(log);
+
+        return true;
+    }
+
+    // Remove stock from inventory item
+    @Transactional
+    public boolean removeQuantity(Long itemId, int removedQty) {
+        if (removedQty <= 0) return false;
+
+        Optional<Inventory> optional = inventoryRepository.findById(itemId);
+        if (optional.isEmpty()) return false;
+
+        Inventory item = optional.get();
+
+        int currentQuantity = item.getQuantity() != null ? item.getQuantity() : 0;
+        if (currentQuantity < removedQty) return false;
+
+        BigDecimal unitCost = item.getUnitCost() != null ? item.getUnitCost() : BigDecimal.ZERO;
+        BigDecimal currentTotalSpent = item.getTotalSpent() != null
+                ? item.getTotalSpent()
+                : BigDecimal.ZERO;
+
+        BigDecimal removedValue = unitCost.multiply(BigDecimal.valueOf(removedQty));
+
+        item.setQuantity(currentQuantity - removedQty);
+        item.setTotalSpent(currentTotalSpent.subtract(removedValue).max(BigDecimal.ZERO));
+
+        Inventory saved = inventoryRepository.save(item);
+
+        if (removedValue.compareTo(BigDecimal.ZERO) > 0) {
+            FinancialLog log = new FinancialLog();
+            log.setType(FinancialLog.Type.expense);
+            log.setSource("inventory");
+            log.setReferenceId(saved.getItemId());
+            log.setAmount(removedValue);
+            log.setDescription("Removed " + removedQty + " units of " + saved.getItemName());
+            financialLogRepository.save(log);
+        }
+
+        return true;
     }
 }
