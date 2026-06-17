@@ -12,6 +12,7 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -23,6 +24,7 @@ import static com.tanyourpeach.backend.security.JsonAuthHandlers.accessDeniedHan
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
 
     @Autowired
@@ -49,21 +51,7 @@ public class SecurityConfig {
         http
             .csrf(csrf -> csrf.disable())
 
-            // CORS: inline config (Java 8 friendly). This makes preflight OPTIONS return 200.
-            .cors(cors -> cors.configurationSource(request -> {
-                org.springframework.web.cors.CorsConfiguration c = new org.springframework.web.cors.CorsConfiguration();
-                // For tests: allow all origins & methods; no credentials when using "*"
-                c.setAllowedOrigins(java.util.Collections.singletonList("*"));
-                c.setAllowedMethods(java.util.Arrays.asList("GET","POST","PUT","DELETE","PATCH","OPTIONS"));
-                c.setAllowedHeaders(java.util.Arrays.asList(
-                    "Authorization","Content-Type","Accept","Origin",
-                    "X-Correlation-Id","X-Requested-With",
-                    "Access-Control-Request-Method","Access-Control-Request-Headers"
-                ));
-                c.setExposedHeaders(java.util.Collections.singletonList("X-Correlation-Id"));
-                c.setAllowCredentials(false);
-                return c;
-            }))
+            .cors(cors -> {})
 
             .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .httpBasic(b -> b.disable())

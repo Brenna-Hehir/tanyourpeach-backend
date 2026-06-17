@@ -19,7 +19,6 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/financial-log")
-@CrossOrigin(origins = "*")
 public class FinancialLogController {
 
     @Autowired

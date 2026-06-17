@@ -427,6 +427,51 @@ class AppointmentServiceTest {
     }
 
     @Test
+    void updateAppointment_shouldPreserveExistingStatus_whenUpdatedStatusIsNull() {
+        Appointment existing = new Appointment();
+        existing.setAppointmentId(1L);
+        existing.setClientName("Client");
+        existing.setClientEmail("client@example.com");
+        existing.setClientAddress("123 Main St");
+        existing.setStatus(Appointment.Status.PENDING);
+
+        TanService service = new TanService();
+        service.setServiceId(1L);
+        service.setBasePrice(50.0);
+        existing.setService(service);
+
+        Availability currentSlot = new Availability();
+        currentSlot.setSlotId(1L);
+        currentSlot.setIsBooked(true);
+        existing.setAvailability(currentSlot);
+
+        Appointment updated = new Appointment();
+        updated.setClientName("Updated Client");
+        updated.setClientEmail("updated@example.com");
+        updated.setClientAddress("456 Main St");
+        updated.setTravelFee(10.0);
+        updated.setStatus(null);
+
+        TanService updatedService = new TanService();
+        updatedService.setServiceId(1L);
+        updated.setService(updatedService);
+
+        Availability updatedSlot = new Availability();
+        updatedSlot.setSlotId(1L);
+        updated.setAvailability(updatedSlot);
+
+        when(appointmentRepository.findById(1L)).thenReturn(Optional.of(existing));
+        when(tanServiceRepository.findById(1L)).thenReturn(Optional.of(service));
+        when(appointmentRepository.save(any(Appointment.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        Optional<Appointment> result = appointmentService.updateAppointment(1L, updated, request);
+
+        assertTrue(result.isPresent());
+        assertEquals(Appointment.Status.PENDING, result.get().getStatus());
+        verify(appointmentStatusHistoryRepository, never()).save(any());
+    }
+
+    @Test
     void updateAppointment_shouldSkipStatusLogic_whenStatusUnchanged() {
         testAppointment.setAppointmentId(1L);
         testAppointment.setStatus(Appointment.Status.PENDING);

@@ -152,8 +152,8 @@ class SecurityErrorShapeIntegrationTest {
     @org.junit.jupiter.api.Test
     void adminRoute_preflightOptions_skipsAuth() throws Exception {
         mockMvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.options("/api/admin/stats/summary")
-                .header("Origin", "https://example.com")
-                .header("Access-Control-Request-Method", "GET"))
+            .header("Origin", "http://localhost:5173")
+            .header("Access-Control-Request-Method", "GET"))
             .andExpect(status().isOk());
     }
 
