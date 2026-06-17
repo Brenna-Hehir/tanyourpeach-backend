@@ -13,7 +13,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/service-usage")
-@CrossOrigin(origins = "*")
 public class ServiceInventoryUsageController {
 
     @Autowired

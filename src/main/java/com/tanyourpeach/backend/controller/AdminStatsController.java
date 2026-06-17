@@ -15,7 +15,6 @@ import org.springframework.security.access.AccessDeniedException;
 
 @RestController
 @RequestMapping("/api/admin/stats")
-@CrossOrigin
 public class AdminStatsController {
 
     @Autowired

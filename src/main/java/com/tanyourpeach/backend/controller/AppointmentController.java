@@ -22,7 +22,6 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/appointments")
-@CrossOrigin(origins = "*")
 public class AppointmentController {
 
     @Autowired

@@ -93,6 +93,19 @@ class AvailabilityServiceTest {
     }
 
     @Test
+    void createAvailability_shouldReturnNull_whenRequiredFieldsAreMissing() {
+        Availability availability = new Availability();
+        availability.setDate(LocalDate.now().plusDays(1));
+        availability.setStartTime(null);
+        availability.setEndTime(LocalTime.of(10, 0));
+
+        Availability result = availabilityService.createAvailability(availability);
+
+        assertNull(result);
+        verify(availabilityRepository, never()).save(any());
+    }
+
+    @Test
     void createAvailability_shouldReturnNull_whenDateIsInPast() {
         Availability pastSlot = new Availability();
         pastSlot.setDate(LocalDate.now().minusDays(1));
@@ -175,6 +188,19 @@ class AvailabilityServiceTest {
         assertEquals(LocalTime.of(14, 0), resultSlot.getEndTime());
         assertTrue(resultSlot.getIsBooked());
         assertEquals("Updated slot", resultSlot.getNotes());
+    }
+
+    @Test
+    void updateAvailability_shouldReturnEmpty_whenRequiredFieldsAreMissing() {
+        Availability updated = new Availability();
+        updated.setDate(LocalDate.now().plusDays(1));
+        updated.setStartTime(null);
+        updated.setEndTime(LocalTime.of(10, 0));
+
+        Optional<Availability> result = availabilityService.updateAvailability(1L, updated);
+
+        assertTrue(result.isEmpty());
+        verify(availabilityRepository, never()).save(any());
     }
 
     @Test

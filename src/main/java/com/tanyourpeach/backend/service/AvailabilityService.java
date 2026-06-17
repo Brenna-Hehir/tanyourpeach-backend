@@ -29,6 +29,13 @@ public class AvailabilityService {
 
     // POST create new availability slot
     public Availability createAvailability(Availability availability) {
+        if (availability == null ||
+                availability.getDate() == null ||
+                availability.getStartTime() == null ||
+                availability.getEndTime() == null) {
+            return null;
+        }
+
         // Prevent past dates
         if (availability.getDate() != null && availability.getDate().isBefore(LocalDate.now())) {
             return null; // Or throw an exception dePENDING on your preference
@@ -56,6 +63,13 @@ public class AvailabilityService {
 
     // PUT update availability slot
     public Optional<Availability> updateAvailability(Long id, Availability updated) {
+        if (updated == null ||
+                updated.getDate() == null ||
+                updated.getStartTime() == null ||
+                updated.getEndTime() == null) {
+            return Optional.empty();
+        }
+
         // Skip self in overlap check
         List<Availability> overlaps = availabilityRepository.findByDate(updated.getDate()).stream()
             .filter(existing -> !existing.getSlotId().equals(id))

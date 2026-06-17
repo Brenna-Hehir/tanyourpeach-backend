@@ -171,6 +171,9 @@ public class AppointmentService {
         Appointment existing = existingOpt.get();
 
         Appointment.Status oldStatus = existing.getStatus();
+        Appointment.Status newStatus = updated.getStatus() != null
+                ? updated.getStatus()
+                : oldStatus;
 
         // Validate input fields
         if (updated.getClientName() == null || updated.getClientName().trim().isEmpty()) return Optional.empty();
@@ -188,7 +191,7 @@ public class AppointmentService {
         }
 
         // Check inventory early if status is changing to CONFIRMED
-        if (oldStatus != Appointment.Status.CONFIRMED && updated.getStatus() == Appointment.Status.CONFIRMED) {
+        if (oldStatus != Appointment.Status.CONFIRMED && newStatus == Appointment.Status.CONFIRMED) {
             Long serviceId = newService != null
                 ? newService.getServiceId()
                 : (existing.getService() != null ? existing.getService().getServiceId() : null);
@@ -254,10 +257,10 @@ public class AppointmentService {
         }
 
         // Status change history
-        if (!oldStatus.equals(updated.getStatus())) {
+        if (!oldStatus.equals(newStatus)) {
             AppointmentStatusHistory history = new AppointmentStatusHistory();
             history.setAppointment(existing);
-            history.setStatus(updated.getStatus().name());
+            history.setStatus(newStatus.name());
 
             String authHeader = request.getHeader("Authorization");
             if (authHeader != null && authHeader.startsWith("Bearer ")) {
@@ -272,7 +275,7 @@ public class AppointmentService {
         }
 
         // Deduct inventory after confirming sufficient inventory
-        if (oldStatus != Appointment.Status.CONFIRMED && updated.getStatus() == Appointment.Status.CONFIRMED) {
+        if (oldStatus != Appointment.Status.CONFIRMED && newStatus == Appointment.Status.CONFIRMED) {
             List<ServiceInventoryUsage> usages = usageRepository.findByService_ServiceId(existing.getService().getServiceId());
             for (ServiceInventoryUsage usage : usages) {
                 Long itemId = usage.getItem().getItemId();
@@ -294,7 +297,7 @@ public class AppointmentService {
         }
 
         // Generate receipt if confirming for first time
-        if (updated.getStatus() == Appointment.Status.CONFIRMED) {
+        if (newStatus == Appointment.Status.CONFIRMED) {
             Receipt existingReceipt = receiptRepository.findByAppointment_AppointmentId(existing.getAppointmentId());
             if (existingReceipt == null) {
                 Receipt receipt = new Receipt();
@@ -305,7 +308,7 @@ public class AppointmentService {
             }
         }
 
-        existing.setStatus(updated.getStatus());
+        existing.setStatus(newStatus);
 
         Appointment saved = appointmentRepository.save(existing);
         return Optional.of(saved);
