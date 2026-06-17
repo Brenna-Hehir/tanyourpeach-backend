@@ -43,8 +43,8 @@ public class AvailabilityService {
         // Prevent overlap
         List<Availability> overlaps = availabilityRepository.findByDate(availability.getDate()).stream()
             .filter(existing ->
-                !(availability.getEndTime().isBefore(existing.getStartTime()) ||
-                availability.getStartTime().isAfter(existing.getEndTime()))
+                availability.getStartTime().isBefore(existing.getEndTime()) &&
+                availability.getEndTime().isAfter(existing.getStartTime())
             ).toList();
 
         if (!overlaps.isEmpty()) {
@@ -60,8 +60,8 @@ public class AvailabilityService {
         List<Availability> overlaps = availabilityRepository.findByDate(updated.getDate()).stream()
             .filter(existing -> !existing.getSlotId().equals(id))
             .filter(existing ->
-                !(updated.getEndTime().isBefore(existing.getStartTime()) ||
-                updated.getStartTime().isAfter(existing.getEndTime()))
+                updated.getStartTime().isBefore(existing.getEndTime()) &&
+                updated.getEndTime().isAfter(existing.getStartTime())
             ).toList();
 
         if (!overlaps.isEmpty() ||

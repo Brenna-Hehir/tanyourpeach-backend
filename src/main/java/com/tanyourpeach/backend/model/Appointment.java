@@ -93,10 +93,6 @@ public class Appointment {
     }
 
     public void setService(TanService service) {
-        if (service != null && service.getServiceId() == null) {
-            System.err.println("🚨 UNSAVED TanService assigned to Appointment");
-            new Exception("Trace: TanService is not yet saved").printStackTrace(); // 💣
-        }
         this.service = service;
     }
 
