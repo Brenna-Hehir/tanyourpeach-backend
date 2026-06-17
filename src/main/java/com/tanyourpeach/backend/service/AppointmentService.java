@@ -90,6 +90,11 @@ public class AppointmentService {
         return stats;
     }
 
+    private Optional<Availability> findAvailabilityForBooking(Long slotId) {
+        Optional<Availability> lockedSlot = availabilityRepository.findBySlotIdForUpdate(slotId);
+        return lockedSlot.isPresent() ? lockedSlot : availabilityRepository.findById(slotId);
+    }
+
     // POST create new appointment
     @Transactional
     public Optional<Appointment> createAppointment(Appointment appointment, HttpServletRequest request) {
@@ -113,7 +118,7 @@ public class AppointmentService {
         }
 
         Long slotId = appointment.getAvailability().getSlotId();
-        Optional<Availability> slotOpt = availabilityRepository.findById(slotId);
+        Optional<Availability> slotOpt = findAvailabilityForBooking(slotId);
         if (slotOpt.isEmpty()) return Optional.empty();
 
         Availability slot = slotOpt.get();
@@ -216,7 +221,7 @@ public class AppointmentService {
             boolean isChangingSlot = currentSlot == null || !newSlotId.equals(currentSlot.getSlotId());
 
             if (isChangingSlot) {
-                Optional<Availability> newSlotOpt = availabilityRepository.findById(newSlotId);
+                Optional<Availability> newSlotOpt = findAvailabilityForBooking(newSlotId);
                 if (newSlotOpt.isEmpty() || Boolean.TRUE.equals(newSlotOpt.get().getIsBooked())) {
                     return Optional.empty();
                 }

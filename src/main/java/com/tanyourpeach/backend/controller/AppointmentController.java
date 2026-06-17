@@ -115,25 +115,75 @@ public class AppointmentController {
 
     // PUT update appointment (admins or user that owns it)
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateAppointment(@PathVariable Long id, @Valid @RequestBody Appointment updated, HttpServletRequest request) {
+    public ResponseEntity<?> updateAppointment(
+            @PathVariable Long id,
+            @Valid @RequestBody Appointment updated,
+            HttpServletRequest request
+    ) {
         Optional<Appointment> existing = appointmentService.getAppointmentById(id);
         if (existing.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Appointment not found");
         }
 
-        String email = getUserEmail(request);
-        String ownerEmail = existing.get().getClientEmail();
+        Appointment existingAppointment = existing.get();
 
-        if (isAdmin(request) || (ownerEmail != null && ownerEmail.equals(email))) {
-            return appointmentService.updateAppointment(id, updated, request)
-                    .map(ResponseEntity::ok)
-                    .orElseThrow(() -> new ResponseStatusException(
-                            HttpStatus.BAD_REQUEST,
-                            "Unable to update appointment"
-                    ));
+        String email = getUserEmail(request);
+        String ownerEmail = existingAppointment.getClientEmail();
+
+        boolean admin = isAdmin(request);
+        boolean owner = ownerEmail != null && ownerEmail.equals(email);
+
+        if (!admin && !owner) {
+            throw new AccessDeniedException("Access denied");
         }
 
-        throw new AccessDeniedException("Access denied");
+        boolean statusChangeRequested = updated.getStatus() != null
+                && !updated.getStatus().equals(existingAppointment.getStatus());
+
+        boolean customerCancelPending = owner
+                && !admin
+                && existingAppointment.getStatus() == Appointment.Status.PENDING
+                && updated.getStatus() == Appointment.Status.CANCELLED;
+
+        if (statusChangeRequested && !admin && !customerCancelPending) {
+            throw new AccessDeniedException("Only admins can change appointment status");
+        }
+
+        if (owner && !admin) {
+            boolean changedService = updated.getService() != null
+                    && existingAppointment.getService() != null
+                    && !updated.getService().getServiceId().equals(existingAppointment.getService().getServiceId());
+
+            boolean changedAvailability = updated.getAvailability() != null
+                    && existingAppointment.getAvailability() != null
+                    && !updated.getAvailability().getSlotId().equals(existingAppointment.getAvailability().getSlotId());
+
+            boolean changedEmail = updated.getClientEmail() != null
+                    && !updated.getClientEmail().equals(existingAppointment.getClientEmail());
+
+            boolean changedName = updated.getClientName() != null
+                    && !updated.getClientName().equals(existingAppointment.getClientName());
+
+            boolean changedPricing = updated.getDistanceMiles() != null
+                    && !updated.getDistanceMiles().equals(existingAppointment.getDistanceMiles())
+                    || updated.getTravelFee() != null
+                    && !updated.getTravelFee().equals(existingAppointment.getTravelFee())
+                    || updated.getBasePrice() != null
+                    && !updated.getBasePrice().equals(existingAppointment.getBasePrice())
+                    || updated.getTotalPrice() != null
+                    && !updated.getTotalPrice().equals(existingAppointment.getTotalPrice());
+
+            if (changedService || changedAvailability || changedEmail || changedName || changedPricing) {
+                throw new AccessDeniedException("Customers can only update address, notes, or cancel pending appointments");
+            }
+        }
+
+        return appointmentService.updateAppointment(id, updated, request)
+                .map(ResponseEntity::ok)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.BAD_REQUEST,
+                        "Unable to update appointment"
+                ));
     }
 
     // DELETE appointment (admin only)

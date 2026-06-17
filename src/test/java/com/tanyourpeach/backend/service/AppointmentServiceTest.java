@@ -112,7 +112,7 @@ class AppointmentServiceTest {
 
     @Test
     void createAppointment_shouldSucceed_whenSlotAvailable() {
-        when(availabilityRepository.findById(1L)).thenReturn(Optional.of(testSlot));
+        when(availabilityRepository.findBySlotIdForUpdate(1L)).thenReturn(Optional.of(testSlot));
         when(tanServiceRepository.findById(1L)).thenReturn(Optional.of(testService));
         when(appointmentRepository.save(any())).thenAnswer(i -> {
             Appointment a = i.getArgument(0);
@@ -133,7 +133,7 @@ class AppointmentServiceTest {
         testAppointment.setAvailability(testSlot);
         testAppointment.setClientEmail("guest@example.com");
 
-        when(availabilityRepository.findById(1L)).thenReturn(Optional.of(testSlot));
+        when(availabilityRepository.findBySlotIdForUpdate(1L)).thenReturn(Optional.of(testSlot));
         when(tanServiceRepository.findById(1L)).thenReturn(Optional.of(testService));
         when(appointmentRepository.save(any())).thenAnswer(i -> {
             Appointment a = i.getArgument(0);
@@ -163,7 +163,7 @@ class AppointmentServiceTest {
         when(jwtService.extractUsername(token)).thenReturn(email);
         when(userRepository.findByEmail(email)).thenReturn(Optional.of(mockUser));
 
-        when(availabilityRepository.findById(1L)).thenReturn(Optional.of(testSlot));
+        when(availabilityRepository.findBySlotIdForUpdate(1L)).thenReturn(Optional.of(testSlot));
         when(tanServiceRepository.findById(1L)).thenReturn(Optional.of(testService));
         when(appointmentRepository.save(any())).thenAnswer(i -> {
             Appointment a = i.getArgument(0);
@@ -181,7 +181,7 @@ class AppointmentServiceTest {
     void createAppointment_shouldHandleMissingServiceGracefully() {
         testAppointment.setService(null); // simulate missing service
         testAppointment.setAvailability(testSlot); // ensure slot is present
-        when(availabilityRepository.findById(1L)).thenReturn(Optional.of(testSlot));
+        when(availabilityRepository.findBySlotIdForUpdate(1L)).thenReturn(Optional.of(testSlot));
         when(appointmentRepository.save(any())).thenAnswer(i -> i.getArgument(0));
         when(availabilityRepository.save(any())).thenReturn(testSlot);
 
@@ -212,7 +212,7 @@ class AppointmentServiceTest {
         appointment.setAvailability(slot);
 
         // Mock repository behavior
-        when(availabilityRepository.findById(1L)).thenReturn(Optional.of(slot));
+        when(availabilityRepository.findBySlotIdForUpdate(1L)).thenReturn(Optional.of(slot));
         when(appointmentRepository.save(any(Appointment.class))).thenAnswer(invocation -> invocation.getArgument(0));
         when(appointmentStatusHistoryRepository.save(any())).thenReturn(null); // ignore result
 
@@ -242,7 +242,7 @@ class AppointmentServiceTest {
         testAppointment.setAvailability(slot);
         testAppointment.setService(testService);
 
-        when(availabilityRepository.findById(123L)).thenReturn(Optional.of(slot));
+        when(availabilityRepository.findBySlotIdForUpdate(123L)).thenReturn(Optional.of(slot));
 
         Optional<Appointment> result = appointmentService.createAppointment(testAppointment, request);
         assertTrue(result.isEmpty());
@@ -257,6 +257,7 @@ class AppointmentServiceTest {
 
     @Test
     void createAppointment_shouldFail_whenSlotNotFound() {
+        when(availabilityRepository.findBySlotIdForUpdate(1L)).thenReturn(Optional.empty());
         when(availabilityRepository.findById(1L)).thenReturn(Optional.empty());
         Optional<Appointment> result = appointmentService.createAppointment(testAppointment, request);
         assertTrue(result.isEmpty());
@@ -715,7 +716,7 @@ class AppointmentServiceTest {
         updated.setAvailability(newSlot);
 
         when(appointmentRepository.findById(1L)).thenReturn(Optional.of(testAppointment));
-        when(availabilityRepository.findById(456L)).thenReturn(Optional.of(newSlot));
+        when(availabilityRepository.findBySlotIdForUpdate(456L)).thenReturn(Optional.of(newSlot));
 
         Optional<Appointment> result = appointmentService.updateAppointment(1L, updated, request);
         assertTrue(result.isEmpty());
