@@ -14,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
@@ -165,5 +166,125 @@ class SecurityErrorShapeIntegrationTest {
                 .contentType("application/json")
                 .content("{}")
         ).andExpect(status().isForbidden());
+    }
+
+    @Test
+    void inventoryRoutes_withoutToken_return401() throws Exception {
+        mockMvc.perform(get("/api/inventory"))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.status").value(401))
+                .andExpect(jsonPath("$.error").value("Unauthorized"))
+                .andExpect(jsonPath("$.path").value("/api/inventory"))
+                .andExpect(jsonPath("$.method").value("GET"));
+    }
+
+    @Test
+    void inventoryRoutes_withNonAdminToken_return403() throws Exception {
+        mockMvc.perform(get("/api/inventory")
+                .header("Authorization", "Bearer " + userToken))
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.status").value(403))
+                .andExpect(jsonPath("$.error").value("Forbidden"))
+                .andExpect(jsonPath("$.message").value("Access denied"))
+                .andExpect(jsonPath("$.path").value("/api/inventory"))
+                .andExpect(jsonPath("$.method").value("GET"));
+    }
+
+    @Test
+    void inventoryRoutes_withAdminToken_return200() throws Exception {
+        mockMvc.perform(get("/api/inventory")
+                .header("Authorization", "Bearer " + adminToken))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void userRoutes_withoutToken_return401() throws Exception {
+        mockMvc.perform(get("/api/users"))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.status").value(401))
+                .andExpect(jsonPath("$.error").value("Unauthorized"))
+                .andExpect(jsonPath("$.path").value("/api/users"))
+                .andExpect(jsonPath("$.method").value("GET"));
+    }
+
+    @Test
+    void userRoutes_withNonAdminToken_return403() throws Exception {
+        mockMvc.perform(get("/api/users")
+                .header("Authorization", "Bearer " + userToken))
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.status").value(403))
+                .andExpect(jsonPath("$.error").value("Forbidden"))
+                .andExpect(jsonPath("$.message").value("Access denied"))
+                .andExpect(jsonPath("$.path").value("/api/users"))
+                .andExpect(jsonPath("$.method").value("GET"));
+    }
+
+    @Test
+    void userRoutes_withAdminToken_return200() throws Exception {
+        mockMvc.perform(get("/api/users")
+                .header("Authorization", "Bearer " + adminToken))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void financialLogRoutes_withoutToken_return401() throws Exception {
+        mockMvc.perform(get("/api/financial-log"))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.status").value(401))
+                .andExpect(jsonPath("$.error").value("Unauthorized"))
+                .andExpect(jsonPath("$.path").value("/api/financial-log"))
+                .andExpect(jsonPath("$.method").value("GET"));
+    }
+
+    @Test
+    void financialLogRoutes_withNonAdminToken_return403() throws Exception {
+        mockMvc.perform(get("/api/financial-log")
+                .header("Authorization", "Bearer " + userToken))
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.status").value(403))
+                .andExpect(jsonPath("$.error").value("Forbidden"))
+                .andExpect(jsonPath("$.message").value("Access denied"))
+                .andExpect(jsonPath("$.path").value("/api/financial-log"))
+                .andExpect(jsonPath("$.method").value("GET"));
+    }
+
+    @Test
+    void financialLogRoutes_withAdminToken_return200() throws Exception {
+        mockMvc.perform(get("/api/financial-log")
+                .header("Authorization", "Bearer " + adminToken))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void publicAppointmentCreation_withoutToken_reachesController() throws Exception {
+        mockMvc.perform(post("/api/appointments")
+                .contentType("application/json")
+                .content("{}"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status").value(400))
+                .andExpect(jsonPath("$.path").value("/api/appointments"))
+                .andExpect(jsonPath("$.method").value("POST"));
+    }
+
+    @Test
+    void appointmentReadRoutes_withoutToken_return401() throws Exception {
+        mockMvc.perform(get("/api/appointments/my-appointments"))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.status").value(401))
+                .andExpect(jsonPath("$.error").value("Unauthorized"))
+                .andExpect(jsonPath("$.path").value("/api/appointments/my-appointments"))
+                .andExpect(jsonPath("$.method").value("GET"));
+    }
+
+    @Test
+    void appointmentDelete_withNonAdminToken_return403() throws Exception {
+        mockMvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete("/api/appointments/9999")
+                .header("Authorization", "Bearer " + userToken))
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.status").value(403))
+                .andExpect(jsonPath("$.error").value("Forbidden"))
+                .andExpect(jsonPath("$.message").value("Access denied"))
+                .andExpect(jsonPath("$.path").value("/api/appointments/9999"))
+                .andExpect(jsonPath("$.method").value("DELETE"));
     }
 }
