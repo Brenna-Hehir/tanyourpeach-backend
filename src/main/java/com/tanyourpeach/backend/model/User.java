@@ -33,6 +33,7 @@ public class User implements UserDetails {
     @Column(unique = true, nullable = false)
     private String email;
 
+    @JsonIgnore
     @NotBlank(message = "Password is required")
     @Column(name = "password_hash")
     private String passwordHash;
@@ -76,6 +77,7 @@ public class User implements UserDetails {
         this.email = email;
     }
 
+    @JsonIgnore
     public String getPasswordHash() {
         return passwordHash;
     }

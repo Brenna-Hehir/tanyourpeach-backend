@@ -396,14 +396,16 @@ class AppointmentControllerIntegrationTest {
 
     @Test
     void updateAppointment_shouldSucceedForOwner() throws Exception {
-        appointment.setClientName("Updated Owner");
+        appointment.setClientAddress("456 Updated Peach St");
+        appointment.setNotes("Updated customer notes");
 
         mockMvc.perform(put("/api/appointments/" + appointment.getAppointmentId())
                 .header("Authorization", userToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(appointment)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.clientName").value("Updated Owner"));
+                .andExpect(jsonPath("$.clientAddress").value("456 Updated Peach St"))
+                .andExpect(jsonPath("$.notes").value("Updated customer notes"));
     }
 
     @Test
@@ -440,6 +442,43 @@ class AppointmentControllerIntegrationTest {
         assertThat(receipt).isNotNull();
         assertThat(receipt.getPaymentMethod()).isEqualTo("Unpaid");
         assertThat(receipt.getTotalAmount()).isEqualByComparingTo(BigDecimal.valueOf(100.0));
+    }
+
+    @Test
+    void updateAppointment_shouldAllowOwnerToCancelPendingAppointment() throws Exception {
+        appointment.setStatus(Appointment.Status.CANCELLED);
+
+        mockMvc.perform(put("/api/appointments/" + appointment.getAppointmentId())
+                .header("Authorization", userToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(appointment)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value("CANCELLED"));
+    }
+
+    @Test
+    void updateAppointment_shouldReturnForbidden_whenOwnerTriesToConfirm() throws Exception {
+        appointment.setStatus(Appointment.Status.CONFIRMED);
+
+        mockMvc.perform(put("/api/appointments/" + appointment.getAppointmentId())
+                .header("Authorization", userToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(appointment)))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void updateAppointment_shouldReturnForbidden_whenOwnerTriesToCancelConfirmedAppointment() throws Exception {
+        appointment.setStatus(Appointment.Status.CONFIRMED);
+        appointment = appointmentRepository.save(appointment);
+
+        appointment.setStatus(Appointment.Status.CANCELLED);
+
+        mockMvc.perform(put("/api/appointments/" + appointment.getAppointmentId())
+                .header("Authorization", userToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(appointment)))
+                .andExpect(status().isForbidden());
     }
 
     @Test

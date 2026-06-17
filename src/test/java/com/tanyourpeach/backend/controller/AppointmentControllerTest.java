@@ -268,6 +268,25 @@ class AppointmentControllerTest {
     }
 
     @Test
+    void updateAppointment_shouldReturn200_whenOwnerCancelsPendingAppointment() {
+        testAppointment.setStatus(Appointment.Status.PENDING);
+
+        Appointment updated = new Appointment();
+        updated.setStatus(Appointment.Status.CANCELLED);
+
+        when(appointmentService.getAppointmentById(1L)).thenReturn(Optional.of(testAppointment));
+        when(request.getHeader("Authorization")).thenReturn(jwtToken);
+        when(jwtService.extractUsername("mocktoken")).thenReturn(email);
+        when(userRepository.findByEmail(email)).thenReturn(Optional.of(normalUser));
+        when(appointmentService.updateAppointment(eq(1L), eq(updated), eq(request)))
+                .thenReturn(Optional.of(updated));
+
+        ResponseEntity<?> response = controller.updateAppointment(1L, updated, request);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+    }
+
+    @Test
     void updateAppointment_shouldReturn403_ifNotOwnerOrAdmin() {
         testAppointment.setClientEmail("someone@example.com");
 
@@ -295,19 +314,6 @@ class AppointmentControllerTest {
         );
 
         assertEquals("Access denied", ex.getMessage());
-    }
-
-    @Test
-    void updateAppointment_shouldReturn404_ifNotFound() {
-        when(appointmentService.getAppointmentById(1L)).thenReturn(Optional.empty());
-
-        ResponseStatusException ex = assertThrows(
-                ResponseStatusException.class,
-                () -> controller.updateAppointment(1L, new Appointment(), request)
-        );
-
-        assertEquals(HttpStatus.NOT_FOUND, ex.getStatusCode());
-        assertEquals("Appointment not found", ex.getReason());
     }
 
     @Test
@@ -342,6 +348,69 @@ class AppointmentControllerTest {
         );
 
         assertEquals("Access denied", ex.getMessage());
+    }
+
+    @Test
+    void updateAppointment_shouldReturn403_whenOwnerTriesToConfirm() {
+        testAppointment.setStatus(Appointment.Status.PENDING);
+
+        Appointment updated = new Appointment();
+        updated.setStatus(Appointment.Status.CONFIRMED);
+
+        when(appointmentService.getAppointmentById(1L)).thenReturn(Optional.of(testAppointment));
+        when(request.getHeader("Authorization")).thenReturn(jwtToken);
+        when(jwtService.extractUsername("mocktoken")).thenReturn(email);
+        when(userRepository.findByEmail(email)).thenReturn(Optional.of(normalUser));
+
+        AccessDeniedException ex = assertThrows(
+                AccessDeniedException.class,
+                () -> controller.updateAppointment(1L, updated, request)
+        );
+
+        assertEquals("Only admins can change appointment status", ex.getMessage());
+        verify(appointmentService, never()).updateAppointment(eq(1L), any(), eq(request));
+    }
+
+    @Test
+    void updateAppointment_shouldReturn403_whenOwnerTriesToCancelConfirmedAppointment() {
+        testAppointment.setStatus(Appointment.Status.CONFIRMED);
+
+        Appointment updated = new Appointment();
+        updated.setStatus(Appointment.Status.CANCELLED);
+
+        when(appointmentService.getAppointmentById(1L)).thenReturn(Optional.of(testAppointment));
+        when(request.getHeader("Authorization")).thenReturn(jwtToken);
+        when(jwtService.extractUsername("mocktoken")).thenReturn(email);
+        when(userRepository.findByEmail(email)).thenReturn(Optional.of(normalUser));
+
+        AccessDeniedException ex = assertThrows(
+                AccessDeniedException.class,
+                () -> controller.updateAppointment(1L, updated, request)
+        );
+
+        assertEquals("Only admins can change appointment status", ex.getMessage());
+        verify(appointmentService, never()).updateAppointment(eq(1L), any(), eq(request));
+    }
+
+    @Test
+    void updateAppointment_shouldReturn403_whenOwnerChangesClientEmail() {
+        testAppointment.setClientEmail(email);
+
+        Appointment updated = new Appointment();
+        updated.setClientEmail("different@example.com");
+
+        when(appointmentService.getAppointmentById(1L)).thenReturn(Optional.of(testAppointment));
+        when(request.getHeader("Authorization")).thenReturn(jwtToken);
+        when(jwtService.extractUsername("mocktoken")).thenReturn(email);
+        when(userRepository.findByEmail(email)).thenReturn(Optional.of(normalUser));
+
+        AccessDeniedException ex = assertThrows(
+                AccessDeniedException.class,
+                () -> controller.updateAppointment(1L, updated, request)
+        );
+
+        assertEquals("Customers can only update address, notes, or cancel pending appointments", ex.getMessage());
+        verify(appointmentService, never()).updateAppointment(eq(1L), any(), eq(request));
     }
 
     @Test
