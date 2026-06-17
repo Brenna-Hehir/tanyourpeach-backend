@@ -69,6 +69,30 @@ class AvailabilityServiceTest {
     }
 
     @Test
+    void createAvailability_shouldAllowAdjacentSlots() {
+        Availability existing = new Availability();
+        existing.setSlotId(1L);
+        existing.setDate(LocalDate.now().plusDays(1));
+        existing.setStartTime(LocalTime.of(10, 0));
+        existing.setEndTime(LocalTime.of(11, 0));
+
+        Availability adjacent = new Availability();
+        adjacent.setDate(existing.getDate());
+        adjacent.setStartTime(LocalTime.of(11, 0));
+        adjacent.setEndTime(LocalTime.of(12, 0));
+
+        when(availabilityRepository.findByDate(existing.getDate()))
+                .thenReturn(List.of(existing));
+
+        when(availabilityRepository.save(any()))
+                .thenAnswer(i -> i.getArgument(0));
+
+        Availability result = availabilityService.createAvailability(adjacent);
+
+        assertNotNull(result);
+    }
+
+    @Test
     void createAvailability_shouldReturnNull_whenDateIsInPast() {
         Availability pastSlot = new Availability();
         pastSlot.setDate(LocalDate.now().minusDays(1));

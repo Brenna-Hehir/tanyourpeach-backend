@@ -239,7 +239,6 @@ public class AppointmentService {
         existing.setClientName(updated.getClientName());
         existing.setClientEmail(updated.getClientEmail());
         existing.setClientAddress(updated.getClientAddress());
-        existing.setAppointmentDateTime(updated.getAppointmentDateTime());
         existing.setDistanceMiles(updated.getDistanceMiles());
         existing.setTravelFee(updated.getTravelFee());
         existing.setNotes(updated.getNotes());
