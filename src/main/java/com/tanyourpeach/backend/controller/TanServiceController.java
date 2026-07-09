@@ -1,15 +1,14 @@
 package com.tanyourpeach.backend.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.tanyourpeach.backend.dto.ServiceCreateRequest;
+import com.tanyourpeach.backend.dto.ServiceResponseDto;
+import com.tanyourpeach.backend.dto.ServiceUpdateRequest;
+import com.tanyourpeach.backend.service.TanServiceService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-
-import com.tanyourpeach.backend.model.TanService;
-import com.tanyourpeach.backend.service.TanServiceService;
-
-import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -17,19 +16,30 @@ import java.util.List;
 @RequestMapping("/api/services")
 public class TanServiceController {
 
-    @Autowired
-    private TanServiceService serviceService;
+    private final TanServiceService serviceService;
 
-    // GET all services
-    @GetMapping
-    public List<TanService> getAllServices() {
-        return serviceService.getAllServices();
+    public TanServiceController(TanServiceService serviceService) {
+        this.serviceService = serviceService;
     }
 
-    // GET single service by ID
-    @GetMapping("/{id}")
-    public ResponseEntity<TanService> getServiceById(@PathVariable Long id) {
-        return serviceService.getServiceById(id)
+    @GetMapping
+    public List<ServiceResponseDto> getActiveMainServices() {
+        return serviceService.getActiveMainServices();
+    }
+
+    @GetMapping("/add-ons")
+    public List<ServiceResponseDto> getActiveAddOns() {
+        return serviceService.getActiveAddOns();
+    }
+
+    @GetMapping("/admin")
+    public List<ServiceResponseDto> getAllServicesForAdmin() {
+        return serviceService.getAllServicesForAdmin();
+    }
+
+    @GetMapping("/slug/{slug}")
+    public ResponseEntity<ServiceResponseDto> getServiceBySlug(@PathVariable String slug) {
+        return serviceService.getActiveServiceBySlug(slug)
                 .map(ResponseEntity::ok)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND,
@@ -37,21 +47,28 @@ public class TanServiceController {
                 ));
     }
 
-    // POST create a new service
-    @PostMapping
-    public ResponseEntity<TanService> createService(@Valid @RequestBody TanService service) {
-        TanService created = serviceService.createService(service);
-        if (created == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unable to create service");
-        }
+    @GetMapping("/{id}")
+    public ResponseEntity<ServiceResponseDto> getServiceById(@PathVariable Long id) {
+        return serviceService.getActiveServiceById(id)
+                .map(ResponseEntity::ok)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Service not found"
+                ));
+    }
 
+    @PostMapping
+    public ResponseEntity<ServiceResponseDto> createService(@Valid @RequestBody ServiceCreateRequest request) {
+        ServiceResponseDto created = serviceService.createService(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
-    // PUT update an existing service
     @PutMapping("/{id}")
-    public ResponseEntity<TanService> updateService(@PathVariable Long id, @Valid @RequestBody TanService updated) {
-        return serviceService.updateService(id, updated)
+    public ResponseEntity<ServiceResponseDto> updateService(
+            @PathVariable Long id,
+            @Valid @RequestBody ServiceUpdateRequest request
+    ) {
+        return serviceService.updateService(id, request)
                 .map(ResponseEntity::ok)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND,
@@ -59,10 +76,10 @@ public class TanServiceController {
                 ));
     }
 
-    // DELETE service (soft delete)
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deactivateService(@PathVariable Long id) {
         boolean deactivated = serviceService.deactivateService(id);
+
         if (!deactivated) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Service not found");
         }
@@ -70,10 +87,10 @@ public class TanServiceController {
         return ResponseEntity.noContent().build();
     }
 
-    // DELETE permanently
     @DeleteMapping("/{id}/force")
     public ResponseEntity<Void> deleteServicePermanently(@PathVariable Long id) {
         boolean deleted = serviceService.deleteServicePermanently(id);
+
         if (!deleted) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Service not found");
         }

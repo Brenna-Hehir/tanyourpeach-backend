@@ -1,5 +1,9 @@
 package com.tanyourpeach.backend.controller;
 
+import com.tanyourpeach.backend.dto.ServiceCreateRequest;
+import com.tanyourpeach.backend.dto.ServiceResponseDto;
+import com.tanyourpeach.backend.dto.ServiceUpdateRequest;
+import com.tanyourpeach.backend.model.ServiceType;
 import com.tanyourpeach.backend.model.TanService;
 import com.tanyourpeach.backend.service.TanServiceService;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,9 +19,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.*;
 
 class TanServiceControllerTest {
@@ -28,36 +29,82 @@ class TanServiceControllerTest {
     @InjectMocks
     private TanServiceController controller;
 
-    private TanService testService;
+    private ServiceResponseDto responseDto;
+    private ServiceCreateRequest createRequest;
+    private ServiceUpdateRequest updateRequest;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        testService = new TanService();
-        testService.setServiceId(1L);
-        testService.setName("Basic Tan");
-        testService.setBasePrice(50.0);
+
+        TanService service = new TanService();
+        service.setServiceId(1L);
+        service.setName("Peach Cobbler");
+        service.setSlug("peach-cobbler");
+        service.setBasePrice(60.0);
+        service.setDurationMinutes(30);
+        service.setServiceType(ServiceType.MAIN_SERVICE);
+        service.setDisplayOrder(1);
+        service.setIsActive(true);
+
+        responseDto = new ServiceResponseDto(service);
+
+        createRequest = new ServiceCreateRequest();
+        createRequest.setName("Peach Cobbler");
+        createRequest.setSlug("peach-cobbler");
+        createRequest.setBasePrice(60.0);
+        createRequest.setDurationMinutes(30);
+        createRequest.setServiceType(ServiceType.MAIN_SERVICE);
+
+        updateRequest = new ServiceUpdateRequest();
+        updateRequest.setName("Peach Cobbler");
+        updateRequest.setSlug("peach-cobbler");
+        updateRequest.setBasePrice(60.0);
+        updateRequest.setDurationMinutes(30);
+        updateRequest.setServiceType(ServiceType.MAIN_SERVICE);
     }
 
     @Test
-    void getAllServices_shouldReturnList() {
-        when(serviceService.getAllServices()).thenReturn(List.of(testService));
-        List<TanService> result = controller.getAllServices();
+    void getActiveMainServices_shouldReturnList() {
+        when(serviceService.getActiveMainServices()).thenReturn(List.of(responseDto));
+
+        List<ServiceResponseDto> result = controller.getActiveMainServices();
+
         assertEquals(1, result.size());
-        assertEquals("Basic Tan", result.get(0).getName());
+        assertEquals("Peach Cobbler", result.get(0).getName());
+    }
+
+    @Test
+    void getActiveAddOns_shouldReturnList() {
+        when(serviceService.getActiveAddOns()).thenReturn(List.of(responseDto));
+
+        List<ServiceResponseDto> result = controller.getActiveAddOns();
+
+        assertEquals(1, result.size());
+    }
+
+    @Test
+    void getAllServicesForAdmin_shouldReturnList() {
+        when(serviceService.getAllServicesForAdmin()).thenReturn(List.of(responseDto));
+
+        List<ServiceResponseDto> result = controller.getAllServicesForAdmin();
+
+        assertEquals(1, result.size());
     }
 
     @Test
     void getServiceById_shouldReturnService_ifExists() {
-        when(serviceService.getServiceById(1L)).thenReturn(Optional.of(testService));
-        ResponseEntity<TanService> response = controller.getServiceById(1L);
+        when(serviceService.getActiveServiceById(1L)).thenReturn(Optional.of(responseDto));
+
+        ResponseEntity<ServiceResponseDto> response = controller.getServiceById(1L);
+
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(testService, response.getBody());
+        assertEquals(responseDto, response.getBody());
     }
 
     @Test
     void getServiceById_shouldReturn404_ifNotFound() {
-        when(serviceService.getServiceById(1L)).thenReturn(Optional.empty());
+        when(serviceService.getActiveServiceById(1L)).thenReturn(Optional.empty());
 
         ResponseStatusException ex = assertThrows(
                 ResponseStatusException.class,
@@ -69,55 +116,55 @@ class TanServiceControllerTest {
     }
 
     @Test
-    void createService_shouldReturnCreatedService() {
-        when(serviceService.createService(testService)).thenReturn(testService);
+    void getServiceBySlug_shouldReturnService_ifExists() {
+        when(serviceService.getActiveServiceBySlug("peach-cobbler")).thenReturn(Optional.of(responseDto));
 
-        ResponseEntity<TanService> response = controller.createService(testService);
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        assertEquals(testService, response.getBody());
-    }
+        ResponseEntity<ServiceResponseDto> response = controller.getServiceBySlug("peach-cobbler");
 
-    @Test
-    void createService_shouldReturn400_whenServiceIsNull() {
-        when(serviceService.createService(null)).thenReturn(null);
-
-        ResponseStatusException ex = assertThrows(
-                ResponseStatusException.class,
-                () -> controller.createService(null)
-        );
-
-        assertEquals(HttpStatus.BAD_REQUEST, ex.getStatusCode());
-        assertEquals("Unable to create service", ex.getReason());
-    }
-
-    @Test
-    void updateService_shouldReturnUpdatedService_ifExists() {
-        when(serviceService.updateService(eq(1L), any())).thenReturn(Optional.of(testService));
-        ResponseEntity<TanService> response = controller.updateService(1L, testService);
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(testService, response.getBody());
+        assertEquals(responseDto, response.getBody());
     }
 
     @Test
-    void updateService_shouldHandleNullUpdateObject() {
-        when(serviceService.updateService(eq(1L), isNull())).thenReturn(Optional.empty());
+    void getServiceBySlug_shouldReturn404_ifNotFound() {
+        when(serviceService.getActiveServiceBySlug("missing")).thenReturn(Optional.empty());
 
         ResponseStatusException ex = assertThrows(
                 ResponseStatusException.class,
-                () -> controller.updateService(1L, null)
+                () -> controller.getServiceBySlug("missing")
         );
 
         assertEquals(HttpStatus.NOT_FOUND, ex.getStatusCode());
         assertEquals("Service not found", ex.getReason());
+    }
+
+    @Test
+    void createService_shouldReturnCreatedService() {
+        when(serviceService.createService(createRequest)).thenReturn(responseDto);
+
+        ResponseEntity<ServiceResponseDto> response = controller.createService(createRequest);
+
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        assertEquals(responseDto, response.getBody());
+    }
+
+    @Test
+    void updateService_shouldReturnUpdatedService() {
+        when(serviceService.updateService(1L, updateRequest)).thenReturn(Optional.of(responseDto));
+
+        ResponseEntity<ServiceResponseDto> response = controller.updateService(1L, updateRequest);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(responseDto, response.getBody());
     }
 
     @Test
     void updateService_shouldReturn404_ifNotFound() {
-        when(serviceService.updateService(eq(1L), any())).thenReturn(Optional.empty());
+        when(serviceService.updateService(1L, updateRequest)).thenReturn(Optional.empty());
 
         ResponseStatusException ex = assertThrows(
                 ResponseStatusException.class,
-                () -> controller.updateService(1L, testService)
+                () -> controller.updateService(1L, updateRequest)
         );
 
         assertEquals(HttpStatus.NOT_FOUND, ex.getStatusCode());
@@ -125,14 +172,16 @@ class TanServiceControllerTest {
     }
 
     @Test
-    void deactivateService_shouldReturn204_ifSuccessful() {
+    void deactivateService_shouldReturnNoContent_whenSuccessful() {
         when(serviceService.deactivateService(1L)).thenReturn(true);
+
         ResponseEntity<Void> response = controller.deactivateService(1L);
+
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
     }
 
     @Test
-    void deactivateService_shouldReturn404_ifNotFound() {
+    void deactivateService_shouldReturn404_whenMissing() {
         when(serviceService.deactivateService(1L)).thenReturn(false);
 
         ResponseStatusException ex = assertThrows(
@@ -145,14 +194,16 @@ class TanServiceControllerTest {
     }
 
     @Test
-    void deleteServicePermanently_shouldReturn204_ifSuccessful() {
+    void deleteServicePermanently_shouldReturnNoContent_whenSuccessful() {
         when(serviceService.deleteServicePermanently(1L)).thenReturn(true);
+
         ResponseEntity<Void> response = controller.deleteServicePermanently(1L);
+
         assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
     }
 
     @Test
-    void deleteServicePermanently_shouldReturn404_ifNotFound() {
+    void deleteServicePermanently_shouldReturn404_whenMissing() {
         when(serviceService.deleteServicePermanently(1L)).thenReturn(false);
 
         ResponseStatusException ex = assertThrows(

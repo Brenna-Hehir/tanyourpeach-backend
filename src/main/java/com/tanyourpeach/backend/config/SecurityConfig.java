@@ -65,6 +65,7 @@ public class SecurityConfig {
                 .requestMatchers("/", "/home", "/about", "/contact").permitAll()
 
                 .requestMatchers(HttpMethod.POST, "/api/auth/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/services/admin").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.GET, "/api/services/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/availabilities/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/appointments").permitAll()
@@ -90,8 +91,8 @@ public class SecurityConfig {
             )
 
             .exceptionHandling(e -> e
-                .authenticationEntryPoint(authenticationEntryPoint(om)) // 401 JSON
-                .accessDeniedHandler(accessDeniedHandler(om))           // 403 JSON
+                .authenticationEntryPoint(authenticationEntryPoint(om))
+                .accessDeniedHandler(accessDeniedHandler(om))
             )
 
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
