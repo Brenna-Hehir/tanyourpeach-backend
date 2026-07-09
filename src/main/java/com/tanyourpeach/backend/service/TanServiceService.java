@@ -1,10 +1,14 @@
 package com.tanyourpeach.backend.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
+import com.tanyourpeach.backend.dto.ServiceCreateRequest;
+import com.tanyourpeach.backend.dto.ServiceResponseDto;
+import com.tanyourpeach.backend.dto.ServiceUpdateRequest;
+import com.tanyourpeach.backend.model.ServiceType;
 import com.tanyourpeach.backend.model.TanService;
 import com.tanyourpeach.backend.repository.TanServiceRepository;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,51 +16,78 @@ import java.util.Optional;
 @Service
 public class TanServiceService {
 
-    @Autowired
-    private TanServiceRepository serviceRepository;
+    private final TanServiceRepository serviceRepository;
 
-    // GET all services
-    public List<TanService> getAllServices() {
-        return serviceRepository.findAll();
+    public TanServiceService(TanServiceRepository serviceRepository) {
+        this.serviceRepository = serviceRepository;
     }
 
-    // GET service by ID
-    public Optional<TanService> getServiceById(Long id) {
-        return serviceRepository.findById(id);
+    public List<ServiceResponseDto> getActiveMainServices() {
+        return serviceRepository
+                .findByIsActiveTrueAndServiceTypeOrderByDisplayOrderAscNameAsc(ServiceType.MAIN_SERVICE)
+                .stream()
+                .map(ServiceResponseDto::new)
+                .toList();
     }
 
-    // POST create new service
-    public TanService createService(TanService service) {
-        if (service.getName() == null || service.getName().trim().isEmpty()) return null;
-        if (service.getBasePrice() == null || service.getBasePrice() <= 0) return null;
-        if (service.getDurationMinutes() == null || service.getDurationMinutes() <= 0) return null;
-
-        return serviceRepository.save(service);
+    public List<ServiceResponseDto> getActiveAddOns() {
+        return serviceRepository
+                .findByIsActiveTrueAndServiceTypeOrderByDisplayOrderAscNameAsc(ServiceType.ADD_ON)
+                .stream()
+                .map(ServiceResponseDto::new)
+                .toList();
     }
 
-    // PUT update service
-    public Optional<TanService> updateService(Long id, TanService updated) {
+    public List<ServiceResponseDto> getAllServicesForAdmin() {
+        return serviceRepository
+                .findAllByOrderByDisplayOrderAscNameAsc()
+                .stream()
+                .map(ServiceResponseDto::new)
+                .toList();
+    }
+
+    public Optional<ServiceResponseDto> getActiveServiceById(Long id) {
+        return serviceRepository
+                .findByServiceIdAndIsActiveTrue(id)
+                .map(ServiceResponseDto::new);
+    }
+
+    public Optional<ServiceResponseDto> getActiveServiceBySlug(String slug) {
+        return serviceRepository
+                .findBySlugAndIsActiveTrue(slug)
+                .map(ServiceResponseDto::new);
+    }
+
+    public ServiceResponseDto createService(ServiceCreateRequest request) {
+        validateSlugAvailableForCreate(request.getSlug());
+
+        TanService service = new TanService();
+        applyRequest(service, request);
+
+        return new ServiceResponseDto(serviceRepository.save(service));
+    }
+
+    public Optional<ServiceResponseDto> updateService(Long id, ServiceUpdateRequest request) {
         Optional<TanService> existingOpt = serviceRepository.findById(id);
-        if (existingOpt.isEmpty()) return Optional.empty();
 
-        if (updated.getName() == null || updated.getName().trim().isEmpty()) return Optional.empty();
-        if (updated.getBasePrice() == null || updated.getBasePrice() <= 0) return Optional.empty();
-        if (updated.getDurationMinutes() == null || updated.getDurationMinutes() <= 0) return Optional.empty();
+        if (existingOpt.isEmpty()) {
+            return Optional.empty();
+        }
+
+        validateSlugAvailableForUpdate(request.getSlug(), id);
 
         TanService existing = existingOpt.get();
-        existing.setName(updated.getName());
-        existing.setDescription(updated.getDescription());
-        existing.setBasePrice(updated.getBasePrice());
-        existing.setDurationMinutes(updated.getDurationMinutes());
-        existing.setIsActive(updated.getIsActive());
+        applyRequest(existing, request);
 
-        return Optional.of(serviceRepository.save(existing));
+        return Optional.of(new ServiceResponseDto(serviceRepository.save(existing)));
     }
 
-    // PUT deactivate service (soft delete)
     public boolean deactivateService(Long id) {
         Optional<TanService> optional = serviceRepository.findById(id);
-        if (optional.isEmpty()) return false;
+
+        if (optional.isEmpty()) {
+            return false;
+        }
 
         TanService service = optional.get();
         service.setIsActive(false);
@@ -64,10 +95,52 @@ public class TanServiceService {
         return true;
     }
 
-    // DELETE service permanently
     public boolean deleteServicePermanently(Long id) {
-        if (!serviceRepository.existsById(id)) return false;
+        if (!serviceRepository.existsById(id)) {
+            return false;
+        }
+
         serviceRepository.deleteById(id);
         return true;
+    }
+
+    private void applyRequest(TanService service, ServiceCreateRequest request) {
+        service.setName(request.getName());
+        service.setSlug(request.getSlug());
+        service.setShortDescription(request.getShortDescription());
+        service.setDescription(request.getDescription());
+        service.setBasePrice(request.getBasePrice());
+        service.setDurationMinutes(request.getDurationMinutes());
+        service.setServiceType(defaultServiceType(request.getServiceType()));
+        service.setCardImageUrl(request.getCardImageUrl());
+        service.setHeroImageUrl(request.getHeroImageUrl());
+        service.setDisplayOrder(defaultDisplayOrder(request.getDisplayOrder()));
+        service.setRinseTimeMinHours(request.getRinseTimeMinHours());
+        service.setRinseTimeMaxHours(request.getRinseTimeMaxHours());
+        service.setIsActive(defaultIsActive(request.getIsActive()));
+    }
+
+    private ServiceType defaultServiceType(ServiceType serviceType) {
+        return serviceType == null ? ServiceType.MAIN_SERVICE : serviceType;
+    }
+
+    private Integer defaultDisplayOrder(Integer displayOrder) {
+        return displayOrder == null ? 0 : displayOrder;
+    }
+
+    private Boolean defaultIsActive(Boolean isActive) {
+        return isActive == null ? true : isActive;
+    }
+
+    private void validateSlugAvailableForCreate(String slug) {
+        if (slug != null && serviceRepository.existsBySlug(slug)) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Service slug already exists");
+        }
+    }
+
+    private void validateSlugAvailableForUpdate(String slug, Long serviceId) {
+        if (slug != null && serviceRepository.existsBySlugAndServiceIdNot(slug, serviceId)) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Service slug already exists");
+        }
     }
 }
