@@ -16,6 +16,7 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import java.sql.SQLException;
@@ -144,6 +145,21 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
     public ResponseEntity<ErrorResponse> handleUnsupportedMedia(HttpMediaTypeNotSupportedException ex, HttpServletRequest req) {
         return build(req, HttpStatus.UNSUPPORTED_MEDIA_TYPE, "Unsupported media type", null, false, ex);
+    }
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<ErrorResponse> handleNoResourceFound(
+            NoResourceFoundException ex,
+            HttpServletRequest req) {
+
+        return build(
+                req,
+                HttpStatus.NOT_FOUND,
+                "Resource not found",
+                null,
+                false,
+                ex
+        );
     }
 
     // Catch-all: true 500 (generic message only)
